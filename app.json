@@ -1,0 +1,46 @@
+{
+  "id": "035d365d-35f3-4b8f-aa8e-b3b6f479640f",
+  "name": "ALEN",
+  "publisher": "HappiestMinds",
+  "version": "1.0.0.0",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": 
+  [
+    {
+      "id": "10cb69d9-bc8a-4d27-970a-9e110e9db2a5",
+      "name": "_Exclude_APIV2_",
+  "publisher": "Microsoft",
+  "version": "26.0.0.0"
+    },
+    {
+      "id": "ec255f57-31d0-4ca2-b751-f2fa7c745abb",
+      "name": "Shopify Connector",
+  "publisher": "Microsoft",
+  "version": "26.0.30643.33009"
+    }
+  ],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "26.0.0.0",
+  "idRanges": [
+    {
+      "from": 50100,
+      "to": 50149
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "15.0",
+  "features": [
+    "NoImplicitWith"
+  ]
+}
