@@ -55,5 +55,166 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Store Front Payment Authcode';
             DataClassification = ToBeClassified;
         }
+        field(50110; "Order Total Check"; Decimal)
+        {
+            Caption = 'Order Total Check';
+            DataClassification = ToBeClassified;
+        }
+        field(50111; "Order Total Variance"; Decimal)
+        {
+            Caption = 'Order Total Variance';
+            DataClassification = ToBeClassified;
+        }
+        //... Marketplace fields
+        field(50112; "memo"; Text[50])
+        {
+            Caption = 'Memo';
+            DataClassification = ToBeClassified;
+        }
+        field(50113; "Vendor_Number"; Code[20])
+        {
+            Caption = 'Vendor Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50114; "shippingAddress_attention"; Text[50])
+        {
+            Caption = 'Shipping Address Attention';
+            DataClassification = ToBeClassified;
+        }
+        field(50115; "Store_number"; Code[20])
+        {
+            Caption = 'Store Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50116; "Dealer_Department_Number"; Code[20])
+        {
+            Caption = 'Dealer Department Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50117; "Dealer_Department_Description"; Text[50])
+        {
+            Caption = 'Dealer Department Description';
+            DataClassification = ToBeClassified;
+        }
+        field(50118; "Standard_Carrier_Alpha_Code"; Text[50])
+        {
+            Caption = 'Standard Carrier Alpha Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50119; "FOB_Qualifier"; Text[50])
+        {
+            Caption = 'FOB Qualifier';
+            DataClassification = ToBeClassified;
+        }
+        field(50120; "Transportation_Method_Code"; Text[50])
+        {
+            Caption = 'Carrier Transportation Method Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50121; "Transaction_ID"; Code[20])
+        {
+            Caption = 'Transaction ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50122; "discountItem_intID"; Text[50])
+        {
+            Caption = 'Discount Item - intID';
+            DataClassification = ToBeClassified;
+        }
+        field(50123; "Customer_Account_Number"; Text[50])
+        {
+            Caption = 'Customer Account Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50124; "Special_Instructions"; Text[100])
+        {
+            Caption = 'Special Instructions';
+            DataClassification = ToBeClassified;
+        }
+        field(50125; "Customer_Order_Number"; Code[20])
+        {
+            Caption = 'Customer Order Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50126; "Release_No"; Text[50])
+        {
+            Caption = 'Release No';
+            DataClassification = ToBeClassified;
+        }
+        field(50127; "Ship_To_Code_Qualifier"; Text[50])
+        {
+            Caption = 'Ship To Code Qualifier';
+            DataClassification = ToBeClassified;
+        }
+        field(50128; "Requested_Ship_Date"; Date)
+        {
+            Caption = 'Requested Ship Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50129; "Current_Scheduled_Delivery"; Date)
+        {
+            Caption = 'Current Scheduled Delivery';
+            DataClassification = ToBeClassified;
+        }
+        field(50130; "Requested_PickUp_Date"; Date)
+        {
+            Caption = 'Requested Pick Up Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50131; "Packaging_Type"; Text[20])
+        {
+            Caption = 'Packaging Type';
+            DataClassification = ToBeClassified;
+        }
+        field(50132; "Total_Packages"; Decimal)
+        {
+            Caption = 'Total Packages';
+            DataClassification = ToBeClassified;
+        }
+        field(50133; "PKG_PLT_Qty"; Decimal)
+        {
+            Caption = 'PKG PLT Qty';
+            DataClassification = ToBeClassified;
+        }
+        field(50134; "Marketplace_Shipment_ID"; Text[50])
+        {
+            Caption = 'Marketplace Shipment ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50135; "824_Received"; Boolean)
+        {
+            Caption = '824 Received';
+            DataClassification = ToBeClassified;
+        }
+        field(50136; "824_Notes"; Text[100])
+        {
+            Caption = '824 Notes';
+            DataClassification = ToBeClassified;
+        }
+        field(50137; "Routing_Request_Sent"; Boolean)
+        {
+            Caption = 'Routing Request Sent';
+            DataClassification = ToBeClassified;
+        }
+        field(50138; "Processed"; Boolean)
+        {
+            Caption = 'Processed';
+            DataClassification = ToBeClassified;
+        }
+        field(50139; "Supplier_Contact_Name"; Text[100])
+        {
+            Caption = 'Supplier Contact Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50140; "Supplier_Contact_No"; Text[21])
+        {
+            Caption = 'Supplier Contact No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50141; "Supplier_Contact_Email"; Text[100])
+        {
+            Caption = 'Supplier Contact Email';
+            DataClassification = ToBeClassified;
+        }
     }
 }

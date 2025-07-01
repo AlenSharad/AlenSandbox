@@ -27,6 +27,7 @@ page 50130 "API - Item Unit of Measure"
                 field(ItemNo; Rec."Item No.")
                 {
                     Caption = 'Item No.';
+                    Editable = false;
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Item No."));
@@ -89,14 +90,18 @@ page 50130 "API - Item Unit of Measure"
                         RegisterFieldSet(Rec.FieldNo(Cubage));
                     end;
                 }
-
+                field(dimension; Rec.Dimension)
+                {
+                    Caption = 'Dimension';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(Dimension));
+                    end;
+                }
             }
         }
     }
 
-    actions
-    {
-    }
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
         GraphMgtGeneralTools: Codeunit "Graph Mgt - General Tools";

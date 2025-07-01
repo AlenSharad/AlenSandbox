@@ -58,6 +58,16 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                 ApplicationArea = All;
                 Caption = 'Store Front Payment Authcode';
             }
+            field("Order Total Check"; Rec."Order Total Check")
+            {
+                ApplicationArea = All;
+                Caption = 'Order Total Check';
+            }
+            field("Order Total Variance"; Rec."Order Total Variance")
+            {
+                ApplicationArea = All;
+                Caption = 'Order Total Variance';
+            }
 
         }
     }

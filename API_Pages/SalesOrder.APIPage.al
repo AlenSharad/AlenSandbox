@@ -549,6 +549,296 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Requested Delivery Date"));
                     end;
                 }
+
+                field(orderTotalCheck; Rec."Order Total Check")
+                {
+                    Caption = 'Order Total Check';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Total Check"));
+                    end;
+                }
+                field(orderTotalVariance; Rec."Order Total Variance")
+                {
+                    Caption = 'Order Total Variance';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Total Variance"));
+                    end;
+                }
+                field("memo"; Rec."memo")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Memo';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("memo"));
+                    end;
+                }
+                field("Vendor_Number"; Rec."Vendor_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Vendor Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Vendor_Number"));
+                    end;
+                }
+                field("shippingAddress_attention"; Rec."shippingAddress_attention")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shipping Address Attention';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("shippingAddress_attention"));
+                    end;
+                }
+                field("Store_number"; Rec."Store_number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Store Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Store_number"));
+                    end;
+                }
+                field("Dealer_Department_Number"; Rec."Dealer_Department_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Dealer Department Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Dealer_Department_Number"));
+                    end;
+                }
+                field("Dealer_Department_Description"; Rec."Dealer_Department_Description")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Dealer Department Description';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Dealer_Department_Description"));
+                    end;
+                }
+                field("Standard_Carrier_Alpha_Code"; Rec."Standard_Carrier_Alpha_Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Standard Carrier Alpha Code';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Standard_Carrier_Alpha_Code"));
+                    end;
+                }
+                field("FOB_Qualifier"; Rec."FOB_Qualifier")
+                {
+                    ApplicationArea = All;
+                    Caption = 'FOB Qualifier';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("FOB_Qualifier"));
+                    end;
+                }
+                field("Carrier_Transportation_Method_Code"; Rec."Transportation_Method_Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Carrier Transportation Method Code';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Transportation_Method_Code"));
+                    end;
+                }
+                field("Transaction_ID"; Rec."Transaction_ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Transaction ID';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Transaction_ID"));
+                    end;
+                }
+                field("discountItem_intID"; Rec."discountItem_intID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Discount Item - intID';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("discountItem_intID"));
+                    end;
+                }
+                field("Customer_Account_Number"; Rec."Customer_Account_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer Account Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer_Account_Number"));
+                    end;
+                }
+                field("Special_Instructions"; Rec."Special_Instructions")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Special Instructions';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Special_Instructions"));
+                    end;
+                }
+                field("Customer_Order_Number"; Rec."Customer_Order_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer Order Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer_Order_Number"));
+                    end;
+                }
+                field("Release_No"; Rec."Release_No")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Release No';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Release_No"));
+                    end;
+                }
+                field("Ship_To_Code_Qualifier"; Rec."Ship_To_Code_Qualifier")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ship To Code Qualifier';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ship_To_Code_Qualifier"));
+                    end;
+                }
+                field("Requested_Ship_Date"; Rec."Requested_Ship_Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Requested Ship Date';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Requested_Ship_Date"));
+                    end;
+                }
+                field("Current_Scheduled_Delivery"; Rec."Current_Scheduled_Delivery")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Current Scheduled Delivery';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Current_Scheduled_Delivery"));
+                    end;
+                }
+                field("Requested_PickUp_Date"; Rec."Requested_PickUp_Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Requested Pick Up Date';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Requested_PickUp_Date"));
+                    end;
+                }
+                field("Packaging_Type"; Rec."Packaging_Type")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Packaging Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Packaging_Type"));
+                    end;
+                }
+                field("Total_Packages"; Rec."Total_Packages")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Total Packages';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Total_Packages"));
+                    end;
+                }
+                field("PKG_PLT_Qty"; Rec."PKG_PLT_Qty")
+                {
+                    ApplicationArea = All;
+                    Caption = 'PKG PLT Qty';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("PKG_PLT_Qty"));
+                    end;
+                }
+                field("Marketplace_Shipment_ID"; Rec."Marketplace_Shipment_ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Marketplace Shipment ID';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Marketplace_Shipment_ID"));
+                    end;
+                }
+                field("824_Received"; Rec."824_Received")
+                {
+                    ApplicationArea = All;
+                    Caption = '824 Received';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("824_Received"));
+                    end;
+                }
+                field("824_Notes"; Rec."824_Notes")
+                {
+                    ApplicationArea = All;
+                    Caption = '824 Notes';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("824_Notes"));
+                    end;
+                }
+                field("Routing_Request_Sent"; Rec."Routing_Request_Sent")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Routing Request Sent';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Routing_Request_Sent"));
+                    end;
+                }
+                field("Processed"; Rec."Processed")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Processed';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Processed"));
+                    end;
+                }
+                field("Supplier_Contact_Name"; Rec."Supplier_Contact_Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Supplier Contact Name';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Supplier_Contact_Name"));
+                    end;
+                }
+                field("Supplier_Contact_No"; Rec."Supplier_Contact_No")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Supplier Contact No.';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Supplier_Contact_No"));
+                    end;
+                }
+                field("Supplier_Contact_Email"; Rec."Supplier_Contact_Email")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Supplier Contact Email';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Supplier_Contact_Email"));
+                    end;
+                }
+
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
                 {
                     Caption = 'Dimension Set Lines';

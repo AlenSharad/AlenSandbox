@@ -58,6 +58,16 @@ pageextension 50105 "Posted Sales Invoice Page Ext" extends "Posted Sales Invoic
                 ApplicationArea = All;
                 Caption = 'Store Front Payment Authcode';
             }
+            field("Order Total Check"; Rec."Order Total Check")
+            {
+                ApplicationArea = All;
+                Caption = 'Order Total Check';
+            }
+            field("Order Total Variance"; Rec."Order Total Variance")
+            {
+                ApplicationArea = All;
+                Caption = 'Order Total Variance';
+            }
         }
     }
 

@@ -399,11 +399,11 @@ page 50105 "API - Items"
                 }
                 part(itemUnitOfMeasure; "API - Item Unit of Measure")
                 {
-                    Caption = 'Unit Of Measure';
-                    Multiplicity = ZeroOrOne;
+                    Caption = 'Item Unit Of Measure';
                     EntityName = 'itemUnitOfMeasure';
                     EntitySetName = 'itemUnitOfMeasures';
                     SubPageLink = "Item No." = field("No.");
+
                 }
                 part(itemAttributes; "API - Item Attributes")
                 {

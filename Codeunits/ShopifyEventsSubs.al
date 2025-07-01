@@ -31,7 +31,7 @@ codeunit 50100 ShopifyEventSubs
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Item Reference", OnAfterInsertEvent, '', false, false)]
-    local procedure UpdateItemIDOnAfterInsertEvent(var Rec: Record "Item Reference")
+    local procedure UpdateItemIDOnAfterInsertEventItemRef(var Rec: Record "Item Reference")
     var
         item: Record Item;
     begin
