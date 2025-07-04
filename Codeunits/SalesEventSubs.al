@@ -46,4 +46,47 @@ codeunit 50101 SalesEventSubs
         end;
         custombillto.DeleteAll();
     end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterUpdateUnitPrice, '', false, false)]
+    local procedure UpdateBaseUnitPriceOnAfterUpdateUnitPrice(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; CalledByFieldNo: Integer; CurrFieldNo: Integer)
+    begin
+
+        if (CalledByFieldNo = SalesLine.FieldNo("No.")) and (SalesLine.Type = SalesLine.Type::Item) then begin
+            SalesLine."BC Unit Price" := SalesLine."Unit Price";
+            CalculateandUpdateTotalVarance(SalesLine);
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Unit Price", false, false)]
+    local procedure CalculateandUpdateTotalVaranceOnAfterValidateEventUnitPrice(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    begin
+        CalculateandUpdateTotalVarance(Rec);
+    end;
+
+    local Procedure CalculateandUpdateTotalVarance(var SL: Record "Sales Line")
+    var
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        CurrLineTotal: Decimal;
+        CurrLineBaseTotal: Decimal;
+        OtherTotal: Decimal;
+        OtherBaseTotal: Decimal;
+    begin
+        Clear(SalesHeader);
+        SalesHeader := SL.GetSalesHeader();
+        CurrLineTotal := SL."Unit Price" * SL.Quantity;
+        CurrLineBaseTotal := SL."BC Unit Price" * SL.Quantity;
+        SalesLine.Reset();
+        SalesLine.SetRange("Document Type", SL."Document Type");
+        SalesLine.SetRange("Document No.", SL."Document No.");
+        SalesLine.SetFilter("Line No.", '<>%1', SL."Line No.");
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        if SalesLine.FindSet() then
+            repeat
+                OtherTotal := SalesLine."Unit Price" * SalesLine.Quantity;
+                OtherBaseTotal := SalesLine."BC Unit Price" * SalesLine.Quantity;
+            until SalesLine.Next() = 0;
+        SalesHeader."Order Total Variance" := (CurrLineBaseTotal + OtherBaseTotal) - (CurrLineTotal + OtherTotal);
+        SalesHeader.Modify();
+    end;
 }

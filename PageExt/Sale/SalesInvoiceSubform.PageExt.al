@@ -1,30 +1,7 @@
-pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform"
+pageextension 50128 SalesInvoiceSubformExt extends "Sales Invoice Subform"
 {
     layout
     {
-        modify("Line Discount Amount")
-        {
-            Visible = true;
-        }
-        movebefore("Line Discount %"; "Line Discount Amount")
-        addafter("Line Amount")
-        {
-            field(StoreFront_LineAmount; Rec.StoreFront_LineAmount)
-            {
-                Caption = 'Store Front Line Amount';
-                ApplicationArea = all;
-
-            }
-        }
-        addafter("Unit Price")
-        {
-            field("BC Unit Price"; Rec."BC Unit Price")
-            {
-                Caption = 'BC Unit Price';
-                ApplicationArea = all;
-                Editable = false;
-            }
-        }
         // Add changes to page layout here
         addlast(Control1)
         {

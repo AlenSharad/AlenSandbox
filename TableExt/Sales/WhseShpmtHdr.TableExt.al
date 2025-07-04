@@ -216,5 +216,40 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Supplier Contact Email';
             DataClassification = ToBeClassified;
         }
+        field(50142; "Ship From"; Text[100])
+        {
+            Caption = 'Ship From';
+            DataClassification = ToBeClassified;
+        }
+        field(50143; "3rd Party Billing Account"; Text[100])
+        {
+            Caption = '3rd Party Billing Account';
+            DataClassification = ToBeClassified;
+        }
+        field(50144; "3rd Party Zip"; Code[10])
+        {
+            Caption = '3rd Party Zip';
+            DataClassification = ToBeClassified;
+        }
+        field(50145; "3rd Party Carrier"; Text[100])
+        {
+            Caption = '3rd Party Carrier';
+            DataClassification = ToBeClassified;
+        }
+        field(50146; "Storefront Name"; Text[100])
+        {
+            Caption = 'Storefront Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50147; isShipresidential; Boolean)
+        {
+            Caption = 'Is Ship Residential';
+            DataClassification = ToBeClassified;
+        }
+        field(50148; "Bill-to Phone No."; Text[30])
+        {
+            Caption = 'Bill-to Phone No.';
+            DataClassification = ToBeClassified;
+        }
     }
 }

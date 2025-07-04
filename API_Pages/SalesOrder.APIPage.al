@@ -267,27 +267,57 @@ page 50109 "API - Sales Orders"
                 {
                     Caption = 'Bill-to Address Line 2';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Address 2"));
+                    end;
                 }
                 field(billToCity; Rec."Bill-to City")
                 {
                     Caption = 'Bill-to City';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to City"));
+                    end;
                 }
                 field(billToCountry; Rec."Bill-to Country/Region Code")
                 {
                     Caption = 'Bill-to Country/Region Code';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Country/Region Code"));
+                    end;
                 }
                 field(billToState; Rec."Bill-to County")
                 {
                     Caption = 'BillTo State';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to County"));
+                    end;
                 }
                 field(billToPostCode; Rec."Bill-to Post Code")
                 {
                     Caption = 'Bill-to Post Code';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Post Code"));
+                    end;
                 }
+                field(billToPhoneNo; Rec."Bill-to Phone No.")
+                {
+                    Caption = 'Bill-to Phone No.';
+                    //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Phone No."));
+                    end;
+                }
+
                 field(shipToAddressLine1; Rec."Ship-to Address")
                 {
                     Caption = 'Ship-to Address Line 1';
@@ -299,6 +329,7 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Ship-to Address"));
                     end;
                 }
+
                 field(shipToAddressLine2; Rec."Ship-to Address 2")
                 {
                     Caption = 'Ship-to Address Line 2';
@@ -838,7 +869,54 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Supplier_Contact_Email"));
                     end;
                 }
-
+                field(shipFrom; Rec."Ship From")
+                {
+                    Caption = 'Ship From';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ship From"));
+                    end;
+                }
+                field(thirdPartyBillingAccount; Rec."3rd Party Billing Account")
+                {
+                    Caption = '3rd Party Billing Account';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("3rd Party Billing Account"));
+                    end;
+                }
+                field(thirdPartyZip; Rec."3rd Party Zip")
+                {
+                    Caption = '3rd Party Zip';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("3rd Party Zip"));
+                    end;
+                }
+                field(thirdPartyCarrier; Rec."3rd Party Carrier")
+                {
+                    Caption = '3rd Party Carrier';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("3rd Party Carrier"));
+                    end;
+                }
+                field(storeFrontName; Rec."Storefront Name")
+                {
+                    Caption = 'Storefront Name';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Storefront Name"));
+                    end;
+                }
+                field(isShipResidential; Rec.isShipresidential)
+                {
+                    Caption = 'Is Ship Residential';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(isShipresidential));
+                    end;
+                }
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
                 {
                     Caption = 'Dimension Set Lines';

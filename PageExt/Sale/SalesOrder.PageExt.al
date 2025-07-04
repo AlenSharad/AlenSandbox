@@ -37,6 +37,11 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 Caption = 'Order Source';
                 TableRelation = "Order Source".Code;
             }
+            field("Storefront Name"; Rec."Storefront Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Storefront Name';
+            }
             field("Store Front Payment Status"; Rec."Store Front Payment Status")
             {
                 ApplicationArea = All;
@@ -87,12 +92,7 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                     Caption = 'Vendor Number';
                     Importance = Standard;
                 }
-                field("shippingAddress_attention"; Rec."shippingAddress_attention")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Address Attention';
-                    Importance = Standard;
-                }
+
                 field("Store_number"; Rec."Store_number")
                 {
                     ApplicationArea = All;
@@ -255,6 +255,56 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                     Caption = 'Supplier Contact Email';
                     Importance = Standard;
                 }
+                field("Ship From"; Rec."Ship From")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ship From';
+                    Importance = Standard;
+
+                }
+                field("3rd Party Billing Account"; Rec."3rd Party Billing Account")
+                {
+                    ApplicationArea = All;
+                    Caption = '3rd Party Billing Account';
+                    Importance = Standard;
+                }
+                field("3rd Party Carrier"; Rec."3rd Party Carrier")
+                {
+                    ApplicationArea = All;
+                    Caption = '3rd Party Carrier';
+                    Importance = Standard;
+                }
+                field("3rd Party Zip"; Rec."3rd Party Zip")
+                {
+                    ApplicationArea = All;
+                    Caption = '3rd Party Zip';
+                    Importance = Standard;
+                }
+
+                field(isShipresidential; Rec.isShipresidential)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Is Ship Residential';
+                    Importance = Standard;
+                }
+            }
+        }
+        addafter("Bill-to Post Code")
+        {
+            field("Bill-to Phone No."; Rec."Bill-to Phone No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Bill-to Phone No.';
+                Importance = Standard;
+            }
+        }
+        addafter("Ship-to Contact")
+        {
+            field("shippingAddress_attention"; Rec."shippingAddress_attention")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Address Attention';
+                Importance = Standard;
             }
         }
 

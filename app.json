@@ -2,7 +2,7 @@
   "id": "035d365d-35f3-4b8f-aa8e-b3b6f479640f",
   "name": "ALEN",
   "publisher": "HappiestMinds",
-  "version": "1.0.0.0",
+  "version": "1.0.0.1",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -10,6 +10,7 @@
   "help": "",
   "url": "",
   "logo": "",
+  
   "dependencies": 
   [
     {

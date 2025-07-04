@@ -1,4 +1,4 @@
-pageextension 50123 "Sales Return Order Page Ext" extends "Sales Return Order"
+pageextension 50127 "Sales Return Order Archive Ext" extends "Sales Return Order Archive"
 {
     layout
     {

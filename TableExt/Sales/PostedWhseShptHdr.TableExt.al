@@ -36,6 +36,26 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             DataClassification = ToBeClassified;
             TableRelation = "Order Source".Code;
         }
+        field(50106; "Store Front Payment Status"; Text[50])
+        {
+            Caption = 'Store Front Payment Status';
+            DataClassification = ToBeClassified;
+        }
+        field(50107; "Store Front Payment Gateway"; Code[20])
+        {
+            Caption = 'Store Front Payment Gateway';
+            DataClassification = ToBeClassified;
+        }
+        field(50108; "Store Front Payment Event Type"; Text[50])
+        {
+            Caption = 'Store Front Payment Event Type';
+            DataClassification = ToBeClassified;
+        }
+        field(50109; "Store Front Payment Authcode"; Text[50])
+        {
+            Caption = 'Store Front Payment Authcode';
+            DataClassification = ToBeClassified;
+        }
         field(50110; "Order Total Check"; Decimal)
         {
             Caption = 'Order Total Check';
@@ -195,6 +215,41 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
         field(50141; "Supplier_Contact_Email"; Text[100])
         {
             Caption = 'Supplier Contact Email';
+            DataClassification = ToBeClassified;
+        }
+        field(50142; "Ship From"; Text[100])
+        {
+            Caption = 'Ship From';
+            DataClassification = ToBeClassified;
+        }
+        field(50143; "3rd Party Billing Account"; Text[100])
+        {
+            Caption = '3rd Party Billing Account';
+            DataClassification = ToBeClassified;
+        }
+        field(50144; "3rd Party Zip"; Code[10])
+        {
+            Caption = '3rd Party Zip';
+            DataClassification = ToBeClassified;
+        }
+        field(50145; "3rd Party Carrier"; Text[100])
+        {
+            Caption = '3rd Party Carrier';
+            DataClassification = ToBeClassified;
+        }
+        field(50146; "Storefront Name"; Text[100])
+        {
+            Caption = 'Storefront Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50147; isShipresidential; Boolean)
+        {
+            Caption = 'Is Ship Residential';
+            DataClassification = ToBeClassified;
+        }
+        field(50148; "Bill-to Phone No."; Text[30])
+        {
+            Caption = 'Bill-to Phone No.';
             DataClassification = ToBeClassified;
         }
     }

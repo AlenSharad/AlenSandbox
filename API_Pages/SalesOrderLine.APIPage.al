@@ -214,6 +214,15 @@ page 50114 "API - Sales Order Lines"
                     Caption = 'Discount Applied Before Tax';
                     Editable = false;
                 }
+                field(StoreFront_LineAmount; Rec.StoreFront_LineAmount)
+                {
+                    Caption = 'Store Front Line Amount';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(StoreFront_LineAmount));
+                    end;
+                }
                 field(amountExcludingTax; Rec."Line Amount Excluding Tax")
                 {
                     Caption = 'Amount Excluding Tax';
@@ -369,6 +378,33 @@ page 50114 "API - Sales Order Lines"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Discount Details"));
+                    end;
+                }
+                field(amamzonItemId; Rec."Amazon Item ID")
+                {
+                    Caption = 'Amazon Item ID';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Amazon Item ID"));
+                    end;
+                }
+                field(upcCode; Rec.UPC_Code)
+                {
+                    Caption = 'Marketplace UPC Code';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("UPC_Code"));
+                    end;
+                }
+                field(poLine; Rec."PO Line")
+                {
+                    Caption = 'PO Line';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("PO Line"));
                     end;
                 }
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
