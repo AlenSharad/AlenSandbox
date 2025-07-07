@@ -59,7 +59,15 @@ page 50109 "API - Sales Orders"
                     Caption = 'External Document No.';
 
                     trigger OnValidate()
+                    var
+                        SalesHeader: Record "Sales Header";
                     begin
+                        if Rec."External Document No." = '' then
+                            Error(ExternalDocumentBlankErr);
+                        SalesHeader.Reset();
+                        SalesHeader.SetRange("External Document No.", Rec."External Document No.");
+                        if SalesHeader.FindFirst() then
+                            Error(ExternalDocumentAlreadyExistErr, SalesHeader."No.");
                         RegisterFieldSet(Rec.FieldNo("External Document No."))
                     end;
                 }
@@ -1155,9 +1163,11 @@ page 50109 "API - Sales Orders"
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
         SalesHeader: Record "Sales Header";
+        SalesHeader2: Record "Sales Header";
         custombillto: Record "Custom Bill To Address";
+        LocCode: Code[10];
     begin
-
+        LocCode := Rec."Location Code";
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
             custombillto.DeleteAll();
             custombillto.Init();
@@ -1199,9 +1209,14 @@ page 50109 "API - Sales Orders"
             SalesHeader."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
             SalesHeader."Bill-to City" := custombillto.billtoCity;
             SalesHeader."Bill-to County" := custombillto.billtoCounty;
+            //SalesHeader."Location Code" := LocCode;
             SalesHeader.modify;
 
         end;
+        // SalesHeader2.Reset();
+        // SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.");
+        // SalesHeader2."Location Code" := LocCode;
+        // SalesHeader2.Modify(false);
         custombillto.DeleteAll();
         exit(false);
     end;
@@ -1279,6 +1294,8 @@ page 50109 "API - Sales Orders"
         CurrencyIdDoesNotMatchACurrencyErr: Label 'The "currencyId" does not match to a Currency.', Comment = 'currencyId is a field name and should not be translated.';
         CurrencyCodeDoesNotMatchACurrencyErr: Label 'The "currencyCode" does not match to a Currency.', Comment = 'currencyCode is a field name and should not be translated.';
         PaymentTermsIdDoesNotMatchAPaymentTermsErr: Label 'The "paymentTermsId" does not match to a Payment Terms.', Comment = 'paymentTermsId is a field name and should not be translated.';
+        ExternalDocumentBlankErr: Label '"externalDocumentNumber" cannot be empty. Shopify or Marketplace Order should be filled here.', Comment = 'externalDocumentNumber is a field name and should not be translated.';
+        ExternalDocumentAlreadyExistErr: Label '"externalDocumentNumber" already exist in BC with Sales Order No. %1 .', Comment = 'externalDocumentNumber is a field name and should not be translated.';
         ShipmentMethodIdDoesNotMatchAShipmentMethodErr: Label 'The "shipmentMethodId" does not match to a Shipment Method.', Comment = 'shipmentMethodId is a field name and should not be translated.';
         CannotFindOrderErr: Label 'The order cannot be found.';
         CannotEnablePricesIncludeTaxErr: Label 'The "pricesIncludeTax" cannot be set to true if VAT Calculation Type is Sales Tax.', Comment = 'pricesIncludeTax is a field name and should not be translated.';
