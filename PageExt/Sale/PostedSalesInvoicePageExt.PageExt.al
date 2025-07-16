@@ -10,11 +10,11 @@ pageextension 50105 "Posted Sales Invoice Page Ext" extends "Posted Sales Invoic
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
             }
-            field("Shopify Variant Id"; Rec."Shopify Variant Id")
-            {
-                ApplicationArea = All;
-                Caption = 'Shopify Variant Id';
-            }
+            // field("Shopify Variant Id"; Rec."Shopify Variant Id")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Shopify Variant Id';
+            // }
             field("Sent to 3PL Date"; Rec."Sent to 3PL Date")
             {
                 ApplicationArea = All;

@@ -45,5 +45,15 @@ tableextension 50126 "Sales Shipment Line Extension" extends "Sales Shipment Lin
             Caption = 'BC Unit Price';
             DataClassification = ToBeClassified;
         }
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+        }
+        field(50111; "Line Tax Amount"; Decimal)
+        {
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
+        }
     }
 }

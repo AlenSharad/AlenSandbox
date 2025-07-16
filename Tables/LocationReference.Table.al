@@ -1,11 +1,4 @@
-namespace Microsoft.Foundation.Address;
 
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Inventory.Location;
-using Microsoft.Foundation.Company;
-using Microsoft.Sales.Customer;
-using Microsoft.Purchases.Vendor;
-using System.DateTime;
 table 50106 "Location Reference"
 {
     Caption = 'Location Reference';

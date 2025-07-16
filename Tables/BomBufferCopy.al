@@ -1,23 +1,3 @@
-// ------------------------------------------------------------------------------------------------
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for license information.
-// ------------------------------------------------------------------------------------------------
-namespace Microsoft.Inventory.BOM;
-
-using Microsoft.Assembly.Document;
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Foundation.Enums;
-using Microsoft.Foundation.UOM;
-using Microsoft.Inventory.Costing;
-using Microsoft.Inventory.Item;
-using Microsoft.Inventory.Location;
-using Microsoft.Manufacturing.Capacity;
-using Microsoft.Manufacturing.Document;
-using Microsoft.Manufacturing.MachineCenter;
-using Microsoft.Manufacturing.ProductionBOM;
-using Microsoft.Manufacturing.Routing;
-using Microsoft.Manufacturing.WorkCenter;
-using Microsoft.Projects.Resources.Resource;
 
 table 50107 "BOM Buffer Copy"
 {
@@ -392,6 +372,13 @@ table 50107 "BOM Buffer Copy"
             Caption = 'Calculation Formula';
             DataClassification = SystemMetadata;
         }
+        field(50000; "Sales Item"; Code[20])
+        {
+            Caption = 'Sales Item';
+            DataClassification = SystemMetadata;
+
+        }
+
     }
 
     keys

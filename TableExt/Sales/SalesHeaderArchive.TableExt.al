@@ -8,11 +8,11 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             DataClassification = ToBeClassified;
             TableRelation = "Order Type".Code;
         }
-        field(50101; "Shopify Variant Id"; Text[50])
-        {
-            Caption = 'Shopify Variant Id';
-            DataClassification = ToBeClassified;
-        }
+        // field(50101; "Shopify Variant Id"; Text[50])
+        // {
+        //     Caption = 'Shopify Variant Id';
+        //     DataClassification = ToBeClassified;
+        // }
         field(50102; "Sent to 3PL Date"; DateTime)
         {
             Caption = 'Sent to 3PL Date';
@@ -249,6 +249,17 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
         field(50148; "Bill-to Phone No."; Text[30])
         {
             Caption = 'Bill-to Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50149; "Order Discount Details"; Text[50])
+        {
+            Caption = 'Order Discount Details';
+            DataClassification = ToBeClassified;
+        }
+        field(50157; "Order Total Tax"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
     }

@@ -42,5 +42,25 @@ tableextension 50129 "Whse. Shipment Line Extension" extends "Warehouse Shipment
             Caption = 'BC Unit Price';
             DataClassification = ToBeClassified;
         }
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+        }
+        field(50109; "Sales Order No."; Code[20])
+        {
+            Caption = 'Sales Order No.';
+            DataClassification = CustomerContent;
+        }
+        field(50110; "Sales Order Line No."; Integer)
+        {
+            Caption = 'Sales Order Line No.';
+            DataClassification = CustomerContent;
+        }
+        field(50111; "Line Tax Amount"; Decimal)
+        {
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
+        }
     }
 }

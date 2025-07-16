@@ -1,12 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Integration.Entity;
-using Microsoft.Finance.GeneralLedger.Account;
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Integration.Graph;
-using Microsoft.Sales.Document;
-using Microsoft.Inventory.Item;
-using System.Reflection;
 
 page 50114 "API - Sales Order Lines"
 {
@@ -250,6 +241,17 @@ page 50114 "API - Sales Order Lines"
                         end;
                     end;
                 }
+
+                field(lineTaxAmount; Rec."Line Tax AmountN")
+                {
+                    Caption = 'Line Tax Amount';
+                    Editable = false;
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Line Tax AmountN"));
+                    end;
+                }
                 field(taxPercent; Rec."VAT %")
                 {
                     Caption = 'Tax Percent';
@@ -351,6 +353,15 @@ page 50114 "API - Sales Order Lines"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Location Code"));
+                    end;
+                }
+                field(customerSubscription; Rec."Customer Subscription No.")
+                {
+                    Caption = 'Customer Subscription No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer Subscription No."));
                     end;
                 }
                 field(shopifyVariantId; Rec."Shopify Variant Id")

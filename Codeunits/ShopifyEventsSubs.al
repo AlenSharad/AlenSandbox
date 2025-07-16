@@ -10,7 +10,7 @@ codeunit 50100 ShopifyEventSubs
     local procedure FlowSalesHeaderFieldsOnBeforeWhseShptHeaderInsert(SalesHeader: Record "Sales Header"; var WarehouseShipmentHeader: Record "Warehouse Shipment Header")
     begin
         WarehouseShipmentHeader."Order Type Code" := SalesHeader."Order Type Code";
-        WarehouseShipmentHeader."Shopify Variant Id" := SalesHeader."Shopify Variant Id";
+        //WarehouseShipmentHeader."Shopify Variant Id" := SalesHeader."Shopify Variant Id";
         WarehouseShipmentHeader."Sent to 3PL Date" := SalesHeader."Sent to 3PL Date";
         WarehouseShipmentHeader."Sent to 3PL" := SalesHeader."Sent to 3PL";
         WarehouseShipmentHeader."All Items Fully Commited" := SalesHeader."All Items Fully Commited";

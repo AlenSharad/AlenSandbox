@@ -10,11 +10,11 @@ pageextension 50107 "Sales Order Archive Page Ext" extends "Sales Order Archive"
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
             }
-            field("Shopify Variant Id"; Rec."Shopify Variant Id")
-            {
-                ApplicationArea = All;
-                Caption = 'Shopify Variant Id';
-            }
+            // field("Shopify Variant Id"; Rec."Shopify Variant Id")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Shopify Variant Id';
+            // }
             field("Sent to 3PL Date"; Rec."Sent to 3PL Date")
             {
                 ApplicationArea = All;

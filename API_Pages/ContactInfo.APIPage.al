@@ -1,6 +1,4 @@
-namespace Microsoft.API.V2;
 
-using Microsoft.CRM.Contact;
 
 page 50102 "API - Contacts Information"
 {

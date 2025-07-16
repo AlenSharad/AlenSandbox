@@ -1,6 +1,3 @@
-namespace Microsoft.API.V2;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Item.Catalog;
 
 page 50107 "API - Item Vendor"
 {

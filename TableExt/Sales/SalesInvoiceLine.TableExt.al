@@ -42,11 +42,25 @@ tableextension 50125 "Sales Invoice Line Extension" extends "Sales Invoice Line"
         {
             Caption = 'Storefront Line Amount';
             DataClassification = ToBeClassified;
+            Editable = false;
         }
         field(50107; "BC Unit Price"; Decimal)
         {
             Caption = 'BC Unit Price';
             DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(50111; "Line Tax Amount"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
         }
     }
 }

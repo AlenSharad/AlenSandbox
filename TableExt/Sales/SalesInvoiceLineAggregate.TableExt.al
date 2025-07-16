@@ -38,6 +38,15 @@ tableextension 50120 "Sales Inv Line Agg Extension" extends "Sales Invoice Line 
             Caption = 'Storefront Line Amount';
             DataClassification = ToBeClassified;
         }
-
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+        }
+        field(50111; "Line Tax AmountN"; Decimal)
+        {
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
+        }
     }
 }

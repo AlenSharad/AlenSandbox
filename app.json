@@ -24,6 +24,12 @@
       "name": "Shopify Connector",
   "publisher": "Microsoft",
   "version": "26.0.30643.33009"
+    },
+    {
+      "id": "3099ffc7-4cf7-4df6-9b96-7e4bc2bb587c",
+      "name": "Subscription Billing",
+      "publisher": "Microsoft",
+      "version": "26.2.34746.35601"
     }
   ],
   "screenshots": [],
@@ -31,7 +37,7 @@
   "application": "26.0.0.0",
   "idRanges": [
     {
-      "from": 50100,
+      "from": 50000,
       "to": 50149
     }
   ],

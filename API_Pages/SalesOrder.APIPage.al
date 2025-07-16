@@ -1,17 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Integration.Entity;
-using Microsoft.Sales.Document;
-using Microsoft.Foundation.Address;
-using Microsoft.Sales.Customer;
-using Microsoft.Finance.Currency;
-using Microsoft.Foundation.PaymentTerms;
-using Microsoft.Foundation.Shipping;
-using Microsoft.Integration.Graph;
-using Microsoft.Sales.History;
-using Microsoft.Sales.Posting;
-using Microsoft.Utilities;
-using System.Reflection;
 
 page 50109 "API - Sales Orders"
 {
@@ -909,14 +895,7 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("3rd Party Carrier"));
                     end;
                 }
-                field(storeFrontName; Rec."Storefront Name")
-                {
-                    Caption = 'Storefront Name';
-                    trigger OnValidate()
-                    begin
-                        RegisterFieldSet(Rec.FieldNo("Storefront Name"));
-                    end;
-                }
+
                 field(isShipResidential; Rec.isShipresidential)
                 {
                     Caption = 'Is Ship Residential';
@@ -960,16 +939,24 @@ page 50109 "API - Sales Orders"
                     Caption = 'Total Amount Excluding Tax';
                     Editable = false;
                 }
-                field(totalTaxAmount; Rec."Total Tax Amount")
+                field(orderTotalTax; Rec."Order Total Tax")
                 {
-                    Caption = 'Total Tax Amount';
-                    Editable = false;
-
+                    Caption = 'Order Total Tax';
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Total Tax Amount"));
+                        RegisterFieldSet(Rec.FieldNo("Order Total Tax"));
                     end;
                 }
+                // field(totalTaxAmount; Rec."Total Tax Amount")
+                // {
+                //     Caption = 'Total Tax Amount';
+                //     Editable = false;
+
+                //     trigger OnValidate()
+                //     begin
+                //         RegisterFieldSet(Rec.FieldNo("Total Tax Amount"));
+                //     end;
+                // }
                 field(totalAmountIncludingTax; Rec."Amount Including VAT")
                 {
                     Caption = 'Total Amount Including Tax';
@@ -1031,6 +1018,14 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Location Code"));
                     end;
                 }
+                field(orderDiscountDetails; Rec."Order Discount Details")
+                {
+                    Caption = 'Order Discount Details';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Discount Details"));
+                    end;
+                }
                 field(orderType; Rec."Order Type Code")
                 {
                     Caption = 'Order Type';
@@ -1040,15 +1035,15 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Order Type Code"));
                     end;
                 }
-                field(shopifyVariant; Rec."Shopify Variant Id")
-                {
-                    Caption = 'Shopify Variant Id';
+                // field(shopifyVariant; Rec."Shopify Variant Id")
+                // {
+                //     Caption = 'Shopify Variant Id';
 
-                    trigger OnValidate()
-                    begin
-                        RegisterFieldSet(Rec.FieldNo("Shopify Variant Id"));
-                    end;
-                }
+                //     trigger OnValidate()
+                //     begin
+                //         RegisterFieldSet(Rec.FieldNo("Shopify Variant Id"));
+                //     end;
+                // }
                 field(sentTo3PLDate; Rec."Sent to 3PL Date")
                 {
                     Caption = 'Sent to 3PL Date';
@@ -1083,6 +1078,14 @@ page 50109 "API - Sales Orders"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Order Source"));
+                    end;
+                }
+                field(storeFrontName; Rec."Storefront Name")
+                {
+                    Caption = 'Storefront Name';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Storefront Name"));
                     end;
                 }
                 field(storeFrontPaymentStatus; Rec."Store Front Payment Status")
@@ -1146,6 +1149,7 @@ page 50109 "API - Sales Orders"
 
     }
 
+
     trigger OnAfterGetRecord()
     begin
         SetCalculatedFields();
@@ -1166,8 +1170,22 @@ page 50109 "API - Sales Orders"
         SalesHeader2: Record "Sales Header";
         custombillto: Record "Custom Bill To Address";
         LocCode: Code[10];
+        yourReference: Text[35];
+        taxareaCode: Code[20];
+        paymentMethodCode: Code[10];
+        shippingagentCode: Code[10];
+        shippingAgentServiceCode: Code[10];
+        taxliable: Boolean;
+        orderTotalTax: Decimal;
     begin
         LocCode := Rec."Location Code";
+        yourReference := Rec."Your Reference";
+        taxareaCode := Rec."Tax Area Code";
+        paymentMethodCode := Rec."Payment Method Code";
+        shippingagentCode := Rec."Shipping Agent Code";
+        shippingAgentServiceCode := Rec."Shipping Agent Service Code";
+        taxliable := Rec."Tax Liable";
+        orderTotalTax := Rec."Order Total Tax";
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
             custombillto.DeleteAll();
             custombillto.Init();
@@ -1209,15 +1227,39 @@ page 50109 "API - Sales Orders"
             SalesHeader."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
             SalesHeader."Bill-to City" := custombillto.billtoCity;
             SalesHeader."Bill-to County" := custombillto.billtoCounty;
-            //SalesHeader."Location Code" := LocCode;
+            SalesHeader."Location Code" := LocCode;
+            SalesHeader."Your Reference" := yourReference;
+            SalesHeader."Tax Area Code" := taxareaCode;
+            SalesHeader."Payment Method Code" := paymentMethodCode;
+            SalesHeader."Shipping Agent Code" := shippingagentCode;
+            SalesHeader."Shipping Agent Service Code" := shippingAgentServiceCode;
+            SalesHeader."Tax Liable" := taxliable;
+            SalesHeader."Order Total Tax" := orderTotalTax;
             SalesHeader.modify;
 
         end;
-        // SalesHeader2.Reset();
-        // SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.");
-        // SalesHeader2."Location Code" := LocCode;
-        // SalesHeader2.Modify(false);
+        SalesHeader2.Reset();
+        if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+            SalesHeader2."Location Code" := LocCode;
+            SalesHeader2."Your Reference" := yourReference;
+            SalesHeader2."Tax Area Code" := taxareaCode;
+            SalesHeader2."Payment Method Code" := paymentMethodCode;
+            SalesHeader2."Shipping Agent Code" := shippingagentCode;
+            SalesHeader2."Shipping Agent Service Code" := shippingAgentServiceCode;
+            SalesHeader2."Tax Liable" := taxliable;
+            SalesHeader2."Order Total Tax" := orderTotalTax;
+            SalesHeader2.Modify(false);
+        end;
         custombillto.DeleteAll();
+        Rec."Location Code" := LocCode;
+        Rec."Your Reference" := yourReference;
+        Rec."Tax Area Code" := taxareaCode;
+        Rec."Payment Method Code" := paymentMethodCode;
+        Rec."Shipping Agent Code" := shippingagentCode;
+        Rec."Shipping Agent Service Code" := shippingAgentServiceCode;
+        Rec."Tax Liable" := taxliable;
+        Rec."Order Total Tax" := orderTotalTax;
+        Rec.Modify();
         exit(false);
     end;
 

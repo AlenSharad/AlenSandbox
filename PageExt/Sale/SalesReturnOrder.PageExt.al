@@ -11,11 +11,11 @@ pageextension 50123 "Sales Return Order Page Ext" extends "Sales Return Order"
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
             }
-            field("Shopify Variant Id"; Rec."Shopify Variant Id")
-            {
-                ApplicationArea = All;
-                Caption = 'Shopify Variant Id';
-            }
+            // field("Shopify Variant Id"; Rec."Shopify Variant Id")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Shopify Variant Id';
+            // }
             field("Sent to 3PL Date"; Rec."Sent to 3PL Date")
             {
                 ApplicationArea = All;

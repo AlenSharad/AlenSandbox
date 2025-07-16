@@ -47,5 +47,16 @@ tableextension 50127 "Sales Archive Line Extension" extends "Sales Line Archive"
             Caption = 'BC Unit Price';
             DataClassification = ToBeClassified;
         }
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+        }
+        field(50111; "Line Tax AmountN"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
+        }
     }
 }

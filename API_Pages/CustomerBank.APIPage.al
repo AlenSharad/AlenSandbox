@@ -1,7 +1,3 @@
-namespace Microsoft.Sales.Customer;
-
-using Microsoft.Foundation.Address;
-using Microsoft.Integration.Graph;
 
 page 50104 "API - CustomerBank"
 {

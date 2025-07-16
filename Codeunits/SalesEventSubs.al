@@ -29,38 +29,79 @@ codeunit 50101 SalesEventSubs
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterModifyEvent', '', true, true)]
-    local procedure MyProcedure(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
+    local procedure ChangeBufferCustomFieldsOnAfterModifyEvent(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
+    var
+        salesEntityBuffer: Record "Sales Order Entity Buffer";
     begin
-        custombillto.Reset();
-        custombillto.SetRange("Document Type", custombillto."Document Type"::Order);
-        custombillto.SetRange("Document No.", Rec."No.");
-        if custombillto.FindFirst() then begin
-            Error('2');
-            Rec."Bill-to Address" := custombillto.BilltoAdd1;
-            Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
-            Rec."Bill-to Post Code" := custombillto.billtoPostCode;
-            Rec."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
-            Rec."Bill-to County" := custombillto.billtoCounty;
-            Rec."Bill-to City" := custombillto.billtoCity;
-            //Rec.modify;
+        salesEntityBuffer.Reset();
+        if salesEntityBuffer.Get(Rec."No.") then begin
+            if salesEntityBuffer."Location Code" <> Rec."Location Code" then
+                salesEntityBuffer."Location Code" := Rec."Location Code";
+            if salesEntityBuffer."Payment Method Code" <> Rec."Payment Method Code" then
+                salesEntityBuffer."Payment Method Code" := Rec."Payment Method Code";
+            if salesEntityBuffer."Shipping Agent Code" <> Rec."Shipping Agent Code" then
+                salesEntityBuffer."Shipping Agent Code" := Rec."Shipping Agent Code";
+            if salesEntityBuffer."Shipping Agent Service Code" <> Rec."Shipping Agent Service Code" then
+                salesEntityBuffer."Shipping Agent Service Code" := Rec."Shipping Agent Service Code";
+            if salesEntityBuffer."Your Reference" <> Rec."Your Reference" then
+                salesEntityBuffer."Your Reference" := Rec."Your Reference";
+            if salesEntityBuffer."Tax Area Code" <> Rec."Tax Area Code" then
+                salesEntityBuffer."Tax Area Code" := Rec."Tax Area Code";
+            if salesEntityBuffer."Tax Liable" <> Rec."Tax Liable" then
+                salesEntityBuffer."Tax Liable" := Rec."Tax Liable";
+            if salesEntityBuffer."Order Total Tax" <> Rec."Order Total Tax" then
+                salesEntityBuffer."Order Total Tax" := Rec."Order Total Tax";
+            salesEntityBuffer.Modify();
         end;
-        custombillto.DeleteAll();
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterUpdateUnitPrice, '', false, false)]
     local procedure UpdateBaseUnitPriceOnAfterUpdateUnitPrice(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; CalledByFieldNo: Integer; CurrFieldNo: Integer)
     begin
-
         if (CalledByFieldNo = SalesLine.FieldNo("No.")) and (SalesLine.Type = SalesLine.Type::Item) then begin
             SalesLine."BC Unit Price" := SalesLine."Unit Price";
             CalculateandUpdateTotalVarance(SalesLine);
         end;
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Unit Price", false, false)]
     local procedure CalculateandUpdateTotalVaranceOnAfterValidateEventUnitPrice(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    var
+        item: Record Item;
     begin
+        if (Rec.Type = Rec.Type::Item) then begin
+            if item.Get(Rec."No.") and (item.Type = item.Type::"Non-Inventory") then
+                Rec."BC Unit Price" := Rec."Unit Price";
+        end;
         CalculateandUpdateTotalVarance(Rec);
+
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Amount", false, false)]
+    local procedure CalculateAmountInclTaxOnAfterValidateEventLineAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+
+    begin
+        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Tax Amount", false, false)]
+    local procedure CalculateAmountInclTaxOnAfterValidateEventLineTaxAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    begin
+        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount Amount", false, false)]
+    local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    begin
+        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount %", false, false)]
+    local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscPer(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    begin
+        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
     end;
 
     local Procedure CalculateandUpdateTotalVarance(var SL: Record "Sales Line")
@@ -71,6 +112,7 @@ codeunit 50101 SalesEventSubs
         CurrLineBaseTotal: Decimal;
         OtherTotal: Decimal;
         OtherBaseTotal: Decimal;
+        salesheader2: Record "Sales Header";
     begin
         Clear(SalesHeader);
         SalesHeader := SL.GetSalesHeader();
@@ -86,7 +128,19 @@ codeunit 50101 SalesEventSubs
                 OtherTotal := SalesLine."Unit Price" * SalesLine.Quantity;
                 OtherBaseTotal := SalesLine."BC Unit Price" * SalesLine.Quantity;
             until SalesLine.Next() = 0;
-        SalesHeader."Order Total Variance" := (CurrLineBaseTotal + OtherBaseTotal) - (CurrLineTotal + OtherTotal);
-        SalesHeader.Modify();
+
+        salesheader2.Reset();
+        salesheader2.GET(SalesHeader."Document Type", SalesHeader."No.");
+        SalesHeader2."Order Total Variance" := (CurrLineBaseTotal + OtherBaseTotal) - (CurrLineTotal + OtherTotal);
+        SalesHeader2.Modify();
     end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnValidateSellToCustomerNoOnBeforeUpdateSellToCont, '', false, false)]
+    local procedure UpdateCustomFields(SellToCustomer: Record Customer; var SalesHeader: Record "Sales Header")
+    begin
+        SalesHeader."3rd Party Billing Account" := SellToCustomer."Third Party Billing Account";
+        SalesHeader."3rd Party Carrier" := SellToCustomer."Third Party Carrier";
+        SalesHeader."3rd Party Zip" := SellToCustomer."Third Party Zip Code";
+    end;
+
 }

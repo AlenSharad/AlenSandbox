@@ -1,7 +1,4 @@
-namespace Microsoft.API.V2;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Item.Attribute;
-using Microsoft.Inventory.Item;
+
 page 50110 "API - Get Item Attributes"
 {
     APIVersion = 'v2.0';

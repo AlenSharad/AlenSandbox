@@ -11,12 +11,12 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 TableRelation = "Order Type".Code;
                 Editable = false;
             }
-            field("Shopify Variant Id"; Rec."Shopify Variant Id")
-            {
-                ApplicationArea = All;
-                Caption = 'Shopify Variant Id';
-                Editable = false;
-            }
+            // field("Shopify Variant Id"; Rec."Shopify Variant Id")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Shopify Variant Id';
+            //     Editable = false;
+            // }
             field("Sent to 3PL Date"; Rec."Sent to 3PL Date")
             {
                 ApplicationArea = All;

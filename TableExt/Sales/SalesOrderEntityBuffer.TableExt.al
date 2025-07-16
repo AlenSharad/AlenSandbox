@@ -2,53 +2,18 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
 {
     fields
     {
-        field(11; "Your Reference"; Text[35])
-        {
-            Caption = 'Your Reference';
-        }
-        field(28; "Location Code"; Code[10])
-        {
-            Caption = 'Location Code';
-            TableRelation = Location where("Use As In-Transit" = const(false));
-        }
-        field(114; "Tax Area Code"; Code[20])
-        {
-            Caption = 'Tax Area Code';
-            TableRelation = "Tax Area";
-            ValidateTableRelation = false;
-        }
-        field(104; "Payment Method Code"; Code[10])
-        {
-            Caption = 'Payment Method Code';
-            TableRelation = "Payment Method";
-        }
-        field(105; "Shipping Agent Code"; Code[10])
-        {
-            AccessByPermission = TableData "Shipping Agent Services" = R;
-            Caption = 'Shipping Agent Code';
-            TableRelation = "Shipping Agent";
-        }
-        field(115; "Tax Liable"; Boolean)
-        {
-            Caption = 'Tax Liable';
-        }
 
-        field(5794; "Shipping Agent Service Code"; Code[10])
-        {
-            Caption = 'Shipping Agent Service Code';
-            TableRelation = "Shipping Agent Services".Code where("Shipping Agent Code" = field("Shipping Agent Code"));
-        }
         field(50100; "Order Type Code"; Code[20])
         {
             Caption = 'Order Type Code';
             DataClassification = ToBeClassified;
             TableRelation = "Order Type".Code;
         }
-        field(50101; "Shopify Variant Id"; Text[50])
-        {
-            Caption = 'Shopify Variant Id';
-            DataClassification = ToBeClassified;
-        }
+        // field(50101; "Shopify Variant Id"; Text[50])
+        // {
+        //     Caption = 'Shopify Variant Id';
+        //     DataClassification = ToBeClassified;
+        // }
         field(50102; "Sent to 3PL Date"; DateTime)
         {
             Caption = 'Sent to 3PL Date';
@@ -290,6 +255,52 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
         field(50148; "Bill-to Phone No."; Text[30])
         {
             Caption = 'Bill-to Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50149; "Order Discount Details"; Text[50])
+        {
+            Caption = 'Order Discount Details';
+            DataClassification = ToBeClassified;
+        }
+        field(50150; "Your Reference"; Text[35])
+        {
+            Caption = 'Your Reference';
+        }
+        field(50151; "Location Code"; Code[10])
+        {
+            Caption = 'Location Code';
+            TableRelation = Location where("Use As In-Transit" = const(false));
+        }
+        field(50152; "Tax Area Code"; Code[20])
+        {
+            Caption = 'Tax Area Code';
+            TableRelation = "Tax Area";
+            ValidateTableRelation = false;
+        }
+        field(50153; "Payment Method Code"; Code[10])
+        {
+            Caption = 'Payment Method Code';
+            TableRelation = "Payment Method";
+        }
+        field(50154; "Shipping Agent Code"; Code[10])
+        {
+            AccessByPermission = TableData "Shipping Agent Services" = R;
+            Caption = 'Shipping Agent Code';
+            TableRelation = "Shipping Agent";
+        }
+        field(50155; "Tax Liable"; Boolean)
+        {
+            Caption = 'Tax Liable';
+        }
+
+        field(50156; "Shipping Agent Service Code"; Code[10])
+        {
+            Caption = 'Shipping Agent Service Code';
+            TableRelation = "Shipping Agent Services".Code where("Shipping Agent Code" = field("Shipping Agent Code"));
+        }
+        field(50157; "Order Total Tax"; Decimal)
+        {
+            Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
     }

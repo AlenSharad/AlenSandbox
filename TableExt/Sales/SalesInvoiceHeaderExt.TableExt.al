@@ -9,12 +9,12 @@ tableextension 50106 "Sales Invoice Header Ext" extends "Sales Invoice Header"
             TableRelation = "Order Type".Code;
             Editable = false;
         }
-        field(50101; "Shopify Variant Id"; Text[50])
-        {
-            Caption = 'Shopify Variant Id';
-            DataClassification = ToBeClassified;
-            Editable = false;
-        }
+        // field(50101; "Shopify Variant Id"; Text[50])
+        // {
+        //     Caption = 'Shopify Variant Id';
+        //     DataClassification = ToBeClassified;
+        //     Editable = false;
+        // }
         field(50102; "Sent to 3PL Date"; DateTime)
         {
             Caption = 'Sent to 3PL Date';
@@ -254,6 +254,16 @@ tableextension 50106 "Sales Invoice Header Ext" extends "Sales Invoice Header"
         field(50148; "Bill-to Phone No."; Text[30])
         {
             Caption = 'Bill-to Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50149; "Order Discount Details"; Text[50])
+        {
+            Caption = 'Order Discount Details';
+            DataClassification = ToBeClassified;
+        }
+        field(50157; "Order Total Tax"; Decimal)
+        {
+            Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
     }

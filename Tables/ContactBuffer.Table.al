@@ -1,27 +1,3 @@
-// ------------------------------------------------------------------------------------------------
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for license information.
-// ------------------------------------------------------------------------------------------------
-namespace Microsoft.CRM.Contact;
-using Microsoft.CRM.BusinessRelation;
-using Microsoft.CRM.Campaign;
-using Microsoft.CRM.Comment;
-using Microsoft.CRM.Duplicates;
-using Microsoft.CRM.Interaction;
-using Microsoft.CRM.Opportunity;
-using Microsoft.CRM.Profiling;
-using Microsoft.CRM.Setup;
-using Microsoft.CRM.Task;
-using Microsoft.CRM.Team;
-using Microsoft.Finance.Currency;
-using Microsoft.Foundation.Address;
-using Microsoft.Foundation.NoSeries;
-using Microsoft.Integration.Dataverse;
-using Microsoft.Inventory.Intrastat;
-using Microsoft.Purchases.Vendor;
-using Microsoft.Sales.Customer;
-using Microsoft.Sales.Document;
-using System.Globalization;
 
 table 50101 "Contact Buffer"
 {

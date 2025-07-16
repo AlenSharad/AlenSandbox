@@ -145,7 +145,7 @@ page 50120 PageName
                 var
                     LA: Codeunit "LocationAssignment";
                 begin
-                    LA.RefreshPage2();
+                    //LA.FillItemAvailabilityLocationwise()
                 end;
             }
         }

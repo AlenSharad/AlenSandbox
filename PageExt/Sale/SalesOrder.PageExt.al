@@ -11,11 +11,11 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
             }
-            field("Shopify Variant Id"; Rec."Shopify Variant Id")
-            {
-                ApplicationArea = All;
-                Caption = 'Shopify Variant Id';
-            }
+            // field("Shopify Variant Id"; Rec."Shopify Variant Id")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Shopify Variant Id';
+            // }
             field("Sent to 3PL Date"; Rec."Sent to 3PL Date")
             {
                 ApplicationArea = All;
@@ -73,6 +73,11 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
             {
                 ApplicationArea = All;
                 Caption = 'Order Total Variance';
+            }
+            field("Order Discount Details"; Rec."Order Discount Details")
+            {
+                ApplicationArea = All;
+                Caption = 'Order Discount Details';
             }
         }
         addafter("Shipping and Billing")
@@ -308,5 +313,53 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
             }
         }
 
+    }
+    actions
+    {
+        addlast(processing)
+        {
+            action(GetLocationAssignment)
+            {
+                ApplicationArea = All;
+                Caption = 'Ge tLocation Assignment';
+                Image = Action;
+                trigger OnAction()
+                var
+                    LocationAssignment: Codeunit LocationAssignment;
+                    bomavailable: Record "Item Bom Available";
+                    salesEntityBuffer: Record "Sales Order Entity Buffer";
+                    salesHeader: Record "Sales Header";
+                begin
+                    /*
+                    LocationAssignment.FillItemAvailabilityLocationwise(Rec, true);
+                    bomavailable.Reset();
+                    bomavailable.SetRange("Order No.", Rec."No.");
+                    Page.Run(50121, bomavailable);
+                    */
+                    salesHeader.Reset();
+                    salesHeader.FindSet();
+                    repeat
+                        salesEntityBuffer.Reset();
+                        if salesEntityBuffer.Get(salesHeader."No.") then begin
+                            if salesEntityBuffer."Location Code" <> salesHeader."Location Code" then
+                                salesEntityBuffer."Location Code" := salesHeader."Location Code";
+                            if salesEntityBuffer."Payment Method Code" <> salesHeader."Payment Method Code" then
+                                salesEntityBuffer."Payment Method Code" := salesHeader."Payment Method Code";
+                            if salesEntityBuffer."Shipping Agent Code" <> salesHeader."Shipping Agent Code" then
+                                salesEntityBuffer."Shipping Agent Code" := salesHeader."Shipping Agent Code";
+                            if salesEntityBuffer."Shipping Agent Service Code" <> salesHeader."Shipping Agent Service Code" then
+                                salesEntityBuffer."Shipping Agent Service Code" := salesHeader."Shipping Agent Service Code";
+                            if salesEntityBuffer."Your Reference" <> salesHeader."Your Reference" then
+                                salesEntityBuffer."Your Reference" := salesHeader."Your Reference";
+                            if salesEntityBuffer."Tax Area Code" <> salesHeader."Tax Area Code" then
+                                salesEntityBuffer."Tax Area Code" := salesHeader."Tax Area Code";
+                            if salesEntityBuffer."Tax Liable" <> salesHeader."Tax Liable" then
+                                salesEntityBuffer."Tax Liable" := salesHeader."Tax Liable";
+                            salesEntityBuffer.Modify();
+                        end;
+                    until salesHeader.Next() = 0;
+                end;
+            }
+        }
     }
 }

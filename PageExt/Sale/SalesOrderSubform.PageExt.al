@@ -7,6 +7,10 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
             Visible = true;
         }
         movebefore("Line Discount %"; "Line Discount Amount")
+        modify("Unit Price")
+        {
+            Caption = 'Sale Unit Price';
+        }
         addafter("Line Amount")
         {
             field(StoreFront_LineAmount; Rec.StoreFront_LineAmount)
@@ -20,15 +24,28 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
         {
             field("BC Unit Price"; Rec."BC Unit Price")
             {
-                Caption = 'BC Unit Price';
+                Caption = 'Base Unit Price';
                 ApplicationArea = all;
                 Editable = false;
+            }
+        }
+        addafter("Line Amount")
+        {
+            field("Line Tax Amount"; Rec."Line Tax Amount")
+            {
+                ApplicationArea = all;
+                Caption = 'Line Tax Amount';
             }
         }
         // Add changes to page layout here
         addlast(Control1)
         {
 
+            field("Customer Subscription No."; Rec."Customer Subscription No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Subscription No.';
+            }
             field("Shopify Variant Id"; Rec."Shopify Variant Id")
             {
                 ApplicationArea = All;
@@ -44,6 +61,7 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
                 ApplicationArea = All;
                 Caption = 'Discount Details';
             }
+
             field("Amazon Item ID"; Rec."Amazon Item ID")
             {
                 ApplicationArea = all;

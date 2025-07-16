@@ -39,13 +39,27 @@ tableextension 50128 "Posted Whse Shpt Line Ext" extends "Posted Whse. Shipment 
         }
         field(50106; "StoreFront_LineAmount"; Decimal)
         {
+            Editable = false;
             Caption = 'Storefront Line Amount';
             DataClassification = ToBeClassified;
         }
         field(50107; "BC Unit Price"; Decimal)
         {
+            Editable = false;
             Caption = 'BC Unit Price';
             DataClassification = ToBeClassified;
+        }
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Editable = false;
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+        }
+        field(50111; "Line Tax AmountN"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
         }
     }
 }

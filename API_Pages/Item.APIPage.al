@@ -1,11 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Foundation.UOM;
-using Microsoft.Inventory.Item;
-using Microsoft.Finance.SalesTax;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Journal;
-using Microsoft.Inventory.Posting;
 
 page 50105 "API - Items"
 {
