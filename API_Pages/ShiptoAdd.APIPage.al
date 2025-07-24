@@ -207,21 +207,26 @@ page 50103 "API - ShiptoAddress"
     var
         STA: Record "Ship-to Address";
         STARecordRef: RecordRef;
+        inserted: Boolean;
     begin
         if Rec.Name = '' then
             Error(NotProvidedContactNameErr);
 
         STA.SetRange(Code, Rec.Code);
-        if not STA.IsEmpty() then
+        if not STA.IsEmpty() then begin
             Rec.Insert();
+            inserted := true;
 
-        Rec.Insert(true);
+        end;
+        //Error('Name %1', Rec.Name);
+        if not inserted then
+            Rec.Insert();
 
         STARecordRef.GetTable(Rec);
         GraphMgtGeneralTools.ProcessNewRecordFromAPI(STARecordRef, TempFieldSet, CurrentDateTime());
         STARecordRef.SetTable(Rec);
 
-        Rec.Modify(true);
+        //Rec.Modify(true);
         //SetCalculatedFields();
         exit(false);
     end;
@@ -235,6 +240,7 @@ page 50103 "API - ShiptoAddress"
         if Rec.Code = STA.Code then
             Rec.Modify(true)
         else begin
+            Error('test modify');
             STA.TransferFields(Rec, false);
             STA.Rename(Rec.Code);
             Rec.TransferFields(STA);

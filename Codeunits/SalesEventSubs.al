@@ -33,6 +33,8 @@ codeunit 50101 SalesEventSubs
     var
         salesEntityBuffer: Record "Sales Order Entity Buffer";
     begin
+        // if Rec."Shortcut Dimension 2 Code" = '410' then
+        //     Rec."Shipping Advice" := Rec."Shipping Advice"::Complete;
         salesEntityBuffer.Reset();
         if salesEntityBuffer.Get(Rec."No.") then begin
             if salesEntityBuffer."Location Code" <> Rec."Location Code" then
@@ -51,8 +53,32 @@ codeunit 50101 SalesEventSubs
                 salesEntityBuffer."Tax Liable" := Rec."Tax Liable";
             if salesEntityBuffer."Order Total Tax" <> Rec."Order Total Tax" then
                 salesEntityBuffer."Order Total Tax" := Rec."Order Total Tax";
+            // if Rec."Shipping Advice" = Rec."Shipping Advice"::Complete then
+            //     salesEntityBuffer."Shipping Advice" := salesEntityBuffer."Shipping Advice"::Complete;
+            if salesEntityBuffer."Shipment Date" <> Rec."Shipment Date" then
+                salesEntityBuffer."Shipment Date" := Rec."Shipment Date";
             salesEntityBuffer.Modify();
         end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "Shortcut Dimension 2 Code", false, false)]
+    local procedure ChangeBufferCustomFieldsOnAfterValidateEventShortcutDimension2Code(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
+    var
+        salesEntityBuffer: Record "Sales Order Entity Buffer";
+    begin
+        if Rec."Shortcut Dimension 2 Code" = '410' then
+            Rec."Shipping Advice" := Rec."Shipping Advice"::Complete;
+        salesEntityBuffer.Reset();
+        if salesEntityBuffer.Get(Rec."No.") then begin
+            if Rec."Shipping Advice" = Rec."Shipping Advice"::Complete then
+                salesEntityBuffer."Shipping Advice" := salesEntityBuffer."Shipping Advice"::Complete;
+            salesEntityBuffer.Modify();
+        end;
+    end;
+
+    local procedure MyProcedure()
+    begin
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterUpdateUnitPrice, '', false, false)]

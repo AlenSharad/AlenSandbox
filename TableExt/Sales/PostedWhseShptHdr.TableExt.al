@@ -263,5 +263,16 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
+        field(50200; "Source No."; Code[20])
+        {
+            Editable = false;
+            Caption = 'Source No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50201; "Your Reference"; Text[35])
+        {
+            Caption = 'Your Reference';
+            DataClassification = ToBeClassified;
+        }
     }
 }

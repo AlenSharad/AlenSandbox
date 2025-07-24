@@ -8,6 +8,9 @@ codeunit 50103 APIManagement
     procedure PostRecordforLocAssignment(SalesHeader: Record "Sales Header")
     var
         IntegrationSetup: Record "Integration Setup";
+        content: HttpContent;
+        ResponseMsgTXT: Text[500];
+        RecSalesLine: Record "Sales Line";
     begin
         IntegrationSetup.Reset();
         IntegrationSetup.SetRange(Active, true);
@@ -16,6 +19,26 @@ codeunit 50103 APIManagement
             Error('Integration Setup not found for Location Assignment.');
         CheckMandatoryandReset(IntegrationSetup."API URL");
         ResponseMsg := MakeRequest(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayload(), IntegrationSetup.Username, IntegrationSetup.Password);
+        content := ResponseMsg.Content();
+        content.ReadAs(ResponseMsgTXT);
+
+        finalLocation := GetLocationfromResponse(ResponseMsgTXT);
+        // Message(finalLocation);
+        if finalLocation <> '' then begin
+            SalesHeader."Location Code" := finalLocation;
+            SalesHeader.Modify(true);
+            RecSalesLine.Reset();
+            RecSalesLine.SetRange("Document Type", SalesHeader."Document Type");
+            RecSalesLine.SetRange("Document No.", SalesHeader."No.");
+            if RecSalesLine.FindSet() then
+                repeat
+
+                    RecSalesLine."Location Code" := finalLocation;
+                    RecSalesLine.Modify(true);
+
+                until RecSalesLine.Next() = 0;
+        end else
+            Error('Location code not found in response.');
     end;
 
     local procedure CheckMandatoryandReset(PostUrl: Text)
@@ -74,6 +97,8 @@ codeunit 50103 APIManagement
                 Error('Unsupported HTTP method.');
         end;
         ResponseStatus := client.Send(request, response);
+
+        //Message('Response Status: %1', Format(ResponseStatus));
         //Log API Transactions
     end;
 
@@ -83,7 +108,7 @@ codeunit 50103 APIManagement
         WarehouseListArr: JsonArray;
         salesheader: Record "Sales Header";
         itemBomAvailable: Record "Item Bom Available";
-        salesLine: Record "Sales Line";
+        LsalesLine: Record "Sales Line";
         LocFilter: Text[300];
         LocList: List of [Text];
         Value: Text;
@@ -95,6 +120,8 @@ codeunit 50103 APIManagement
             salesheader.get(salesheader."Document Type"::Order, itemBomAvailable."Order No.");
             //salesLine
             RootObj.Add('orderNumber', salesheader."No.");
+            RootObj.Add('shipAgent', salesheader."Shipping Agent Code");
+            RootObj.Add('shipAgentService', salesheader."Shipping Agent Service Code");
 
             // ShipToAddress object
             ShipToAddressObj.Add('postalCode', salesheader."Ship-to Post Code");
@@ -135,22 +162,41 @@ codeunit 50103 APIManagement
             location.Reset();
             location.SetFilter(Code, LocFilter);
             if location.FindSet() then
-                repeat
+                if location.Count = 1 then begin
+                    SalesHeader."Location Code" := location.Code;
+                    SalesHeader.Modify(true);
+                    LsalesLine.Reset();
+                    LsalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                    LsalesLine.SetRange("Document No.", SalesHeader."No.");
+                    if LsalesLine.FindSet() then
+                        repeat
+                            if LsalesLine."Location Code" = '' then begin
+                                LsalesLine."Location Code" := location.Code;
+                                LsalesLine.Modify(true);
+                            end;
+                        until LsalesLine.Next() = 0;
+                    exit;
+                end;
+            repeat
+                Clear(WarehouseObj);
+                Clear(WarehouseItemObj);
+                WarehouseObj.Add('code', location.Code);
+                WarehouseObj.Add('id', '');
+                WarehouseObj.Add('postalCode', location."Post Code");
+                //WarehouseItemObj.Add('warehouses', WarehouseObj);
+                WarehouseListArr.Add(WarehouseObj);
+            until location.Next() = 0;
 
-                    WarehouseObj.Add('code', location.Code);
-                    //WarehouseObj.Add('id', '157');
-                    WarehouseObj.Add('postalCode', location."Post Code");
-                until location.Next() = 0;
         end;
         // Wrap Warehouse in warehouse key
-        WarehouseItemObj.Add('warehouse', WarehouseObj);
-        WarehouseListArr.Add(WarehouseItemObj);
+
 
         // Add array to root
-        RootObj.Add('warehouseList', WarehouseListArr);
+        RootObj.Add('warehouses', WarehouseListArr);
 
         // Convert to text
         RootObj.WriteTo(payload);
+        // Message('Payload: %1', payload);
         exit(payload);
     end;
 
@@ -169,10 +215,42 @@ codeunit 50103 APIManagement
         exit(TotalWeight);
     end;
 
+    local procedure GetLocationfromResponse(ResponseMsgTXT: Text[500]): Code[20]
+    var
+        JsonObj: JsonObject;
+        AssignedWarehouseObj: JsonObject;
+        OrderNumber: Text;
+        WarehouseCode: Code[20];
+        JToken: JsonToken;
+        output: Text;
+        WhToken: JsonToken;
+    begin
+        if not JsonObj.ReadFrom(ResponseMsgTXT) then
+            Error('Invalid JSON format.');
+
+        // // Get Order Number
+        // JsonObj.Get('orderNumber', OrderNumber);
+
+        // Get assignedWarehouse object
+        JsonObj.Get('assignedWarehouse', JToken);
+        if JToken.IsObject then begin
+            JToken.WriteTo(output);
+            AssignedWarehouseObj.ReadFrom(output);
+            AssignedWarehouseObj.Get('warehouseCode', WhToken);
+            WarehouseCode := WhToken.AsValue().AsText();
+        end;
+        exit(WarehouseCode);
+
+        // Insert into table
+
+    end;
+
+
     var
         Content: HttpContent;
         ResponseMsg: HttpResponseMessage;
         httpMethod: Enum "Http Request Type";
         ResponseStatus: Boolean;
         ResponseText: Text;
+        finalLocation: Code[20];
 }

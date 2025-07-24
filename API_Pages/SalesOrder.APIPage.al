@@ -501,6 +501,15 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Shipment Method Code"));
                     end;
                 }
+                field(shipmentDate; Rec."Shipment Date")
+                {
+                    Caption = 'Shipment Date';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Date"));
+                    end;
+                }
                 field(taxLiable; Rec."Tax Liable")
                 {
                     Caption = 'Tax Liable';
@@ -1177,6 +1186,7 @@ page 50109 "API - Sales Orders"
         shippingAgentServiceCode: Code[10];
         taxliable: Boolean;
         orderTotalTax: Decimal;
+        shipDate: Date;
     begin
         LocCode := Rec."Location Code";
         yourReference := Rec."Your Reference";
@@ -1186,6 +1196,7 @@ page 50109 "API - Sales Orders"
         shippingAgentServiceCode := Rec."Shipping Agent Service Code";
         taxliable := Rec."Tax Liable";
         orderTotalTax := Rec."Order Total Tax";
+        shipDate := Rec."Shipment Date";
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
             custombillto.DeleteAll();
             custombillto.Init();
@@ -1235,6 +1246,7 @@ page 50109 "API - Sales Orders"
             SalesHeader."Shipping Agent Service Code" := shippingAgentServiceCode;
             SalesHeader."Tax Liable" := taxliable;
             SalesHeader."Order Total Tax" := orderTotalTax;
+            SalesHeader."Shipment Date" := shipDate;
             SalesHeader.modify;
 
         end;
@@ -1248,6 +1260,7 @@ page 50109 "API - Sales Orders"
             SalesHeader2."Shipping Agent Service Code" := shippingAgentServiceCode;
             SalesHeader2."Tax Liable" := taxliable;
             SalesHeader2."Order Total Tax" := orderTotalTax;
+            SalesHeader2."Shipment Date" := shipDate;
             SalesHeader2.Modify(false);
         end;
         custombillto.DeleteAll();
@@ -1259,6 +1272,7 @@ page 50109 "API - Sales Orders"
         Rec."Shipping Agent Service Code" := shippingAgentServiceCode;
         Rec."Tax Liable" := taxliable;
         Rec."Order Total Tax" := orderTotalTax;
+        Rec."Shipment Date" := shipDate;
         Rec.Modify();
         exit(false);
     end;
@@ -1509,6 +1523,26 @@ page 50109 "API - Sales Orders"
         Released := CODEUNIT.Run(CODEUNIT::"Release Sales Document", SalesHeader);
         // Invoiced := PostWithShipAndInvoice(SalesHeader, SalesInvoiceHeader);
         if Released then
+            SetActionResponse(ActionContext, SalesHeader.SystemId, Page::"API - Sales Orders", WebServiceActionResultCode::Updated);
+    end;
+
+    [ServiceEnabled]
+    [Scope('Cloud')]
+    procedure createWarehouseShipment(var ActionContext: WebServiceActionContext)
+    var
+        WarehouseRequest: Record "Warehouse Request";
+        SalesHeader: Record "Sales Header";
+        ShipmentCreated: Boolean;
+        GetSourceDocOB: codeunit "Get Source Doc. Outbound";
+    begin
+        GetOrder(SalesHeader);
+        SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
+        if not SalesHeader.IsApprovedForPosting() then
+            ShipmentCreated := false;
+
+        GetSourceDocOB.FindWarehouseRequestForSalesOrder(WarehouseRequest, SalesHeader);
+        ShipmentCreated := GetSourceDocOB.CreateWhseShipmentHeaderFromWhseRequest(WarehouseRequest);
+        if ShipmentCreated then
             SetActionResponse(ActionContext, SalesHeader.SystemId, Page::"API - Sales Orders", WebServiceActionResultCode::Updated);
     end;
 }

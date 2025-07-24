@@ -48,5 +48,15 @@ tableextension 50120 "Sales Inv Line Agg Extension" extends "Sales Invoice Line 
             Caption = 'Line Tax Amount';
             DataClassification = CustomerContent;
         }
+        field(50112; "Gross Weight"; Decimal)
+        {
+            Caption = 'Gross Weight';
+            DecimalPlaces = 0 : 5;
+        }
+        field(50113; "Net Weight"; Decimal)
+        {
+            Caption = 'Net Weight';
+            DecimalPlaces = 0 : 5;
+        }
     }
 }

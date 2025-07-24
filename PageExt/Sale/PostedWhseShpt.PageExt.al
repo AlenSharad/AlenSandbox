@@ -4,18 +4,29 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
     {
         addlast(General)
         {
+            field("Source No."; Rec."Source No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Source No.';
+                Editable = false;
+            }
+            field("Your Reference"; Rec."Your Reference")
+            {
+                ApplicationArea = All;
+                Editable = false;
+                Caption = 'Your Reference';
+            }
             field("Order Type Code"; Rec."Order Type Code")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
-                Editable = false;
             }
             // field("Shopify Variant Id"; Rec."Shopify Variant Id")
             // {
             //     ApplicationArea = All;
             //     Caption = 'Shopify Variant Id';
-            //     Editable = false;
             // }
             field("Sent to 3PL Date"; Rec."Sent to 3PL Date")
             {
@@ -32,50 +43,60 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
             field("All Items Fully Commited"; Rec."All Items Fully Commited")
             {
                 ApplicationArea = All;
-                Caption = 'All Items Fully Commited';
                 Editable = false;
+                Caption = 'All Items Fully Commited';
             }
             field("Order Source"; Rec."Order Source")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Order Source';
                 TableRelation = "Order Source".Code;
             }
             field("Storefront Name"; Rec."Storefront Name")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Storefront Name';
             }
             field("Store Front Payment Status"; Rec."Store Front Payment Status")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Status';
 
             }
             field("Store Front Payment Gateway"; Rec."Store Front Payment Gateway")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Gateway';
 
             }
             field("Store Front Payment Event Type"; Rec."Store Front Payment Event Type")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Event Type';
             }
             field("Store Front Payment Authcode"; Rec."Store Front Payment Authcode")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Authcode';
             }
             field("Order Total Check"; Rec."Order Total Check")
             {
                 ApplicationArea = All;
+                Visible = false;
+                Editable = false;
                 Caption = 'Order Total Check';
             }
             field("Order Total Variance"; Rec."Order Total Variance")
             {
                 ApplicationArea = All;
+                Visible = false;
+                Editable = false;
                 Caption = 'Order Total Variance';
             }
         }
@@ -88,6 +109,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 {
                     ApplicationArea = All;
                     Caption = 'Memo';
+                    Editable = false;
                     Importance = Standard;
                 }
                 field("Vendor_Number"; Rec."Vendor_Number")
@@ -95,180 +117,210 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     ApplicationArea = All;
                     Caption = 'Vendor Number';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("shippingAddress_attention"; Rec."shippingAddress_attention")
                 {
                     ApplicationArea = All;
                     Caption = 'Shipping Address Attention';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Store_number"; Rec."Store_number")
                 {
                     ApplicationArea = All;
                     Caption = 'Store Number';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Dealer_Department_Number"; Rec."Dealer_Department_Number")
                 {
                     ApplicationArea = All;
                     Caption = 'Dealer Department Number';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Dealer_Department_Description"; Rec."Dealer_Department_Description")
                 {
                     ApplicationArea = All;
                     Caption = 'Dealer Department Description';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Standard_Carrier_Alpha_Code"; Rec."Standard_Carrier_Alpha_Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Standard Carrier Alpha Code';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("FOB_Qualifier"; Rec."FOB_Qualifier")
                 {
                     ApplicationArea = All;
                     Caption = 'FOB Qualifier';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Carrier_Transportation_Method_Code"; Rec."Transportation_Method_Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Carrier Transportation Method Code';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Transaction_ID"; Rec."Transaction_ID")
                 {
                     ApplicationArea = All;
                     Caption = 'Transaction ID';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("discountItem_intID"; Rec."discountItem_intID")
                 {
                     ApplicationArea = All;
                     Caption = 'Discount Item - intID';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Customer_Account_Number"; Rec."Customer_Account_Number")
                 {
                     ApplicationArea = All;
                     Caption = 'Customer Account Number';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Special_Instructions"; Rec."Special_Instructions")
                 {
                     ApplicationArea = All;
                     Caption = 'Special Instructions';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Customer_Order_Number"; Rec."Customer_Order_Number")
                 {
                     ApplicationArea = All;
                     Caption = 'Customer Order Number';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Release_No"; Rec."Release_No")
                 {
                     ApplicationArea = All;
                     Caption = 'Release No';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Ship_To_Code_Qualifier"; Rec."Ship_To_Code_Qualifier")
                 {
                     ApplicationArea = All;
                     Caption = 'Ship To Code Qualifier';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Requested_Ship_Date"; Rec."Requested_Ship_Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Requested Ship Date';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Current_Scheduled_Delivery"; Rec."Current_Scheduled_Delivery")
                 {
                     ApplicationArea = All;
                     Caption = 'Current Scheduled Delivery';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Requested_PickUp_Date"; Rec."Requested_PickUp_Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Requested Pick Up Date';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Packaging_Type"; Rec."Packaging_Type")
                 {
                     ApplicationArea = All;
                     Caption = 'Packaging Type';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Total_Packages"; Rec."Total_Packages")
                 {
                     ApplicationArea = All;
                     Caption = 'Total Packages';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("PKG_PLT_Qty"; Rec."PKG_PLT_Qty")
                 {
                     ApplicationArea = All;
                     Caption = 'PKG PLT Qty';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Marketplace_Shipment_ID"; Rec."Marketplace_Shipment_ID")
                 {
                     ApplicationArea = All;
                     Caption = 'Marketplace Shipment ID';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("824_Received"; Rec."824_Received")
                 {
                     ApplicationArea = All;
                     Caption = '824 Received';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("824_Notes"; Rec."824_Notes")
                 {
                     ApplicationArea = All;
                     Caption = '824 Notes';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Routing_Request_Sent"; Rec."Routing_Request_Sent")
                 {
                     ApplicationArea = All;
                     Caption = 'Routing Request Sent';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Processed"; Rec."Processed")
                 {
                     ApplicationArea = All;
                     Caption = 'Processed';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Supplier_Contact_Name"; Rec."Supplier_Contact_Name")
                 {
                     ApplicationArea = All;
                     Caption = 'Supplier Contact Name';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Supplier_Contact_No"; Rec."Supplier_Contact_No")
                 {
                     ApplicationArea = All;
                     Caption = 'Supplier Contact No.';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Supplier_Contact_Email"; Rec."Supplier_Contact_Email")
                 {
                     ApplicationArea = All;
                     Caption = 'Supplier Contact Email';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("Ship From"; Rec."Ship From")
                 {
                     ApplicationArea = All;
                     Caption = 'Ship From';
                     Importance = Standard;
+                    Editable = false;
 
                 }
                 field("3rd Party Billing Account"; Rec."3rd Party Billing Account")
@@ -276,18 +328,21 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     ApplicationArea = All;
                     Caption = '3rd Party Billing Account';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("3rd Party Carrier"; Rec."3rd Party Carrier")
                 {
                     ApplicationArea = All;
                     Caption = '3rd Party Carrier';
                     Importance = Standard;
+                    Editable = false;
                 }
                 field("3rd Party Zip"; Rec."3rd Party Zip")
                 {
                     ApplicationArea = All;
                     Caption = '3rd Party Zip';
                     Importance = Standard;
+                    Editable = false;
                 }
 
                 field(isShipresidential; Rec.isShipresidential)
@@ -295,6 +350,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     ApplicationArea = All;
                     Caption = 'Is Ship Residential';
                     Importance = Standard;
+                    Editable = false;
                 }
             }
         }

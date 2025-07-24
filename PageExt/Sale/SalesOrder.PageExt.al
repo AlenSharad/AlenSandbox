@@ -329,35 +329,16 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                     bomavailable: Record "Item Bom Available";
                     salesEntityBuffer: Record "Sales Order Entity Buffer";
                     salesHeader: Record "Sales Header";
+
                 begin
-                    /*
+
+
                     LocationAssignment.FillItemAvailabilityLocationwise(Rec, true);
                     bomavailable.Reset();
                     bomavailable.SetRange("Order No.", Rec."No.");
                     Page.Run(50121, bomavailable);
-                    */
-                    salesHeader.Reset();
-                    salesHeader.FindSet();
-                    repeat
-                        salesEntityBuffer.Reset();
-                        if salesEntityBuffer.Get(salesHeader."No.") then begin
-                            if salesEntityBuffer."Location Code" <> salesHeader."Location Code" then
-                                salesEntityBuffer."Location Code" := salesHeader."Location Code";
-                            if salesEntityBuffer."Payment Method Code" <> salesHeader."Payment Method Code" then
-                                salesEntityBuffer."Payment Method Code" := salesHeader."Payment Method Code";
-                            if salesEntityBuffer."Shipping Agent Code" <> salesHeader."Shipping Agent Code" then
-                                salesEntityBuffer."Shipping Agent Code" := salesHeader."Shipping Agent Code";
-                            if salesEntityBuffer."Shipping Agent Service Code" <> salesHeader."Shipping Agent Service Code" then
-                                salesEntityBuffer."Shipping Agent Service Code" := salesHeader."Shipping Agent Service Code";
-                            if salesEntityBuffer."Your Reference" <> salesHeader."Your Reference" then
-                                salesEntityBuffer."Your Reference" := salesHeader."Your Reference";
-                            if salesEntityBuffer."Tax Area Code" <> salesHeader."Tax Area Code" then
-                                salesEntityBuffer."Tax Area Code" := salesHeader."Tax Area Code";
-                            if salesEntityBuffer."Tax Liable" <> salesHeader."Tax Liable" then
-                                salesEntityBuffer."Tax Liable" := salesHeader."Tax Liable";
-                            salesEntityBuffer.Modify();
-                        end;
-                    until salesHeader.Next() = 0;
+
+
                 end;
             }
         }

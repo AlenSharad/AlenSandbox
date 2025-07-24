@@ -303,6 +303,11 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
+        field(50158; "Shipment Date"; Date)
+        {
+            Caption = 'Shipment Date';
+            DataClassification = ToBeClassified;
+        }
     }
 
 }

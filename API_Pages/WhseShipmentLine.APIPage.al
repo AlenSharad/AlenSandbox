@@ -7,7 +7,7 @@ page 50124 "API - Warehouse Shipment Lines"
     EntitySetCaption = 'Warehouse Shipment Lines';
     PageType = API;
     DeleteAllowed = false;
-    InsertAllowed = true;
+    InsertAllowed = false;
     ModifyAllowed = true;
     ODataKeyFields = SystemId;
     EntityName = 'itemFulfillmentLine';
@@ -16,7 +16,7 @@ page 50124 "API - Warehouse Shipment Lines"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    Editable = true;
     layout
     {
         area(content)
@@ -31,33 +31,17 @@ page 50124 "API - Warehouse Shipment Lines"
                 field(sourceDocument; Rec."Source Document")
                 {
                     Caption = 'Source Document';
+                    Editable = false;
                 }
-                field(sourceNo; Rec."Sales Order No.")
+                field(sourceNo; Rec."Source No.")
                 {
                     Caption = 'Source No';
-                    trigger OnValidate()
-                    var
-                        salesHeader: Record "Sales Header";
-                    begin
-                        salesHeader.Reset();
-                        salesHeader.Get(salesHeader."Document Type"::Order, Rec."Sales Order No.");
-                        //if salesHeader.FindFirst() then begin
-                        Rec."Source Document" := Rec."Source Document"::"Sales Order";
-                        Rec."Source No." := Rec."Sales Order No.";
-                        //end;
-                    end;
+
                 }
-                field(sourceLineNo; Rec."Sales Order Line No.")
+                field(sourceLineNo; Rec."Source Line No.")
                 {
                     Caption = 'Source Line No';
-                    trigger OnValidate()
-                    var
-                        salesLine: Record "Sales Line";
-                    begin
-                        salesLine.Get(salesLine."Document Type"::Order, Rec."Sales Order No.", Rec."Sales Order Line No.");
-                        Rec."Source Line No." := Rec."Sales Order Line No.";
 
-                    end;
                 }
                 field(sequence; Rec."Line No.")
                 {
@@ -164,9 +148,7 @@ page 50124 "API - Warehouse Shipment Lines"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
-        Rec."Source Document" := Rec."Source Document"::"Sales Order";
-        Rec."Source No." := Rec."Sales Order No.";
-        Rec."Source Line No." := Rec."Sales Order Line No.";
+
     end;
 
     var

@@ -4,9 +4,21 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
     {
         addlast(General)
         {
+            field("Source No."; Rec."Source No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Source No.';
+            }
+            field("Your Reference"; Rec."Your Reference")
+            {
+                ApplicationArea = All;
+                Editable = false;
+                Caption = 'Your Reference';
+            }
             field("Order Type Code"; Rec."Order Type Code")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
             }
@@ -28,49 +40,60 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
             field("All Items Fully Commited"; Rec."All Items Fully Commited")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'All Items Fully Commited';
             }
             field("Order Source"; Rec."Order Source")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Order Source';
                 TableRelation = "Order Source".Code;
             }
             field("Storefront Name"; Rec."Storefront Name")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Storefront Name';
             }
             field("Store Front Payment Status"; Rec."Store Front Payment Status")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Status';
 
             }
             field("Store Front Payment Gateway"; Rec."Store Front Payment Gateway")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Gateway';
 
             }
             field("Store Front Payment Event Type"; Rec."Store Front Payment Event Type")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Event Type';
             }
             field("Store Front Payment Authcode"; Rec."Store Front Payment Authcode")
             {
                 ApplicationArea = All;
+                Editable = false;
                 Caption = 'Store Front Payment Authcode';
             }
             field("Order Total Check"; Rec."Order Total Check")
             {
                 ApplicationArea = All;
+                Visible = false;
+                Editable = false;
                 Caption = 'Order Total Check';
             }
             field("Order Total Variance"; Rec."Order Total Variance")
             {
                 ApplicationArea = All;
+                Visible = false;
+                Editable = false;
                 Caption = 'Order Total Variance';
             }
 

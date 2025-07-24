@@ -196,7 +196,7 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Routing Request Sent';
             DataClassification = ToBeClassified;
         }
-        field(50138; "Processed"; Boolean)
+        field(50138; Processed; Boolean)
         {
             Caption = 'Processed';
             DataClassification = ToBeClassified;
@@ -261,5 +261,17 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
+        field(50200; "Source No."; Code[20])
+        {
+            Editable = false;
+            Caption = 'Source No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50201; "Your Reference"; Text[35])
+        {
+            Caption = 'Your Reference';
+            DataClassification = ToBeClassified;
+        }
+
     }
 }

@@ -245,7 +245,6 @@ page 50114 "API - Sales Order Lines"
                 field(lineTaxAmount; Rec."Line Tax AmountN")
                 {
                     Caption = 'Line Tax Amount';
-                    Editable = false;
 
                     trigger OnValidate()
                     begin
@@ -336,6 +335,14 @@ page 50114 "API - Sales Order Lines"
                     begin
                         RegisterFieldSet(Rec.FieldNo("Qty. to Ship"));
                     end;
+                }
+                // field(grossWeight; Rec."Gross Weight")
+                // {
+                //     Caption = 'Gross Weight';
+                // }
+                field(netWeight; Rec."Net Weight")
+                {
+                    Caption = 'Net Weight';
                 }
                 field(itemVariantId; Rec."Variant Id")
                 {
@@ -456,19 +463,36 @@ page 50114 "API - Sales Order Lines"
         DocumentIdFilter: Text;
         IdFilter: Text;
         FilterView: Text;
+        SalesOrderEntityBuffer: Record "Sales Order Entity Buffer";
+        salesLine: Record "Sales Line";
+        salesInvoiceLineAggregate: Record "Sales Invoice Line Aggregate";
     begin
         if not LinesLoaded then begin
             FilterView := Rec.GetView();
             IdFilter := Rec.GetFilter(SystemId);
             DocumentIdFilter := Rec.GetFilter("Document Id");
-            if (IdFilter = '') and (DocumentIdFilter = '') then
-                Error(IDOrDocumentIdShouldBeSpecifiedForLinesErr);
+            //Error(IdFilter + ' , ' + DocumentIdFilter);
+
             if IdFilter <> '' then begin
                 Evaluate(SysId, IdFilter);
                 DocumentIdFilter := GraphMgtSalesInvLines.GetSalesOrderDocumentIdFilterFromSystemId(SysId);
             end else
                 DocumentIdFilter := Rec.GetFilter("Document Id");
             GraphMgtSalesOrderBuffer.LoadLines(Rec, DocumentIdFilter);
+            if Rec.FindSet() then
+                repeat
+                    SalesOrderEntityBuffer.SetFilter(Id, DocumentIdFilter);
+                    if SalesOrderEntityBuffer.FindFirst() then
+                        salesLine.reset();
+                    salesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+                    salesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
+                    salesLine.SetRange("Line No.", Rec."Line No.");
+                    if salesLine.FindFirst() then begin
+                        //Rec."Gross Weight" := salesLine."Gross Weight" * salesLine.Quantity;
+                        Rec."Net Weight" := salesLine."Net Weight" * salesLine.Quantity;
+                        Rec.Modify();
+                    end;
+                until Rec.Next() = 0;
             Rec.SetView(FilterView);
             if not Rec.FindFirst() then
                 exit(false);

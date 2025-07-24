@@ -10,7 +10,7 @@ page 50123 "API - Warehouse Shipments"
     Editable = true;
     EntityName = 'itemFulfillment';
     EntitySetName = 'itemFulfillments';
-    InsertAllowed = true;
+    InsertAllowed = false;
     ModifyAllowed = true;
     ODataKeyFields = SystemId;
     PageType = API;
@@ -39,6 +39,10 @@ page 50123 "API - Warehouse Shipments"
                 {
                     Caption = 'External Document No.';
                 }
+                field(sourceNo; Rec."Source No.")
+                {
+                    Caption = 'Source No.';
+                }
                 field(shipmentDate; Rec."Shipment Date")
                 {
                     Caption = 'Shipment Date';
@@ -51,6 +55,7 @@ page 50123 "API - Warehouse Shipments"
                 field(locationId; Rec."Location Code")
                 {
                     Caption = 'Location Code';
+
                 }
 
                 field(Status; Rec.Status)
