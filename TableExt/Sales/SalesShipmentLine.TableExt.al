@@ -55,5 +55,12 @@ tableextension 50126 "Sales Shipment Line Extension" extends "Sales Shipment Lin
             Caption = 'Line Tax Amount';
             DataClassification = CustomerContent;
         }
+        //50112,50113 used in SalesInvoiceLineaggregate
+        field(50114; "Item Type"; Enum "Item Type")
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

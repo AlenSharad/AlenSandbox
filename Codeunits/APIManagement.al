@@ -32,10 +32,8 @@ codeunit 50103 APIManagement
             RecSalesLine.SetRange("Document No.", SalesHeader."No.");
             if RecSalesLine.FindSet() then
                 repeat
-
                     RecSalesLine."Location Code" := finalLocation;
                     RecSalesLine.Modify(true);
-
                 until RecSalesLine.Next() = 0;
         end else
             Error('Location code not found in response.');

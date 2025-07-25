@@ -1534,6 +1534,7 @@ page 50109 "API - Sales Orders"
         SalesHeader: Record "Sales Header";
         ShipmentCreated: Boolean;
         GetSourceDocOB: codeunit "Get Source Doc. Outbound";
+
     begin
         GetOrder(SalesHeader);
         SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
@@ -1544,23 +1545,6 @@ page 50109 "API - Sales Orders"
         ShipmentCreated := GetSourceDocOB.CreateWhseShipmentHeaderFromWhseRequest(WarehouseRequest);
         if ShipmentCreated then
             SetActionResponse(ActionContext, SalesHeader.SystemId, Page::"API - Sales Orders", WebServiceActionResultCode::Updated);
+
     end;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -104,6 +104,17 @@ codeunit 50101 SalesEventSubs
 
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "No.", false, false)]
+    local procedure FlowItemTypeOnAfterValidateEventNo(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    var
+        item: Record Item;
+    begin
+        if (Rec.Type = Rec.Type::Item) then begin
+            if item.Get(Rec."No.") then
+                Rec."Item Type" := item.Type;
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Amount", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
 

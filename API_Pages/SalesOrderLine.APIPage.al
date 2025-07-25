@@ -200,6 +200,14 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Line Discount %"));
                     end;
                 }
+                field(itemType; Rec."Item Type")
+                {
+                    Caption = 'Item Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Item Type"));
+                    end;
+                }
                 field(discountAppliedBeforeTax; Rec."Discount Applied Before Tax")
                 {
                     Caption = 'Discount Applied Before Tax';

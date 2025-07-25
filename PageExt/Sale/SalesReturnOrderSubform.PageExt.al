@@ -12,6 +12,14 @@ pageextension 50130 "Sales Return Order Subform Ext" extends "Sales Return Order
 
             }
         }
+        addafter(Description)
+        {
+            field("Item Type"; Rec."Item Type")
+            {
+                Caption = 'Item Type';
+                ApplicationArea = all;
+            }
+        }
     }
 
     actions

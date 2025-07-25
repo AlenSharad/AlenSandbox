@@ -58,5 +58,11 @@ tableextension 50120 "Sales Inv Line Agg Extension" extends "Sales Invoice Line 
             Caption = 'Net Weight';
             DecimalPlaces = 0 : 5;
         }
+        field(50114; "Item Type"; Enum "Item Type")
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

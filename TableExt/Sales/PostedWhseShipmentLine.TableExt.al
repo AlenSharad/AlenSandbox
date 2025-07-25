@@ -61,5 +61,12 @@ tableextension 50128 "Posted Whse Shpt Line Ext" extends "Posted Whse. Shipment 
             Caption = 'Line Tax Amount';
             DataClassification = CustomerContent;
         }
+        //50112,50113 used in SalesInvoiceLineaggregate
+        field(50114; "Item Type"; Enum "Item Type")
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

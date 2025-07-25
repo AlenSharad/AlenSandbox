@@ -327,11 +327,8 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 var
                     LocationAssignment: Codeunit LocationAssignment;
                     bomavailable: Record "Item Bom Available";
-                    salesEntityBuffer: Record "Sales Order Entity Buffer";
-                    salesHeader: Record "Sales Header";
 
                 begin
-
 
                     LocationAssignment.FillItemAvailabilityLocationwise(Rec, true);
                     bomavailable.Reset();

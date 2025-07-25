@@ -37,6 +37,14 @@ pageextension 50128 SalesInvoiceSubformExt extends "Sales Invoice Subform"
                 Caption = 'PO Line';
             }
         }
+        addafter(Description)
+        {
+            field("Item Type"; Rec."Item Type")
+            {
+                Caption = 'Item Type';
+                ApplicationArea = all;
+            }
+        }
     }
 
 }

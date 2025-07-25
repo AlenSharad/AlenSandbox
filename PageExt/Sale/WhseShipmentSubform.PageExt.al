@@ -43,6 +43,14 @@ pageextension 50129 "Whse Shipment Subform Ext" extends "Whse. Shipment Subform"
                 Caption = 'PO Line';
             }
         }
+        addafter(Description)
+        {
+            field("Item Type"; Rec."Item Type")
+            {
+                Caption = 'Item Type';
+                ApplicationArea = all;
+            }
+        }
     }
 
     actions

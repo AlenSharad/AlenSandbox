@@ -58,5 +58,12 @@ tableextension 50127 "Sales Archive Line Extension" extends "Sales Line Archive"
             Caption = 'Line Tax Amount';
             DataClassification = CustomerContent;
         }
+        //50112,50113 used in SalesInvoiceLineaggregate
+        field(50114; "Item Type"; Enum "Item Type")
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }
