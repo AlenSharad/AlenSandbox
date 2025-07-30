@@ -14,7 +14,7 @@ tableextension 50100 CustomerExtension extends Customer
         }
         field(50002; "Third Party Billing Account"; Text[30])
         {
-            Caption = '3rd Party Billing ACcount';
+            Caption = '3rd Party Billing Account';
             DataClassification = ToBeClassified;
         }
         field(50003; "Third Party Carrier"; Text[50])

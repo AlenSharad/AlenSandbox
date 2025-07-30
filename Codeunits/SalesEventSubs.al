@@ -141,6 +141,21 @@ codeunit 50101 SalesEventSubs
         Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "External Document No.", false, false)]
+    local procedure DuplicateExternalDocCheck(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
+    var
+        salesHeader: Record "Sales Header";
+    begin
+        if Rec."External Document No." <> '' then begin
+            salesHeader.Reset();
+            salesHeader.SetRange("External Document No.", Rec."External Document No.");
+            salesHeader.SetRange("Document Type", Rec."Document Type");
+            salesHeader.Setfilter("No.", '<>%1', Rec."No.");
+            if salesHeader.FindFirst() then
+                Error('External Document No. already exists for Order No. %1', salesHeader."No.");
+        end;
+    end;
+
     local Procedure CalculateandUpdateTotalVarance(var SL: Record "Sales Line")
     var
         SalesHeader: Record "Sales Header";

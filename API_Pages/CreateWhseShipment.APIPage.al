@@ -1,0 +1,111 @@
+page 50125 "API - Create Whse Shipment"
+{
+    APIVersion = 'v2.0';
+    EntityCaption = 'Create Warehouse Shipment';
+    EntitySetCaption = 'Create Warehouse Shipments';
+    ChangeTrackingAllowed = true;
+    DelayedInsert = true;
+    EntityName = 'createWarehouseShipment';
+    EntitySetName = 'createWarehouseShipments';
+    ODataKeyFields = Id;
+    PageType = API;
+    SourceTable = "Sales Order Entity Buffer";
+    SourceTableTemporary = true;
+    DeleteAllowed = false;
+    InsertAllowed = true;
+    ModifyAllowed = false;
+    APIPublisher = 'HappiestMinds';
+    APIGroup = 'AlenAPIS';
+    Extensible = true;
+    layout
+    {
+        area(content)
+        {
+            repeater(Group)
+            {
+                field(salesOrderid; Rec."External Document No.")
+                {
+                    Caption = 'Id';
+                    Editable = true;
+                    trigger OnValidate()
+                    var
+                        salesHeader: Record "Sales Header";
+                    begin
+                        salesHeader.Reset();
+                        salesHeader.SetRange("External Document No.", Rec."External Document No.");
+                        if not salesHeader.FindFirst() then
+                            Error('Not Valid sales order id.');
+                    end;
+                }
+                field(shipmentId; shipmentId)
+                {
+                    Caption = 'Shipment Id';
+                    Editable = false;
+                }
+                field(message; message)
+                {
+                    Caption = 'Response Message';
+
+                }
+            }
+        }
+    }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    var
+        salesHeader: Record "Sales Header";
+        SID: Guid;
+        WhseShipment: Record "Warehouse Shipment Header";
+    begin
+        Error(format(SessionId()));
+        if BelowxRec then
+            exit(true);
+
+        if Format(Rec."External Document No.") <> '' then begin
+            salesHeader.Reset();
+            salesHeader.SetRange("External Document No.", Rec."External Document No.");
+            if salesHeader.FindFirst() then begin
+                WhseShipment.Reset();
+                WhseShipment.SetRange("Source No.", salesHeader."No.");
+                if WhseShipment.FindFirst() then begin
+                    shipmentId := WhseShipment.SystemId;
+                    message := 'Shipment already exist.';
+                    exit(false);
+                end;
+                createWarehouseShipment(salesHeader);
+            end;
+        end else begin
+            message := 'Request must have sales order id.';
+        end;
+
+        exit(true);
+    end;
+
+
+    procedure createWarehouseShipment(SalesHeader: Record "Sales Header")
+    var
+        WarehouseRequest: Record "Warehouse Request";
+        ShipmentCreated: Boolean;
+        GetSourceDocOB: codeunit "Get Source Doc. Outbound";
+        WhseShipment: Record "Warehouse Shipment Header";
+    begin
+
+        if not SalesHeader.IsApprovedForPosting() then
+            ShipmentCreated := false;
+
+        GetSourceDocOB.FindWarehouseRequestForSalesOrder(WarehouseRequest, SalesHeader);
+        ShipmentCreated := GetSourceDocOB.CreateWhseShipmentHeaderFromWhseRequest(WarehouseRequest);
+        if ShipmentCreated then begin
+            WhseShipment.Reset();
+            WhseShipment.SetRange("Source No.", SalesHeader."No.");
+            if WhseShipment.FindFirst() then begin
+                shipmentId := WhseShipment.SystemId;
+                message := 'Warehouse Shipment Created Successfully';
+            end;
+        end else
+            message := GetLastErrorText;
+    end;
+
+    var
+        shipmentId: Guid;
+        message: Text[250];
+}

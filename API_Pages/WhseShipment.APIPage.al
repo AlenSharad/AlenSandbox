@@ -8,8 +8,8 @@ page 50123 "API - Warehouse Shipments"
     DelayedInsert = true;
     DeleteAllowed = false;
     Editable = true;
-    EntityName = 'itemFulfillment';
-    EntitySetName = 'itemFulfillments';
+    EntityName = 'warehouseShipment';
+    EntitySetName = 'warehouseShipments';
     InsertAllowed = false;
     ModifyAllowed = true;
     ODataKeyFields = SystemId;
@@ -311,9 +311,17 @@ page 50123 "API - Warehouse Shipments"
                 part(salesShipmentLines; "API - Warehouse Shipment Lines")
                 {
                     Caption = 'Lines';
-                    EntityName = 'itemFulfillmentLine';
-                    EntitySetName = 'itemFulfillmentLines';
+                    EntityName = 'warehouseShipmentLine';
+                    EntitySetName = 'warehouseShipmentLines';
                     SubPageLink = "No." = field("No.");
+                }
+                part(packageContents; "API - Package Content")
+                {
+                    Caption = 'Package Contents';
+                    EntityName = 'packageContent';
+                    Multiplicity = Many;
+                    EntitySetName = 'packageContents';
+                    SubPageLink = "Shipment No." = field("No.");
                 }
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {

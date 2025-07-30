@@ -274,4 +274,11 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
         }
 
     }
+    keys
+    {
+        key(MyKey; "Source No.")
+        {
+            Enabled = true;
+        }
+    }
 }

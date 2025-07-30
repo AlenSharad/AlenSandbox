@@ -318,4 +318,28 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
             }
         }
     }
+    actions
+    {
+        addlast("&Shipment")
+        {
+            action(PackageContent)
+            {
+                ApplicationArea = All;
+                Caption = 'Package Content';
+                Image = BinContent;
+                RunObject = Page "Package Contents";
+                RunPageLink = "Shipment No." = field("No.");
+                trigger OnAction()
+                begin
+                end;
+            }
+        }
+        addfirst(Category_Category7)
+        {
+            actionref(Promoted_PackageContent; PackageContent)
+            { }
+
+        }
+    }
+
 }

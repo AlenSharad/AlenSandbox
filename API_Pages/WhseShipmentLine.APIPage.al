@@ -10,8 +10,8 @@ page 50124 "API - Warehouse Shipment Lines"
     InsertAllowed = false;
     ModifyAllowed = true;
     ODataKeyFields = SystemId;
-    EntityName = 'itemFulfillmentLine';
-    EntitySetName = 'itemFulfillmentLines';
+    EntityName = 'warehouseShipmentLine';
+    EntitySetName = 'warehouseShipmentLines';
     SourceTable = "Warehouse Shipment Line";
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
@@ -122,6 +122,7 @@ page 50124 "API - Warehouse Shipment Lines"
                 {
                     Caption = 'Customer Subscription No.';
                 }
+
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
                 {
                     Caption = 'Dimension Set Lines';
