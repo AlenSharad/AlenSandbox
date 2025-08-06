@@ -7,7 +7,7 @@ page 50125 "API - Create Whse Shipment"
     DelayedInsert = true;
     EntityName = 'createWarehouseShipment';
     EntitySetName = 'createWarehouseShipments';
-    ODataKeyFields = Id;
+    ODataKeyFields = "External Document No.";
     PageType = API;
     SourceTable = "Sales Order Entity Buffer";
     SourceTableTemporary = true;
@@ -56,7 +56,7 @@ page 50125 "API - Create Whse Shipment"
         SID: Guid;
         WhseShipment: Record "Warehouse Shipment Header";
     begin
-        Error(format(SessionId()));
+
         if BelowxRec then
             exit(true);
 

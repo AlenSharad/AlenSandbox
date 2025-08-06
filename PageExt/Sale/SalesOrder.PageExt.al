@@ -79,6 +79,11 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 ApplicationArea = All;
                 Caption = 'Order Discount Details';
             }
+            field("Order Total Amount"; Rec."Order Total Amount")
+            {
+                ApplicationArea = all;
+                Caption = 'Order Total Amount';
+            }
         }
         addafter("Shipping and Billing")
         {
@@ -321,15 +326,13 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
             action(GetLocationAssignment)
             {
                 ApplicationArea = All;
-                Caption = 'Ge tLocation Assignment';
+                Caption = 'Get Location Assignment';
                 Image = Action;
                 trigger OnAction()
                 var
                     LocationAssignment: Codeunit LocationAssignment;
                     bomavailable: Record "Item Bom Available";
-
                 begin
-
                     LocationAssignment.FillItemAvailabilityLocationwise(Rec, true);
                     bomavailable.Reset();
                     bomavailable.SetRange("Order No.", Rec."No.");

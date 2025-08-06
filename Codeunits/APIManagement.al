@@ -19,11 +19,12 @@ codeunit 50103 APIManagement
             Error('Integration Setup not found for Location Assignment.');
         CheckMandatoryandReset(IntegrationSetup."API URL");
         ResponseMsg := MakeRequest(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayload(), IntegrationSetup.Username, IntegrationSetup.Password);
+
         content := ResponseMsg.Content();
         content.ReadAs(ResponseMsgTXT);
 
         finalLocation := GetLocationfromResponse(ResponseMsgTXT);
-        // Message(finalLocation);
+        //Message(finalLocation);
         if finalLocation <> '' then begin
             SalesHeader."Location Code" := finalLocation;
             SalesHeader.Modify(true);
@@ -64,7 +65,8 @@ codeunit 50103 APIManagement
         if Payload <> '' then
             Content.WriteFrom(Payload)
         else
-            Content.WriteFrom('');
+            //Content.WriteFrom('');
+            exit;
         // Step 1: Concatenate username and password with colon
         AuthString := StrSubstNo('%1:%2', Username, Password);
 
@@ -160,21 +162,22 @@ codeunit 50103 APIManagement
             location.Reset();
             location.SetFilter(Code, LocFilter);
             if location.FindSet() then
-                if location.Count = 1 then begin
-                    SalesHeader."Location Code" := location.Code;
-                    SalesHeader.Modify(true);
-                    LsalesLine.Reset();
-                    LsalesLine.SetRange("Document Type", SalesHeader."Document Type");
-                    LsalesLine.SetRange("Document No.", SalesHeader."No.");
-                    if LsalesLine.FindSet() then
-                        repeat
-                            if LsalesLine."Location Code" = '' then begin
-                                LsalesLine."Location Code" := location.Code;
-                                LsalesLine.Modify(true);
-                            end;
-                        until LsalesLine.Next() = 0;
-                    exit;
-                end;
+                // if location.Count = 1 then begin
+                //     SalesHeader."Location Code" := location.Code;
+                //     SalesHeader.Modify(true);
+                //     LsalesLine.Reset();
+                //     LsalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                //     LsalesLine.SetRange("Document No.", SalesHeader."No.");
+                //     if LsalesLine.FindSet() then
+                //         repeat
+                //             if LsalesLine."Location Code" = '' then begin
+                //                 LsalesLine."Location Code" := location.Code;
+                //                 LsalesLine.Modify(true);
+                //             end;
+                //         until LsalesLine.Next() = 0;
+                //     payload := '';
+                //     exit(payload);
+                // end;
             repeat
                 Clear(WarehouseObj);
                 Clear(WarehouseItemObj);
@@ -183,8 +186,7 @@ codeunit 50103 APIManagement
                 WarehouseObj.Add('postalCode', location."Post Code");
                 //WarehouseItemObj.Add('warehouses', WarehouseObj);
                 WarehouseListArr.Add(WarehouseObj);
-            until location.Next() = 0;
-
+                until location.Next() = 0;
         end;
         // Wrap Warehouse in warehouse key
 
@@ -230,6 +232,9 @@ codeunit 50103 APIManagement
         // JsonObj.Get('orderNumber', OrderNumber);
 
         // Get assignedWarehouse object
+        JsonObj.Get('assignedWarehouse', WhToken);
+        WarehouseCode := WhToken.AsValue().AsText();
+        /*
         JsonObj.Get('assignedWarehouse', JToken);
         if JToken.IsObject then begin
             JToken.WriteTo(output);
@@ -237,6 +242,7 @@ codeunit 50103 APIManagement
             AssignedWarehouseObj.Get('warehouseCode', WhToken);
             WarehouseCode := WhToken.AsValue().AsText();
         end;
+        */
         exit(WarehouseCode);
 
         // Insert into table

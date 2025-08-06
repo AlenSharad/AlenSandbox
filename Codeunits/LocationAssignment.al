@@ -17,7 +17,18 @@ codeunit 50102 LocationAssignment
         entryno: Integer;
         ItemCount: Integer;
         APIManagement: Codeunit APIManagement;
+        Customer: Record Customer;
     begin
+        Customer.Get(SalesHeader."Sell-to Customer No.");
+        if Customer."Customer Sets Location" then
+            exit;
+        // SalesLine.Reset();
+        // SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        // SalesLine.SetRange("Document No.", SalesHeader."No.");
+        // SalesLine.SetRange(Type, SalesLine.Type::Item);
+        // SalesLine.SetRange("Location Code", '');
+        // if SalesLine.IsEmpty() then
+        //     exit;
         BomBuffer.DeleteAll();
         bombuffercopy.Reset();
         bombuffercopy.DeleteAll();
@@ -74,7 +85,8 @@ codeunit 50102 LocationAssignment
                 until location.Next() = 0;
             until SalesLine.Next() = 0;
         FillItemBomAvailable(bombuffercopy, SalesHeader, ItemCount);
-        APIManagement.PostRecordforLocAssignment(SalesHeader);
+        if ApplicableforAPI(SalesHeader) then
+            APIManagement.PostRecordforLocAssignment(SalesHeader);
     end;
 
 
@@ -168,6 +180,61 @@ codeunit 50102 LocationAssignment
                         until location.Next() = 0;
                 end;
             until SalesLine.Next() = 0
+    end;
+
+    local procedure ApplicableforAPI(SalesHeader: Record "Sales Header"): Boolean
+    var
+        //salesheader: Record "Sales Header";
+        itemBomAvailable: Record "Item Bom Available";
+        LsalesLine: Record "Sales Line";
+        LocFilter: Text[300];
+        LocList: List of [Text];
+        Value: Text;
+        location: Record Location;
+    begin
+        itemBomAvailable.Reset();
+        itemBomAvailable.SetAutoCalcFields("Availability Count");
+        itemBomAvailable.SetRange(Available, true);
+        itemBomAvailable.SetRange("Order No.", SalesHeader."No.");
+        if itemBomAvailable.FindSet() then
+            repeat
+                if itemBomAvailable."Availability Count" = itemBomAvailable."Actual Count" then begin
+                    if LocFilter <> '' then begin
+
+                        foreach Value in LocFilter.Split('|') do begin
+                            LocList.Add(Value);
+                        end;
+                    end;
+                    // Check if NewValue already exists
+                    if not LocList.Contains(itemBomAvailable."Location Code") then begin
+                        if LocFilter = '' then
+                            LocFilter := itemBomAvailable."Location Code"
+                        else
+                            LocFilter += '|' + itemBomAvailable."Location Code";
+                    end;
+                end;
+            until itemBomAvailable.Next() = 0;
+        if LocFilter <> '' then begin
+            location.Reset();
+            location.SetFilter(Code, LocFilter);
+            if location.FindSet() then
+                if location.Count > 0 then begin
+                    // SalesHeader."Location Code" := location.Code;
+                    // SalesHeader.Modify(true);
+                    // LsalesLine.Reset();
+                    // LsalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                    // LsalesLine.SetRange("Document No.", SalesHeader."No.");
+                    // if LsalesLine.FindSet() then
+                    //     repeat
+                    //         if LsalesLine."Location Code" = '' then begin
+                    //             LsalesLine."Location Code" := location.Code;
+                    //             LsalesLine.Modify(true);
+                    //         end;
+                    //     until LsalesLine.Next() = 0;
+                    exit(true);
+                end else
+                    exit(false);
+        end;
     end;
 
     procedure SethideDialog(HideDialog: Boolean)

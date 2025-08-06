@@ -58,6 +58,7 @@ codeunit 50101 SalesEventSubs
             if salesEntityBuffer."Shipment Date" <> Rec."Shipment Date" then
                 salesEntityBuffer."Shipment Date" := Rec."Shipment Date";
             salesEntityBuffer.Modify();
+
         end;
     end;
 
@@ -120,25 +121,30 @@ codeunit 50101 SalesEventSubs
 
     begin
         Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
-
+        CalculateandUpdateTotalVarance(Rec);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Tax Amount", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineTaxAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
     begin
-        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+        Rec.validate("Amount Including VAT", (Rec."Line Amount" + Rec."Line Tax Amount"));
+        Rec.Amount := Rec."Line Amount";
+        CalculateandUpdateTotalVarance(Rec);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount Amount", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
     begin
         Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+        CalculateandUpdateTotalVarance(Rec);
     end;
+
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount %", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscPer(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
     begin
         Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+        CalculateandUpdateTotalVarance(Rec);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "External Document No.", false, false)]
@@ -156,35 +162,45 @@ codeunit 50101 SalesEventSubs
         end;
     end;
 
+
+
     local Procedure CalculateandUpdateTotalVarance(var SL: Record "Sales Line")
     var
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
         CurrLineTotal: Decimal;
-        CurrLineBaseTotal: Decimal;
+
         OtherTotal: Decimal;
-        OtherBaseTotal: Decimal;
+
         salesheader2: Record "Sales Header";
     begin
+
         Clear(SalesHeader);
-        SalesHeader := SL.GetSalesHeader();
-        CurrLineTotal := SL."Unit Price" * SL.Quantity;
-        CurrLineBaseTotal := SL."BC Unit Price" * SL.Quantity;
+        CurrLineTotal := 0;
+        OtherTotal := 0;
+        SalesHeader.Get(SL."Document Type", SL."Document No.");
+        CurrLineTotal := SL."Amount Including VAT";
+        //CurrLineBaseTotal := SL."BC Unit Price" * SL.Quantity;
         SalesLine.Reset();
         SalesLine.SetRange("Document Type", SL."Document Type");
         SalesLine.SetRange("Document No.", SL."Document No.");
         SalesLine.SetFilter("Line No.", '<>%1', SL."Line No.");
-        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        //SalesLine.SetRange(Type, SalesLine.Type::Item);
         if SalesLine.FindSet() then
             repeat
-                OtherTotal := SalesLine."Unit Price" * SalesLine.Quantity;
-                OtherBaseTotal := SalesLine."BC Unit Price" * SalesLine.Quantity;
+                OtherTotal += SalesLine."Amount Including VAT";
+            //OtherBaseTotal := SalesLine."BC Unit Price" * SalesLine.Quantity;
             until SalesLine.Next() = 0;
 
-        salesheader2.Reset();
-        salesheader2.GET(SalesHeader."Document Type", SalesHeader."No.");
-        SalesHeader2."Order Total Variance" := (CurrLineBaseTotal + OtherBaseTotal) - (CurrLineTotal + OtherTotal);
-        SalesHeader2.Modify();
+        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
+            salesheader2.Reset();
+            salesheader2.GET(SalesHeader."Document Type", SalesHeader."No.");
+            SalesHeader2."Order Total Amount" := (CurrLineTotal + OtherTotal);
+            SalesHeader2."Order Total Variance" := Abs(SalesHeader2."Order Total Amount" - (SalesHeader2."Order Total Check"));
+            SalesHeader2.Modify();
+        end;
+
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnValidateSellToCustomerNoOnBeforeUpdateSellToCont, '', false, false)]
@@ -195,4 +211,32 @@ codeunit 50101 SalesEventSubs
         SalesHeader."3rd Party Zip" := SellToCustomer."Third Party Zip Code";
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "Order Total Check", false, false)]
+    local procedure UpdateOrderVariance(var Rec: Record "Sales Header")
+    begin
+        //Rec.CalcFields("Order Total Amount");
+
+        if UPPERCASE(GetUserNameFromSecurityId(Rec.SystemCreatedBy)) = 'OAUTH' then
+            Rec."Order Total Variance" := Abs(Rec."Order Total Check" - Rec."Order Total Amount");
+    end;
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", OnBeforePerformManualReleaseProcedure, '', false, false)]
+    local procedure LocationAssignmentOnBeforePerformManualReleaseProcedure(var SalesHeader: Record "Sales Header")
+    var
+        LocationAssignment: Codeunit LocationAssignment;
+    begin
+        LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
+    end;
+
+    procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
+    var
+        User: Record User;
+    begin
+        if User.Get(UserSecurityID) then
+            exit(User."User Name")
+        else
+            exit('');
+
+    end;
 }

@@ -64,6 +64,7 @@ tableextension 50105 "Sales Header Ext" extends "Sales Header"
         {
             Caption = 'Order Total Variance';
             DataClassification = ToBeClassified;
+            Editable = false;
         }
         //... Marketplace fields
         field(50112; "memo"; Text[50])
@@ -260,6 +261,14 @@ tableextension 50105 "Sales Header Ext" extends "Sales Header"
         {
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
+        }
+        field(50159; "Order Total Amount"; Decimal)
+        {
+            Editable = false;
+            trigger OnValidate()
+            begin
+                Rec."Order Total Variance" := Abs(Rec."Order Total Check" - Rec."Order Total Amount");
+            end;
         }
     }
 }

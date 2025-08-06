@@ -48,11 +48,6 @@ tableextension 50100 CustomerExtension extends Customer
             Caption = 'Warranty Customer';
             DataClassification = ToBeClassified;
         }
-        // field(50009; "b2b_customer"; Boolean)
-        // {
-        //     Caption = 'B2B Customer';
-        //     DataClassification = ToBeClassified;
-        // }
         field(50010; "Customer No."; Code[20])
         {
             Caption = 'Customer No.';
