@@ -229,6 +229,33 @@ codeunit 50101 SalesEventSubs
         LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCalcVATAmountLines, '', false, false)]
+    local procedure SkipVatCalculationOnBeforeCalcVATAmountLines(SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
+    begin
+        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnBeforeAddSalesLine, '', false, false)]
+    local procedure SkipSalesTaxCalcOnBeforeAddSalesLine(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    var
+        SalesHeader: Record "Sales Header";
+    begin
+        SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
+        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
+            IsHandled := true
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnBeforeDistTaxOverSalesLines, '', false, false)]
+    local procedure SkipSalesTaxCalcOnBeforeDistTaxOverSalesLines(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    var
+        SalesHeader: Record "Sales Header";
+    begin
+        SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
+        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
+            IsHandled := true
+    end;
+
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
     var
         User: Record User;

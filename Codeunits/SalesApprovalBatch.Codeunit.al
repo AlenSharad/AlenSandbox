@@ -16,7 +16,7 @@ codeunit 50104 "Sales Order Approval Processor"
             SalesHeader.Reset();
             SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
             SalesHeader.SetRange(Status, SalesHeader.Status::Open);
-            SalesHeader.SetRange("Order Total Variance", 0.01, 999999999);
+            SalesHeader.SetFilter("Order Total Variance", '>%1', 0);
             //SalesHeader.SetRange("No.", 'ALNC8702S-DEV');
             if SalesHeader.FindSet() then
                 repeat
@@ -34,7 +34,7 @@ codeunit 50104 "Sales Order Approval Processor"
                     SalesLine.Reset();
                     SalesLine.SetRange("Document Type", SalesHeader."Document Type");
                     SalesLine.SetRange("Document No.", SalesHeader."No.");
-                    SalesLine.SetRange(Quantity, 0.1, 9999);
+                    SalesLine.Setfilter(Quantity, '<>%1', 0);
                     if Not SalesLine.IsEmpty then
                         SalesHeader.PerformManualRelease();
                 until SalesHeader.Next() = 0;

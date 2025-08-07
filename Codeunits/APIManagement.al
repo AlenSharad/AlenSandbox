@@ -12,6 +12,8 @@ codeunit 50103 APIManagement
         ResponseMsgTXT: Text[500];
         RecSalesLine: Record "Sales Line";
     begin
+        finalLocation := '';
+        finalAgentService := '';
         IntegrationSetup.Reset();
         IntegrationSetup.SetRange(Active, true);
         IntegrationSetup.SetRange(Code, 'LOCASSIGN');
@@ -24,9 +26,12 @@ codeunit 50103 APIManagement
         content.ReadAs(ResponseMsgTXT);
 
         finalLocation := GetLocationfromResponse(ResponseMsgTXT);
+        finalAgentService := GetAgentfromResponse(ResponseMsgTXT);
         //Message(finalLocation);
         if finalLocation <> '' then begin
             SalesHeader."Location Code" := finalLocation;
+            if (finalAgentService <> '') and (finalAgentService <> SalesHeader."Shipping Agent Service Code") then
+                SalesHeader.Validate("Shipping Agent Service Code", finalAgentService);
             SalesHeader.Modify(true);
             RecSalesLine.Reset();
             RecSalesLine.SetRange("Document Type", SalesHeader."Document Type");
@@ -204,12 +209,15 @@ codeunit 50103 APIManagement
     var
         itembomavailable: Record "Item Bom Available";
         TotalWeight: Decimal;
+        itemNo: Code[20];
     begin
         itembomavailable.Reset();
         itembomavailable.SetRange("Order No.", No);
         if itembomavailable.FindSet() then
             repeat
-                TotalWeight += itembomavailable.Weight;
+                if itemNo <> itembomavailable."Item No." then
+                    TotalWeight += itembomavailable.Weight;
+                itemNo := itembomavailable."Item No.";
             until itembomavailable.Next() = 0;
 
         exit(TotalWeight);
@@ -249,6 +257,39 @@ codeunit 50103 APIManagement
 
     end;
 
+    local procedure GetAgentfromResponse(ResponseMsgTXT: Text[500]): Code[20]
+    var
+        JsonObj: JsonObject;
+        AssignedWarehouseObj: JsonObject;
+        OrderNumber: Text;
+        WarehouseCode: Code[20];
+        JToken: JsonToken;
+        output: Text;
+        WhToken: JsonToken;
+    begin
+        if not JsonObj.ReadFrom(ResponseMsgTXT) then
+            Error('Invalid JSON format.');
+
+        // // Get Order Number
+        // JsonObj.Get('orderNumber', OrderNumber);
+
+        // Get assignedWarehouse object
+        JsonObj.Get('shipAgentService', WhToken);
+        WarehouseCode := WhToken.AsValue().AsText();
+        /*
+        JsonObj.Get('assignedWarehouse', JToken);
+        if JToken.IsObject then begin
+            JToken.WriteTo(output);
+            AssignedWarehouseObj.ReadFrom(output);
+            AssignedWarehouseObj.Get('warehouseCode', WhToken);
+            WarehouseCode := WhToken.AsValue().AsText();
+        end;
+        */
+        exit(WarehouseCode);
+
+        // Insert into table
+
+    end;
 
     var
         Content: HttpContent;
@@ -256,5 +297,6 @@ codeunit 50103 APIManagement
         httpMethod: Enum "Http Request Type";
         ResponseStatus: Boolean;
         ResponseText: Text;
-        finalLocation: Code[20];
+        finalLocation, finalAgentService : Code[20];
+
 }

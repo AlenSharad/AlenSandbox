@@ -120,21 +120,23 @@ codeunit 50102 LocationAssignment
                 bombuffercopy.Reset();
                 bombuffercopy.SetRange(Indentation, 0);
                 bombuffercopy.SetRange("No.", SalesLine."No.");
-                bombuffercopy.SetFilter("Available Quantity", '>=%1', SalesLine.Quantity);
+                //bombuffercopy.SetFilter("Available Quantity", '>=%1', SalesLine.Quantity);
                 if bombuffercopy.FindSet() then
                     repeat
-                        if LocFilter <> '' then begin
+                        if (bombuffercopy."Available Quantity" + bombuffercopy."Able to Make Parent") >= (SalesLine.Quantity) then begin
+                            if LocFilter <> '' then begin
 
-                            foreach Value in LocFilter.Split('|') do begin
-                                LocList.Add(Value);
+                                foreach Value in LocFilter.Split('|') do begin
+                                    LocList.Add(Value);
+                                end;
                             end;
-                        end;
-                        // Check if NewValue already exists
-                        if not LocList.Contains(bombuffercopy."Location Code") then begin
-                            if LocFilter = '' then
-                                LocFilter := bombuffercopy."Location Code"
-                            else
-                                LocFilter += '|' + bombuffercopy."Location Code";
+                            // Check if NewValue already exists
+                            if not LocList.Contains(bombuffercopy."Location Code") then begin
+                                if LocFilter = '' then
+                                    LocFilter := bombuffercopy."Location Code"
+                                else
+                                    LocFilter += '|' + bombuffercopy."Location Code";
+                            end;
                         end;
                     until bombuffercopy.Next() = 0;
                 if LocFilter <> '' then begin
