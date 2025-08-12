@@ -18,7 +18,12 @@ codeunit 50102 LocationAssignment
         ItemCount: Integer;
         APIManagement: Codeunit APIManagement;
         Customer: Record Customer;
+        ItemAvailFormsMgt: Codeunit "Item Availability Forms Mgt";
+        GrossRequirement, PlannedOrderRcpt, ScheduledRcpt,
+                                      PlannedOrderReleases, ProjAvailableBalance, ExpectedInventory, DummyQtyAvailable, AvailableInventory : Decimal;
     begin
+        if SalesHeader.Status = SalesHeader.Status::Released then
+            exit;
         Customer.Get(SalesHeader."Sell-to Customer No.");
         if Customer."Customer Sets Location" then
             exit;
@@ -42,47 +47,89 @@ codeunit 50102 LocationAssignment
         if SalesLine.FindSet() then
             Repeat
                 if Item.Get(SalesLine."No.") then
-                    if not (Item.Type = Item.Type::Inventory) then
-                        exit;
-                ItemCount += 1;
-                location.Reset();
-                location.FindSet();
-                repeat
-                    Item.Reset();
-                    if SalesHeader."Shipment Date" <> 0D then
-                        Item.SetRange("Date Filter", 0D, SalesHeader."Shipment Date")
-                    else
-                        Item.SetRange("Date Filter", 0D, Today);
-                    Item.SetFilter("Location Filter", location.Code);
-                    Item.SetFilter("No.", SalesLine."No.");
-                    CalculateBOMTree.SetItemFilter(Item);
-                    CalculateBOMTree.SetShowTotalAvailability(true);
-                    case ShowBy of
-                        ShowBy::Item:
-                            begin
-                                Item.FindFirst();
-                                if not Item.HasBOM() then
-                                    exit;
-                                CalculateBOMTree.GenerateTreeForItems(Item, BomBuffer, 1);
-
-                            end;
-                    end;
-                    bombuffercopy.Reset();
-                    if bombuffercopy.FindLast() then
-                        entryno := bombuffercopy."Entry No." + 1
-                    else
-                        entryno := 1;
-                    if BomBuffer.FindSet() then
+                    if not Item.HasBOM() then begin
+                        ItemCount += 1;
+                        location.Reset();
+                        location.SetRange("Include in Location Assignment", true);
+                        location.FindSet();
                         repeat
-                            entryno += 1;
-                            bombuffercopy.Init();
-                            bombuffercopy.TransferFields(BomBuffer);
-                            bombuffercopy."Entry No." := entryno;
-                            bombuffercopy."Location Code" := location.Code;
-                            bombuffercopy."Sales Item" := SalesLine."No.";
-                            bombuffercopy.Insert();
-                        until BomBuffer.Next() = 0;
-                until location.Next() = 0;
+                            Item.Reset();
+                            if SalesHeader."Shipment Date" <> 0D then
+                                Item.SetRange("Date Filter", 0D, SalesHeader."Shipment Date")
+                            else
+                                Item.SetRange("Date Filter", 0D, Today);
+                            Item.SetFilter("Location Filter", location.Code);
+                            Item.SetFilter("No.", SalesLine."No.");
+                            ItemAvailFormsMgt.CalcAvailQuantities(
+                                      Item, true,
+                                      GrossRequirement, PlannedOrderRcpt, ScheduledRcpt,
+                                      PlannedOrderReleases, ProjAvailableBalance, ExpectedInventory, DummyQtyAvailable, AvailableInventory);
+
+                            bombuffercopy.Reset();
+                            if bombuffercopy.FindLast() then
+                                entryno := bombuffercopy."Entry No." + 1
+                            else
+                                entryno := 1;
+                            bombuffercopy.Reset();
+                            bombuffercopy.SetRange("Location Code", location.Code);
+                            bombuffercopy.SetRange("Sales Item", SalesLine."No.");
+                            if NOT bombuffercopy.FindFirst() then begin
+
+                                entryno += 1;
+                                bombuffercopy.Init();
+                                bombuffercopy."No." := SalesLine."No.";
+                                bombuffercopy."Entry No." := entryno;
+                                bombuffercopy."Location Code" := location.Code;
+                                bombuffercopy."Sales Item" := SalesLine."No.";
+                                bombuffercopy."Available Quantity" := AvailableInventory;
+                                bombuffercopy."Gross Requirement" := SalesLine.Quantity;
+                                bombuffercopy.Insert();
+                            end;
+                        until location.Next() = 0;
+                    end else begin
+                        // exit;
+                        ItemCount += 1;
+                        location.Reset();
+                        location.SetRange("Include in Location Assignment", true);
+                        location.FindSet();
+                        repeat
+                            Item.Reset();
+                            if SalesHeader."Shipment Date" <> 0D then
+                                Item.SetRange("Date Filter", 0D, SalesHeader."Shipment Date")
+                            else
+                                Item.SetRange("Date Filter", 0D, Today);
+                            Item.SetFilter("Location Filter", location.Code);
+                            Item.SetFilter("No.", SalesLine."No.");
+                            CalculateBOMTree.SetItemFilter(Item);
+                            CalculateBOMTree.SetShowTotalAvailability(true);
+                            case ShowBy of
+                                ShowBy::Item:
+                                    begin
+                                        Item.FindFirst();
+                                        if not Item.HasBOM() then
+                                            exit;
+                                        CalculateBOMTree.GenerateTreeForItems(Item, BomBuffer, 1);
+
+                                    end;
+                            end;
+                            bombuffercopy.Reset();
+                            if bombuffercopy.FindLast() then
+                                entryno := bombuffercopy."Entry No." + 1
+                            else
+                                entryno := 1;
+                            BomBuffer.SetRange(Indentation, 0);
+                            if BomBuffer.FindSet() then
+                                repeat
+                                    entryno += 1;
+                                    bombuffercopy.Init();
+                                    bombuffercopy.TransferFields(BomBuffer);
+                                    bombuffercopy."Entry No." := entryno;
+                                    bombuffercopy."Location Code" := location.Code;
+                                    bombuffercopy."Sales Item" := SalesLine."No.";
+                                    bombuffercopy.Insert();
+                                until BomBuffer.Next() = 0;
+                        until location.Next() = 0;
+                    end;
             until SalesLine.Next() = 0;
         FillItemBomAvailable(bombuffercopy, SalesHeader, ItemCount);
         if ApplicableforAPI(SalesHeader) then
@@ -144,6 +191,7 @@ codeunit 50102 LocationAssignment
                     location.SetFilter(Code, LocFilter);
                     if location.FindSet() then
                         repeat
+                            /*
                             available := false;
                             bombuffercopy2.Reset();
                             bombuffercopy2.SetFilter(Indentation, '>%1', 0);
@@ -160,7 +208,8 @@ codeunit 50102 LocationAssignment
 
                                 until bombuffercopy2.Next() = 0;
                             end else
-                                available := true;
+                            */
+                            available := true;
                             //if available then begin
                             if not bomavailable.Get(SalesLine."No.", location.code) then begin
                                 bomavailable.Init();
@@ -173,12 +222,7 @@ codeunit 50102 LocationAssignment
                                 bomavailable.Weight := SalesLine."Gross Weight" * SalesLine.Quantity;
                                 bomavailable."Actual Count" := TotalRecord;
                                 bomavailable.Insert();
-                                // end else begin
-                                //     if not bomavailable.Available then
-                                //         bomavailable.Available := true;
-                                //     bomavailable.Modify();
                             end;
-                        //end;
                         until location.Next() = 0;
                 end;
             until SalesLine.Next() = 0
@@ -236,7 +280,22 @@ codeunit 50102 LocationAssignment
                     exit(true);
                 end else
                     exit(false);
+        end else begin
+            SalesHeader."Location Code" := 'BACK ORDER';
+            SalesHeader.Modify(true);
+            LsalesLine.Reset();
+            LsalesLine.SetRange("Document Type", SalesHeader."Document Type");
+            LsalesLine.SetRange("Document No.", SalesHeader."No.");
+            if LsalesLine.FindSet() then
+                repeat
+                    //if LsalesLine."Location Code" = '' then begin
+                    LsalesLine."Location Code" := 'BACK ORDER';
+                    LsalesLine.Modify(true);
+                //end;
+                until LsalesLine.Next() = 0;
+            exit(false);
         end;
+
     end;
 
     procedure SethideDialog(HideDialog: Boolean)

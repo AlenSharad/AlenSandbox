@@ -1,6 +1,17 @@
 // Page Extension for Location Card
 pageextension 50132 "Location Card Extension" extends "Location Card"
 {
+    layout
+    {
+        addlast(General)
+        {
+            field("Include in Location Assignment"; Rec."Include in Location Assignment")
+            {
+                Caption = 'Include in Inventory';
+                ApplicationArea = all;
+            }
+        }
+    }
     actions
     {
         addlast(Navigation)

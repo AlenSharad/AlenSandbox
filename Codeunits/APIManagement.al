@@ -20,11 +20,11 @@ codeunit 50103 APIManagement
         if not IntegrationSetup.FindFirst() then
             Error('Integration Setup not found for Location Assignment.');
         CheckMandatoryandReset(IntegrationSetup."API URL");
-        ResponseMsg := MakeRequest(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayload(), IntegrationSetup.Username, IntegrationSetup.Password);
+        ResponseMsg := MakeRequest(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayload(), IntegrationSetup.Username, IntegrationSetup.Password, IntegrationSetup.Code, SalesHeader."No.");
 
         content := ResponseMsg.Content();
         content.ReadAs(ResponseMsgTXT);
-
+        //Message(ResponseMsgTXT);
         finalLocation := GetLocationfromResponse(ResponseMsgTXT);
         finalAgentService := GetAgentfromResponse(ResponseMsgTXT);
         //Message(finalLocation);
@@ -56,7 +56,7 @@ codeunit 50103 APIManagement
         Clear(ResponseText);
     end;
 
-    local procedure MakeRequest(APIUrl: Text; HttpMethod: Enum "Http Request Type"; var ResponseStatus: Boolean; Payload: Text; Username: Text[50]; Password: Text[50]) response: HttpResponseMessage;
+    local procedure MakeRequest(APIUrl: Text; HttpMethod: Enum "Http Request Type"; var ResponseStatus: Boolean; Payload: Text; Username: Text[50]; Password: Text[50]; APICode: Code[20]; DocumentNo: Code[20]) response: HttpResponseMessage;
     var
         contentHeader: HttpHeaders;
         request: HttpRequestMessage;
@@ -103,14 +103,15 @@ codeunit 50103 APIManagement
         end;
         ResponseStatus := client.Send(request, response);
 
+        LogApiTransactions(APIUrl, HttpMethod, ResponseStatus, Payload, response, APICode, DocumentNo);
         //Message('Response Status: %1', Format(ResponseStatus));
         //Log API Transactions
     end;
 
     local procedure GeneratePostPayload() payload: Text
     var
-        RootObj, ShipToAddressObj, ShipmentWeightObj, WarehouseObj, WarehouseItemObj : JsonObject;
-        WarehouseListArr: JsonArray;
+        RootObj, ShipToAddressObj, ShipmentWeightObj, WarehouseObj, ItemObj : JsonObject;
+        ItemListArr, WarehouseListArr : JsonArray;
         salesheader: Record "Sales Header";
         itemBomAvailable: Record "Item Bom Available";
         LsalesLine: Record "Sales Line";
@@ -163,34 +164,32 @@ codeunit 50103 APIManagement
                     end;
                 end;
             until itemBomAvailable.Next() = 0;
+        // filling items
+        LsalesLine.Reset();
+        LsalesLine.SetRange("Document Type", salesheader."Document Type");
+        LsalesLine.SetRange("Document No.", salesheader."No.");
+        LsalesLine.SetFilter(Quantity, '<>%1', 0);
+        if LsalesLine.FindSet() then
+            repeat
+                Clear(ItemObj);
+                ItemObj.Add('ItemNumber', LsalesLine."No.");
+                ItemObj.Add('isReturnItem', getIsreturnflag(LsalesLine."No."));
+                ItemListArr.Add(ItemObj);
+            until LsalesLine.Next() = 0;
+        RootObj.Add('Items', ItemListArr);
+
         if LocFilter <> '' then begin
             location.Reset();
             location.SetFilter(Code, LocFilter);
             if location.FindSet() then
-                // if location.Count = 1 then begin
-                //     SalesHeader."Location Code" := location.Code;
-                //     SalesHeader.Modify(true);
-                //     LsalesLine.Reset();
-                //     LsalesLine.SetRange("Document Type", SalesHeader."Document Type");
-                //     LsalesLine.SetRange("Document No.", SalesHeader."No.");
-                //     if LsalesLine.FindSet() then
-                //         repeat
-                //             if LsalesLine."Location Code" = '' then begin
-                //                 LsalesLine."Location Code" := location.Code;
-                //                 LsalesLine.Modify(true);
-                //             end;
-                //         until LsalesLine.Next() = 0;
-                //     payload := '';
-                //     exit(payload);
-                // end;
-            repeat
-                Clear(WarehouseObj);
-                Clear(WarehouseItemObj);
-                WarehouseObj.Add('code', location.Code);
-                WarehouseObj.Add('id', '');
-                WarehouseObj.Add('postalCode', location."Post Code");
-                //WarehouseItemObj.Add('warehouses', WarehouseObj);
-                WarehouseListArr.Add(WarehouseObj);
+                repeat
+                    Clear(WarehouseObj);
+
+                    WarehouseObj.Add('code', location.Code);
+                    WarehouseObj.Add('id', '');
+                    WarehouseObj.Add('postalCode', location."Post Code");
+                    //WarehouseItemObj.Add('warehouses', WarehouseObj);
+                    WarehouseListArr.Add(WarehouseObj);
                 until location.Next() = 0;
         end;
         // Wrap Warehouse in warehouse key
@@ -201,7 +200,7 @@ codeunit 50103 APIManagement
 
         // Convert to text
         RootObj.WriteTo(payload);
-        // Message('Payload: %1', payload);
+        //Message('Payload: %1', payload);
         exit(payload);
     end;
 
@@ -274,8 +273,10 @@ codeunit 50103 APIManagement
         // JsonObj.Get('orderNumber', OrderNumber);
 
         // Get assignedWarehouse object
-        JsonObj.Get('shipAgentService', WhToken);
-        WarehouseCode := WhToken.AsValue().AsText();
+        if JsonObj.Get('shipAgentService', WhToken) then
+            WarehouseCode := WhToken.AsValue().AsText()
+        else
+            WarehouseCode := '';
         /*
         JsonObj.Get('assignedWarehouse', JToken);
         if JToken.IsObject then begin
@@ -289,6 +290,68 @@ codeunit 50103 APIManagement
 
         // Insert into table
 
+    end;
+
+    local procedure getIsreturnflag(No: Code[20]): Text
+    var
+        item: Record Item;
+    begin
+        item.Reset();
+        item.Get(No);
+        if item."Ava VAT isGoodsSecondHand" then
+            exit('true')
+        else
+            exit('false');
+    end;
+
+    local procedure HandleStreams(var ApiLog: Record "API Log"; RequestBlob: InStream; ResponseBlob: InStream)
+    var
+        //OutStr: OutStream;
+        OutStr2: OutStream;
+    begin
+        //Clear(OutStr);
+        Clear(OutStr2);
+        // ApiLog."Request".CreateOutStream(OutStr);
+        // CopyStream(OutStr, RequestBlob);
+        // ApiLog.Modify(true);
+        // Commit();
+        ApiLog."Response".CreateOutStream(OutStr2);
+        CopyStream(OutStr2, ResponseBlob);
+
+        // Update the API Log record with the streams
+        ApiLog.Modify(true);
+    end;
+
+
+    procedure LogApiTransactions(ApiUrl: Text; HttpMethod: Enum "Http Request Type"; var ResponseStatus: Boolean; var request: text; var response: HttpResponseMessage; APIName: Code[20]; DocumentNo: Code[20])
+    var
+        ApiLog: Record "API Log";
+        RequestBlob: InStream;
+        ResponseBlob: InStream;
+        TempRequest: InStream;
+        TempResponse: InStream;
+        outStr: OutStream;
+    begin
+
+        //    request.Content.ReadAs(RequestBlob);
+        response.Content.ReadAs(ResponseBlob);
+        ApiLog.Init;
+
+        ApiLog.URL := ApiUrl;
+        ApiLog.Method := HttpMethod;
+        ApiLog.Request.CreateOutStream(outStr);
+        outStr.WriteText(request);
+        ApiLog.DocumentNo := DocumentNo;
+        ApiLog."Status Code" := response.HttpStatusCode;
+        ApiLog.Success := ResponseStatus;
+
+        ApiLog."User ID" := UserId;
+
+        ApiLog.LoggedOn := CurrentDateTime;
+        ApiLog."API Name" := APIName;
+
+        ApiLog.Insert();
+        HandleStreams(ApiLog, RequestBlob, ResponseBlob);
     end;
 
     var

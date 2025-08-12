@@ -63,7 +63,17 @@ tableextension 50100 CustomerExtension extends Customer
             Caption = 'Zendesk Customer No.';
             DataClassification = ToBeClassified;
         }
-
+        field(50013; "Tax Exemption Expiry Date"; Date)
+        {
+            Caption = 'Tax Exemption Expiry Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50014; "Tax Exempt Certificate"; Text[500])
+        {
+            Caption = 'Tax Exempt Certificate';
+            DataClassification = ToBeClassified;
+            ExtendedDatatype = URL;
+        }
     }
 
     keys

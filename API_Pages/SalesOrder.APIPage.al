@@ -148,6 +148,14 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo(BillToOptions));
                     end;
                 }
+                field(ShipToOptions; Rec.ShipToOptions)
+                {
+                    Caption = 'Ship-to';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(ShipToOptions));
+                    end;
+                }
                 field(billToCustomerNumber; Rec."Bill-to Customer No.")
                 {
                     Caption = 'Bill-to Customer No.';
@@ -1178,6 +1186,7 @@ page 50109 "API - Sales Orders"
         SalesHeader: Record "Sales Header";
         SalesHeader2: Record "Sales Header";
         custombillto: Record "Custom Bill To Address";
+        customshipto: Record "Custom Ship To Address";
         LocCode: Code[10];
         yourReference: Text[35];
         taxareaCode: Code[20];
@@ -1198,6 +1207,7 @@ page 50109 "API - Sales Orders"
         orderTotalTax := Rec."Order Total Tax";
         shipDate := Rec."Shipment Date";
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
+            // IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.") then
             custombillto.DeleteAll();
             custombillto.Init();
             custombillto."Document Type" := custombillto."Document Type"::Order;
@@ -1212,6 +1222,23 @@ page 50109 "API - Sales Orders"
             custombillto.Insert();
 
         end;
+        if Rec.ShipToOptions = Rec.ShipToOptions::"Custom Address" then begin
+            IF customshipto.Get(customshipto."Document Type"::Order, Rec."No.") then
+                customshipto.DeleteAll();
+            customshipto.Init();
+            customshipto."Document Type" := customshipto."Document Type"::Order;
+            customshipto."Document No." := Rec."No.";
+            customshipto.ShipToName := Rec."Ship-to Name";
+            customshipto.shiptooptions := Rec.ShipToOptions;
+            customshipto.ShiptoAdd1 := Rec."Ship-to Address";
+            customshipto.ShiptoAdd2 := Rec."Ship-to Address 2";
+            customshipto.ShiptoPostCode := Rec."Ship-to Post Code";
+            customshipto.ShiptoCity := Rec."Ship-to City";
+            customshipto.ShiptoCountryRegionCode := Rec."Ship-to Country/Region Code";
+            customshipto.ShiptoCounty := Rec."Ship-to County";
+            customshipto.Insert();
+
+        end;
 
         CheckSellToCustomerSpecified();
 
@@ -1223,8 +1250,10 @@ page 50109 "API - Sales Orders"
         UpdateDiscount();
 
         SetCalculatedFields();
+        //if custombillto.get(custombillto."Document Type"::Order, Rec."No.") then
         if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
             //Error('-%1 and %2 and %3 and %4', custombillto."Document No.", custombillto.BillToOptions, custombillto.BilltoAdd1, custombillto.billtoPostCode);
+            Rec.BillToOptions := custombillto.BillToOptions;
             Rec."Bill-to Address" := custombillto.BilltoAdd1;
             Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
             Rec."Bill-to Post Code" := custombillto.billtoPostCode;
@@ -1252,6 +1281,23 @@ page 50109 "API - Sales Orders"
         end;
         SalesHeader2.Reset();
         if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+            if customshipto.get(customshipto."Document Type"::Order, Rec."No.") then
+                if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then begin
+                    Rec.ShipToOptions := customshipto.ShipToOptions;
+                    Rec."Ship-to Name" := customshipto.ShipToName;
+                    Rec."Ship-to Address" := customshipto.ShiptoAdd1;
+                    Rec."Ship-to Address 2" := customshipto.ShiptoAdd2;
+                    Rec."Ship-to Post Code" := customshipto.ShiptoPostCode;
+                    Rec."Ship-to Country/Region Code" := customshipto.ShiptoCountryRegionCode;
+                    Rec."Ship-to City" := customshipto.shiptoCity;
+                    Rec."Ship-to County" := customshipto.shiptoCounty;
+                    SalesHeader2."Ship-to Address" := customshipto.ShiptoAdd1;
+                    SalesHeader2."Ship-to Address 2" := customshipto.ShiptoAdd2;
+                    SalesHeader2."Ship-to Post Code" := customshipto.shiptoPostCode;
+                    SalesHeader2."Ship-to Country/Region Code" := customshipto.shiptoCountryRegionCode;
+                    SalesHeader2."Ship-to City" := customshipto.shiptoCity;
+                    SalesHeader2."Ship-to County" := customshipto.shiptoCounty;
+                end;
             SalesHeader2."Location Code" := LocCode;
             SalesHeader2."Your Reference" := yourReference;
             SalesHeader2."Tax Area Code" := taxareaCode;
@@ -1263,7 +1309,7 @@ page 50109 "API - Sales Orders"
             SalesHeader2."Shipment Date" := shipDate;
             SalesHeader2.Modify(false);
         end;
-        custombillto.DeleteAll();
+
         Rec."Location Code" := LocCode;
         Rec."Your Reference" := yourReference;
         Rec."Tax Area Code" := taxareaCode;
@@ -1289,16 +1335,7 @@ page 50109 "API - Sales Orders"
 
         SetCalculatedFields();
 
-        // if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-        //     SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
-        //     SalesHeader."Bill-to Address" := Rec."Bill-to Address";
-        //     SalesHeader."Bill-to Address 2" := Rec."Bill-to Address 2";
-        //     SalesHeader."Bill-to Post Code" := Rec."Bill-to Post Code";
-        //     SalesHeader."Bill-to Country/Region Code" := Rec."Bill-to Country/Region Code";
-        //     SalesHeader."Bill-to City" := Rec."Bill-to City";
-        //     SalesHeader."Bill-to County" := Rec."Bill-to County";
-        //     SalesHeader.modify;
-        // end;
+
         exit(false);
     end;
 
@@ -1308,16 +1345,6 @@ page 50109 "API - Sales Orders"
     begin
         ClearCalculatedFields();
 
-        // if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-        //     SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
-        //     SalesHeader."Bill-to Address" := Rec."Bill-to Address";
-        //     SalesHeader."Bill-to Address 2" := Rec."Bill-to Address 2";
-        //     SalesHeader."Bill-to Post Code" := Rec."Bill-to Post Code";
-        //     SalesHeader."Bill-to Country/Region Code" := Rec."Bill-to Country/Region Code";
-        //     SalesHeader."Bill-to City" := Rec."Bill-to City";
-        //     SalesHeader."Bill-to County" := Rec."Bill-to County";
-        //     SalesHeader.modify;
-        // end;
     end;
 
     trigger OnOpenPage()

@@ -30,6 +30,12 @@
       "name": "Subscription Billing",
       "publisher": "Microsoft",
       "version": "26.2.34746.35601"
+    },
+    {
+      "id": "5fedf952-2450-4bce-b578-f3b7c13cd9a9",
+      "name": "Avalara AvaTax",
+      "publisher": "Avalara",
+      "version": "25.0.27.0"
     }
   ],
   "screenshots": [],

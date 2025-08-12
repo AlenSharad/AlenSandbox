@@ -84,6 +84,12 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 ApplicationArea = all;
                 Caption = 'Order Total Amount';
             }
+            field("Order Total Tax"; Rec."Order Total Tax")
+            {
+                ApplicationArea = all;
+                Caption = 'Order Total Tax';
+                Editable = false;
+            }
         }
         addafter("Shipping and Billing")
         {
@@ -319,6 +325,7 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
         }
 
     }
+
     actions
     {
         addlast(processing)
@@ -343,4 +350,9 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
             }
         }
     }
+    // trigger OnOpenPage()
+
+    // begin
+    //     CurrPage.Editable(false)
+    // end;
 }

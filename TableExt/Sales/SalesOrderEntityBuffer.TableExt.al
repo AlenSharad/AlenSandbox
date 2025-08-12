@@ -61,6 +61,11 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             Caption = 'Bill To Options';
             DataClassification = CustomerContent;
         }
+        field(50502; ShipToOptions; Enum "Sales Ship-to Options")
+        {
+            Caption = 'Ship To Options';
+            DataClassification = CustomerContent;
+        }
         field(50110; "Order Total Check"; Decimal)
         {
             Caption = 'Order Total Check';

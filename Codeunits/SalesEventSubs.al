@@ -7,11 +7,12 @@ codeunit 50101 SalesEventSubs
         // Code to execute when the codeunit is run
     end;
 
-    var
-        custombillto: Record "Custom Bill To Address";
+
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterCopySellToAddressToBillToAddress, '', false, false)]
     local procedure ChangeBillto(var SalesHeader: Record "Sales Header")
+    var
+        custombillto: Record "Custom Bill To Address";
     begin
         //if billtooptions = billtooptions::"Custom Address" then begin
         custombillto.Reset();
@@ -25,7 +26,27 @@ codeunit 50101 SalesEventSubs
             SalesHeader."Bill-to City" := custombillto.billtoCity;
             SalesHeader.modify;
         end;
-        custombillto.DeleteAll();
+        //custombillto.DeleteAll();
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterCopySellToAddressToShipToAddress, '', false, false)]
+    local procedure ChangeShipto(var SalesHeader: Record "Sales Header")
+    var
+        customshipto: Record "Custom Ship To Address";
+    begin
+        //if billtooptions = billtooptions::"Custom Address" then begin
+        customshipto.Reset();
+        customshipto.SetRange("Document Type", customshipto."Document Type"::Order);
+        if customshipto.FindFirst() then begin
+            SalesHeader."ship-to Address" := customshipto.shiptoAdd1;
+            SalesHeader."ship-to Address 2" := customshipto.shiptoAdd2;
+            SalesHeader."ship-to Post Code" := customshipto.shiptoPostCode;
+            SalesHeader."ship-to Country/Region Code" := customshipto.shiptoCountryRegionCode;
+            SalesHeader."ship-to County" := customshipto.shiptoCounty;
+            SalesHeader."ship-to City" := customshipto.shiptoCity;
+            SalesHeader.modify;
+        end;
+        //customshipto.DeleteAll();
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterModifyEvent', '', true, true)]
@@ -135,6 +156,8 @@ codeunit 50101 SalesEventSubs
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount Amount", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
     begin
+        //if xRec."No." = Rec."No." then
+
         Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
         CalculateandUpdateTotalVarance(Rec);
     end;
@@ -162,7 +185,52 @@ codeunit 50101 SalesEventSubs
         end;
     end;
 
+    [EventSubscriber(ObjectType::Page, PAge::"Sales Order", OnBeforeValidateShipToOptions, '', false, false)]
+    local procedure SetShipToAsCustomOnBeforeValidateShipToOptions(ShipToOptions: Option; SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
+    var
+        customshipto: Record "Custom Ship To Address";
+    begin
+        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+            if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
+                ShipToOptions := customshipto.ShipToOptions.AsInteger();
+            IsHandled := true;
 
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Customer Mgt.", OnAfterCalculateShipBillToOptions, '', false, false)]
+    local procedure SetShipToAsCustomOnAfterCalculateShipBillToOptions(var ShipToOptions: Enum "Sales Ship-to Options"; SalesHeader: Record "Sales Header")
+    var
+        customshipto: Record "Custom Ship To Address";
+    begin
+        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+            if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
+                ShipToOptions := customshipto.ShipToOptions;
+
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterHasDifferentShipToAddress', '', true, true)]
+    local procedure MyProcedure2(var SalesHeader: Record "Sales Header"; var Result: Boolean)
+    var
+        customshipto: Record "Custom Ship To Address";
+    begin
+        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+            if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
+                Result := true;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterIsShipToAddressEqualToSellToAddress', '', true, true)]
+    local procedure MyProcedure3(SellToSalesHeader: Record "Sales Header"; var Result: Boolean)
+    var
+        customshipto: Record "Custom Ship To Address";
+    begin
+        if customshipto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.") then begin
+            if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
+                Result := false;
+        end;
+    end;
 
     local Procedure CalculateandUpdateTotalVarance(var SL: Record "Sales Line")
     var
@@ -222,11 +290,14 @@ codeunit 50101 SalesEventSubs
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", OnBeforePerformManualReleaseProcedure, '', false, false)]
-    local procedure LocationAssignmentOnBeforePerformManualReleaseProcedure(var SalesHeader: Record "Sales Header")
+    local procedure LocationAssignmentOnBeforePerformManualReleaseProcedure(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
         LocationAssignment: Codeunit LocationAssignment;
     begin
+
         LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
+        if SalesHeader."Location Code" = 'BACK ORDER' then
+            IsHandled := true;
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCalcVATAmountLines, '', false, false)]
@@ -255,6 +326,97 @@ codeunit 50101 SalesEventSubs
         if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
             IsHandled := true
     end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeUpdateUnitPrice, '', false, false)]
+    local procedure UpdateLineTaxAmountOnBeforeUpdateUnitPrice(CalledByFieldNo: Integer; var Handled: Boolean; var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
+    var
+        TaxBase, TaxAmount, TaxPercent : Decimal;
+    begin
+        if SalesLine."No." = xSalesLine."No." then begin
+            if SalesLine."Line Tax Amount" <> xSalesLine."Line Tax Amount" then begin
+                SalesLine.Validate("Line Tax Amount", xSalesLine."Line Tax Amount");
+                //TaxPercent := (xSalesLine."Line Tax Amount" / xSalesLine."Line Amount") * 100;
+                //Message('Tax Percent: %1', TaxPercent);
+            end;
+            if SalesLine."Line Discount Amount" <> xSalesLine."Line Discount Amount" then begin
+                SalesLine.Validate("Line Discount Amount", xSalesLine."Line Discount Amount");
+                //TaxPercent := (xSalesLine."Line Tax Amount" / xSalesLine."Line Amount") * 100;
+                //Message('Tax Percent: %1', TaxPercent);
+            end;
+        end;
+
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnUpdateUnitPriceByFieldOnBeforeValidateUnitPrice, '', false, false)]
+    local procedure UpdateLineTaxAmountOnAfterUpdateUnitPrice(CalledByFieldNo: Integer; var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
+    var
+        TaxBase, TaxAmount, TaxPercent : Decimal;
+    begin
+        if (SalesLine."Line Amount" <> 0) and (SalesLine.Type = SalesLine.Type::Item) and (SalesLine."No." = xSalesLine."No.") and (SalesLine.Quantity = xSalesLine.Quantity) then begin
+            if SalesLine."Line Discount %" <> xSalesLine."Line Discount %" then begin
+                SalesLine.Validate("Line Discount %", xSalesLine."Line Discount %");
+            end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnValidateSellToCustomerNoOnAfterTestStatusOpen, '', false, false)]
+    local procedure StopValidationOnValidateSellToCustomerNoOnAfterTestStatusOpen(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var IsHandled: Boolean)
+    begin
+        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
+            if (SalesHeader."Sell-to Customer No." = xSalesHeader."Sell-to Customer No.") and
+               (xSalesHeader."Sell-to Customer No." <> '')
+                    then
+                IsHandled := true;
+        end;
+    end;
+
+    //  [EventSubscriber(ObjectType::Page, PAge::"Sales Order", OnBeforeValidateBillToOptions, '', false, false)]
+    // local procedure SetBillToAsCustomOnBeforeValidateShipToOptions(ShipToOptions: Option; SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
+    // var
+    //     customshipto: Record "Custom Ship To Address";
+    // begin
+    //     if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+    //         if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
+    //             ShipToOptions := customshipto.ShipToOptions.AsInteger();
+    //         IsHandled := true;
+
+    //     end;
+    // end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Customer Mgt.", OnAfterCalculateShipBillToOptions, '', false, false)]
+    local procedure SetBillToAsCustomOnAfterCalculateShipBillToOptions(var BillToOptions: Enum "Sales Bill-to Options"; SalesHeader: Record "Sales Header")
+    var
+        custombillto: Record "Custom Bill To Address";
+    begin
+        if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+            if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
+                BillToOptions := custombillto.BillToOptions;
+
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterHasDifferentBillToAddress, '', true, true)]
+    local procedure ChangeBilltoOnAfterHasDifferentBillToAddress(var SalesHeader: Record "Sales Header"; var Result: Boolean)
+    var
+        custombillto: Record "Custom Bill To Address";
+    begin
+        if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+            if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
+                Result := true;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterIsBillToAddressEqualToSellToAddress, '', true, true)]
+    local procedure ChangeBillToOnAfterIsBillToAddressEqualToSellToAddress(SellToSalesHeader: Record "Sales Header"; var Result: Boolean)
+    var
+        custombillto: Record "Custom Bill To Address";
+    begin
+        if custombillto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.") then begin
+            if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
+                Result := false;
+        end;
+    end;
+
 
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
     var

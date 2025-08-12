@@ -22,4 +22,18 @@ page 50122 "Integration Setups"
             }
         }
     }
+    actions
+    {
+        area(navigation)
+        {
+            action(APILog)
+            {
+                ApplicationArea = All;
+                Caption = 'API Log Entry';
+                Image = New;
+                RunObject = page "API Logs";
+                RunPageLink = "API Name" = field(Code);
+            }
+        }
+    }
 }

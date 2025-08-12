@@ -185,6 +185,33 @@ page 50100 "API - Customers"
                         RegisterFieldSet(Rec.FieldNo("Tax Liable"));
                     end;
                 }
+                field(taxExemptionNo; Rec."Tax Exemption No.")
+                {
+                    Caption = 'Tax Exemption No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Tax Exemption No."));
+                    end;
+                }
+                field(taxExemptionExpiryDate; Rec."Tax Exemption Expiry Date")
+                {
+                    Caption = 'Tax Exemption Expiry Date';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Tax Exemption Expiry Date"));
+                    end;
+                }
+                field(taxExemptCertificate; Rec."Tax Exempt Certificate")
+                {
+                    Caption = 'Tax Exempt Certificate';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Tax Exempt Certificate"));
+                    end;
+                }
                 field(taxAreaId; Rec."Tax Area ID")
                 {
                     Caption = 'Tax Area Id';
@@ -201,6 +228,7 @@ page 50100 "API - Customers"
                             RegisterFieldSet(Rec.FieldNo("VAT Bus. Posting Group"));
                     end;
                 }
+
                 field(taxAreaDisplayName; TaxAreaDisplayNameGlobal)
                 {
                     Caption = 'Tax Area Display Name';
