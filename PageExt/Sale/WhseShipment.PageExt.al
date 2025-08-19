@@ -98,6 +98,15 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
             }
 
         }
+        addlast(Shipping)
+        {
+            field("Package Tracking No."; Rec."Package Tracking No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Package Tracking No.';
+                Importance = Standard;
+            }
+        }
         addafter("Shipping")
         {
             group("Marketplace Details")

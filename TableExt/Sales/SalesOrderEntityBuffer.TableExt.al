@@ -313,6 +313,11 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             Caption = 'Shipment Date';
             DataClassification = ToBeClassified;
         }
+        field(50162; "Agreement No."; Text[30])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
     }
 
 }

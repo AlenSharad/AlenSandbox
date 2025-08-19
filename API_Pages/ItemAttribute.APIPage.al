@@ -13,7 +13,7 @@ page 50106 "API - Item Attributes"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

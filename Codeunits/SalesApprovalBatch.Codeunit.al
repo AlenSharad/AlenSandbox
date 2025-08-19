@@ -11,13 +11,15 @@ codeunit 50104 "Sales Order Approval Processor"
     var
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
+        customer: Record Customer;
+        SORelease: Codeunit "Release Sales Order";
     begin
+
         if Rec."Parameter String" = 'Sales Order Approval' then begin
             SalesHeader.Reset();
             SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
             SalesHeader.SetRange(Status, SalesHeader.Status::Open);
             SalesHeader.SetFilter("Order Total Variance", '>%1', 0);
-            //SalesHeader.SetRange("No.", 'ALNC8702S-DEV');
             if SalesHeader.FindSet() then
                 repeat
                     ProcessSalesOrderApproval(SalesHeader);
@@ -31,12 +33,15 @@ codeunit 50104 "Sales Order Approval Processor"
             SalesHeader.SetFilter("Location Code", '<>%1', '');
             if SalesHeader.FindSet() then
                 repeat
-                    SalesLine.Reset();
-                    SalesLine.SetRange("Document Type", SalesHeader."Document Type");
-                    SalesLine.SetRange("Document No.", SalesHeader."No.");
-                    SalesLine.Setfilter(Quantity, '<>%1', 0);
-                    if Not SalesLine.IsEmpty then
-                        SalesHeader.PerformManualRelease();
+                    customer.Get(SalesHeader."Sell-to Customer No.");
+                    if (customer."Blocked" <> customer."Blocked"::"Release") then begin
+                        SalesLine.Reset();
+                        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                        SalesLine.SetRange("Document No.", SalesHeader."No.");
+                        SalesLine.Setfilter(Quantity, '<>%1', 0);
+                        if Not SalesLine.IsEmpty then
+                            SalesHeader.PerformManualRelease();
+                    end;
                 until SalesHeader.Next() = 0;
         end;
 

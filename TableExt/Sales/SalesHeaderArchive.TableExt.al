@@ -262,5 +262,15 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
+        field(50161; "Location Assigned"; Boolean)
+        {
+            Caption = 'Location Assigned';
+            DataClassification = ToBeClassified;
+        }
+        field(50162; "Agreement No."; Text[30])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
     }
 }

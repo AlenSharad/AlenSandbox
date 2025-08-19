@@ -14,7 +14,7 @@ page 50110 "API - Get Item Attributes"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

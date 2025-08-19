@@ -7,7 +7,7 @@ codeunit 50100 ShopifyEventSubs
     end;
 
     [EventSubscriber(ObjectType::Report, Report::"Get Source Documents", OnBeforeWhseShptHeaderInsert, '', false, false)]
-    local procedure FlowSalesHeaderFieldsOnBeforeWhseShptHeaderInsert(SalesHeader: Record "Sales Header"; var WarehouseShipmentHeader: Record "Warehouse Shipment Header")
+    local procedure FlowSalesHeaderFieldsOnBeforeWhseShptHeaderInsert(SalesHeader: Record "Sales Header"; var WarehouseShipmentHeader: Record "Warehouse Shipment Header"; TransferLine: Record "Transfer Line")
     begin
         WarehouseShipmentHeader."Order Type Code" := SalesHeader."Order Type Code";
         //WarehouseShipmentHeader."Shopify Variant Id" := SalesHeader."Shopify Variant Id";
@@ -62,6 +62,9 @@ codeunit 50100 ShopifyEventSubs
         WarehouseShipmentHeader."Order Total Tax" := SalesHeader."Order Total Tax";
         WarehouseShipmentHeader."Source No." := SalesHeader."No.";
         WarehouseShipmentHeader."Your Reference" := SalesHeader."Your Reference";
+        WarehouseShipmentHeader."Package Tracking No." := SalesHeader."Package Tracking No.";
+        if TransferLine."Document No." <> '' then
+            WarehouseShipmentHeader."Source No." := TransferLine."Document No.";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Warehouse Mgt.", OnAfterCreateShptLineFromSalesLine, '', false, false)]
@@ -101,5 +104,9 @@ codeunit 50100 ShopifyEventSubs
         end;
     end;
 
-
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Transfer Warehouse Mgt.", OnAfterCreateRcptLineFromTransLine, '', false, false)]
+    local procedure UpdateSourceNoinHeaderOnAfterCreateRcptLineFromTransLine(TransferLine: Record "Transfer Line"; WarehouseReceiptHeader: Record "Warehouse Receipt Header")
+    begin
+        WarehouseReceiptHeader."Source No." := TransferLine."Document No.";
+    end;
 }

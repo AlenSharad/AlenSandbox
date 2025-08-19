@@ -14,6 +14,7 @@ page 50101 "API - Contacts"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {

@@ -13,7 +13,7 @@ page 50108 "API - Item References"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

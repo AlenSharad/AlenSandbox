@@ -88,7 +88,7 @@ table 50112 "API Log"
             Error('requestblank');
         Rec.SetAutoCalcFields(Request);
         Rec.Request.CreateInStream(Instr);
-        FileName := 'Request_' + Format(Rec."Entry No.") + FORMAT(Rec.Method) + '.json';
+        FileName := 'Request_' + Format(Rec.DocumentNo) + FORMAT(Rec.Method) + '.json';
         DownloadFromStream(Instr, 'Request_', '', 'Json Files (*.json)|*.json', FileName);
         // Rec."Request".DownloadToFile('C:\Temp\Request_' + Format(Rec."Entry No.") + '.txt');
     end;
@@ -102,7 +102,7 @@ table 50112 "API Log"
             exit;
         Rec.SetAutoCalcFields(Response);
         Rec.Response.CreateInStream(Instr);
-        FileName := 'Response_' + Format(Rec."Entry No.") + FORMAT(Rec.Method) + '.json';
+        FileName := 'Response_' + Format(Rec.DocumentNo) + FORMAT(Rec.Method) + '.json';
         DownloadFromStream(Instr, 'Response_', '', 'Json Files (*.json)|*.json', FileName);
         // Rec."Request".DownloadToFile('C:\Temp\Request_' + Format(Rec."Entry No.") + '.txt');
     end;

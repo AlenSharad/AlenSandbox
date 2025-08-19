@@ -14,7 +14,7 @@ page 50105 "API - Items"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

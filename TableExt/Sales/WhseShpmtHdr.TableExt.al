@@ -261,6 +261,11 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
+        field(50162; "Agreement No."; Text[30])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
         field(50200; "Source No."; Code[20])
         {
             Editable = false;
@@ -272,7 +277,11 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Your Reference';
             DataClassification = ToBeClassified;
         }
-
+        field(50202; "Package Tracking No."; Text[50])
+        {
+            Caption = 'Package Tracking No.';
+            DataClassification = ToBeClassified;
+        }
     }
     keys
     {

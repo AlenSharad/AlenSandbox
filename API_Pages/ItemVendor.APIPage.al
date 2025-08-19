@@ -13,6 +13,7 @@ page 50107 "API - Item Vendor"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {

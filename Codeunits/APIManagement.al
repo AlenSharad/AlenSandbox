@@ -5,7 +5,7 @@ codeunit 50103 APIManagement
 
     end;
 
-    procedure PostRecordforLocAssignment(SalesHeader: Record "Sales Header")
+    procedure PostRecordforLocAssignment(var SalesHeader: Record "Sales Header")
     var
         IntegrationSetup: Record "Integration Setup";
         content: HttpContent;
@@ -30,6 +30,7 @@ codeunit 50103 APIManagement
         //Message(finalLocation);
         if finalLocation <> '' then begin
             SalesHeader."Location Code" := finalLocation;
+            SalesHeader."Location Assigned" := true;
             if (finalAgentService <> '') and (finalAgentService <> SalesHeader."Shipping Agent Service Code") then
                 SalesHeader.Validate("Shipping Agent Service Code", finalAgentService);
             SalesHeader.Modify(true);

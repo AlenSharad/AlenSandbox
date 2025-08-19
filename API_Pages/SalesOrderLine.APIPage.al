@@ -14,6 +14,7 @@ page 50114 "API - Sales Order Lines"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {
@@ -361,7 +362,7 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Variant Code"));
                     end;
                 }
-                field(locationId; Rec."Location Id")
+                field(locationId; Rec."Location Code")
                 {
                     Caption = 'Location Id';
 
@@ -406,7 +407,7 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Discount Details"));
                     end;
                 }
-                field(amamzonItemId; Rec."Amazon Item ID")
+                field(amazonItemId; Rec."Amazon Item ID")
                 {
                     Caption = 'Amazon Item ID';
 

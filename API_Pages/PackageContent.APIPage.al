@@ -6,7 +6,7 @@ page 50126 "API - Package Content"
     EntityCaption = 'Package Content';
     EntitySetCaption = 'Package Contents';
     PageType = API;
-    DeleteAllowed = true;
+    DeleteAllowed = false;
     InsertAllowed = true;
     ModifyAllowed = true;
     ODataKeyFields = SystemId;

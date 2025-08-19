@@ -270,5 +270,21 @@ tableextension 50105 "Sales Header Ext" extends "Sales Header"
                 Rec."Order Total Variance" := Abs(Rec."Order Total Check" - Rec."Order Total Amount");
             end;
         }
+        field(50160; "Error Description"; Text[250])
+        {
+            Caption = 'Error Description';
+            DataClassification = ToBeClassified;
+        }
+        field(50161; "Location Assigned"; Boolean)
+        {
+            Editable = false;
+            Caption = 'Location Assigned';
+            DataClassification = ToBeClassified;
+        }
+        field(50162; "Agreement No."; Text[30])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
     }
 }

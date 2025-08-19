@@ -49,6 +49,11 @@ table 50105 "Custom Bill To Address"
             Caption = 'Bill-to County';
             DataClassification = ToBeClassified;
         }
+        field(10; "BillToName"; Text[100])
+        {
+            Caption = 'Bill-to Name';
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

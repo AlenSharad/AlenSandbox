@@ -1,5 +1,6 @@
 pageextension 50119 "Sales Order List Page Ext" extends "Sales Order List"
 {
+
     layout
     {
         modify("Your Reference")

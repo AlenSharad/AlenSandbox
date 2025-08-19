@@ -14,7 +14,7 @@ page 50104 "API - CustomerBank"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

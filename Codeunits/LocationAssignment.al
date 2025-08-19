@@ -5,13 +5,14 @@ codeunit 50102 LocationAssignment
 
     end;
 
-    procedure FillItemAvailabilityLocationwise(SalesHeader: Record "Sales Header"; ShowTotalAvailability: Boolean)
+    procedure FillItemAvailabilityLocationwise(var SalesHeader: Record "Sales Header"; ShowTotalAvailability: Boolean)
     var
         CalculateBOMTree: Codeunit "Calculate BOM Tree";
         SalesLine: Record "Sales Line";
         Item: Record Item;
         BomBuffer: Record "BOM Buffer";
         ShowBy: Enum "BOM Structure Show By";
+        apilog: Record "API Log";
         location: Record Location;
         bombuffercopy: Record "BOM Buffer Copy";
         entryno: Integer;
@@ -22,11 +23,14 @@ codeunit 50102 LocationAssignment
         GrossRequirement, PlannedOrderRcpt, ScheduledRcpt,
                                       PlannedOrderReleases, ProjAvailableBalance, ExpectedInventory, DummyQtyAvailable, AvailableInventory : Decimal;
     begin
-        if SalesHeader.Status = SalesHeader.Status::Released then
+
+        if (SalesHeader.Status = SalesHeader.Status::Released) or (SalesHeader."Document Type" <> SalesHeader."Document Type"::Order)
+        or (SalesHeader."Location Assigned") then
             exit;
         Customer.Get(SalesHeader."Sell-to Customer No.");
         if Customer."Customer Sets Location" then
             exit;
+
         // SalesLine.Reset();
         // SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         // SalesLine.SetRange("Document No.", SalesHeader."No.");
@@ -137,7 +141,7 @@ codeunit 50102 LocationAssignment
     end;
 
 
-    local procedure FillItemBomAvailable(bombuffercopy: Record "BOM Buffer Copy"; SalesHeader: Record "Sales Header"; TotalRecord: Integer)
+    local procedure FillItemBomAvailable(bombuffercopy: Record "BOM Buffer Copy"; var SalesHeader: Record "Sales Header"; TotalRecord: Integer)
     var
         IsHandled: Boolean;
         bomavailable: Record "Item Bom Available";
@@ -228,7 +232,7 @@ codeunit 50102 LocationAssignment
             until SalesLine.Next() = 0
     end;
 
-    local procedure ApplicableforAPI(SalesHeader: Record "Sales Header"): Boolean
+    local procedure ApplicableforAPI(var SalesHeader: Record "Sales Header"): Boolean
     var
         //salesheader: Record "Sales Header";
         itemBomAvailable: Record "Item Bom Available";
@@ -282,6 +286,7 @@ codeunit 50102 LocationAssignment
                     exit(false);
         end else begin
             SalesHeader."Location Code" := 'BACK ORDER';
+            SalesHeader."Location Assigned" := true;
             SalesHeader.Modify(true);
             LsalesLine.Reset();
             LsalesLine.SetRange("Document Type", SalesHeader."Document Type");

@@ -32,16 +32,23 @@ page 50125 "API - Create Whse Shipment"
                         salesHeader: Record "Sales Header";
                     begin
                         salesHeader.Reset();
-                        salesHeader.SetRange("External Document No.", Rec."External Document No.");
+                        salesHeader.SetRange("Document Type", salesHeader."Document Type"::Order);
+                        salesHeader.SetRange("No.", Rec."External Document No.");
                         if not salesHeader.FindFirst() then
                             Error('Not Valid sales order id.');
                     end;
+                }
+                field(trackingNo; trackingNo)
+                {
+                    Caption = 'Tracking No.';
+                    Editable = true;
                 }
                 field(shipmentId; shipmentId)
                 {
                     Caption = 'Shipment Id';
                     Editable = false;
                 }
+
                 field(message; message)
                 {
                     Caption = 'Response Message';
@@ -62,8 +69,11 @@ page 50125 "API - Create Whse Shipment"
 
         if Format(Rec."External Document No.") <> '' then begin
             salesHeader.Reset();
-            salesHeader.SetRange("External Document No.", Rec."External Document No.");
+            salesHeader.SetRange("Document Type", salesHeader."Document Type"::Order);
+            salesHeader.SetRange("No.", Rec."External Document No.");
             if salesHeader.FindFirst() then begin
+                salesHeader."Package Tracking No." := trackingNo;
+                salesHeader.Modify();
                 WhseShipment.Reset();
                 WhseShipment.SetRange("Source No.", salesHeader."No.");
                 if WhseShipment.FindFirst() then begin
@@ -81,7 +91,7 @@ page 50125 "API - Create Whse Shipment"
     end;
 
 
-    procedure createWarehouseShipment(SalesHeader: Record "Sales Header")
+    procedure createWarehouseShipment(var SalesHeader: Record "Sales Header")
     var
         WarehouseRequest: Record "Warehouse Request";
         ShipmentCreated: Boolean;
@@ -107,5 +117,6 @@ page 50125 "API - Create Whse Shipment"
 
     var
         shipmentId: Guid;
+        trackingNo: Text[500];
         message: Text[250];
 }

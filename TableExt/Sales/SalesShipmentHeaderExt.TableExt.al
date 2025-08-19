@@ -266,5 +266,24 @@ tableextension 50107 "Sales Shipment Header Ext" extends "Sales Shipment Header"
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
+        field(50159; "Order Total Amount"; Decimal)
+        {
+            Editable = false;
+            trigger OnValidate()
+            begin
+                Rec."Order Total Variance" := Abs(Rec."Order Total Check" - Rec."Order Total Amount");
+            end;
+        }
+
+        field(50161; "Location Assigned"; Boolean)
+        {
+            Caption = 'Location Assigned';
+            DataClassification = ToBeClassified;
+        }
+        field(50162; "Agreement No."; Text[30])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
     }
 }

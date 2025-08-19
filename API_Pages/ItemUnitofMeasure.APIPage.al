@@ -12,7 +12,7 @@ page 50130 "API - Item Unit of Measure"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

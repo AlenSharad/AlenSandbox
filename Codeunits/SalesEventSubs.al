@@ -247,8 +247,8 @@ codeunit 50101 SalesEventSubs
         CurrLineTotal := 0;
         OtherTotal := 0;
         SalesHeader.Get(SL."Document Type", SL."Document No.");
-        CurrLineTotal := SL."Amount Including VAT";
-        //CurrLineBaseTotal := SL."BC Unit Price" * SL.Quantity;
+        //CurrLineTotal := SL."Amount Including VAT";
+        CurrLineTotal := (((SL."BC Unit Price" * SL.Quantity) + SL."Line Tax Amount") - SL."Line Discount Amount");
         SalesLine.Reset();
         SalesLine.SetRange("Document Type", SL."Document Type");
         SalesLine.SetRange("Document No.", SL."Document No.");
@@ -256,8 +256,8 @@ codeunit 50101 SalesEventSubs
         //SalesLine.SetRange(Type, SalesLine.Type::Item);
         if SalesLine.FindSet() then
             repeat
-                OtherTotal += SalesLine."Amount Including VAT";
-            //OtherBaseTotal := SalesLine."BC Unit Price" * SalesLine.Quantity;
+                //    OtherTotal += SalesLine."Amount Including VAT";
+                OtherTotal += (((SalesLine."BC Unit Price" * SalesLine.Quantity) + SalesLine."Line Tax Amount") - SalesLine."Line Discount Amount");
             until SalesLine.Next() = 0;
 
         if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
@@ -294,8 +294,9 @@ codeunit 50101 SalesEventSubs
     var
         LocationAssignment: Codeunit LocationAssignment;
     begin
-
-        LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
+        if not SalesHeader."Location Assigned" then
+            LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
+        //Commit();
         if SalesHeader."Location Code" = 'BACK ORDER' then
             IsHandled := true;
     end;
@@ -417,6 +418,17 @@ codeunit 50101 SalesEventSubs
         end;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeValidateNo, '', false, false)]
+    local procedure StopValidationOnBeforeValidateNo(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; var IsHandled: Boolean)
+
+    begin
+        if UPPERCASE(GetUserNameFromSecurityId(SalesLine.SystemCreatedBy)) = 'OAUTH' then begin
+            if (SalesLine."No." = xSalesLine."No.") and
+               (xSalesLine."No." <> '')
+                    then
+                IsHandled := true;
+        end;
+    end;
 
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
     var

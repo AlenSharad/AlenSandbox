@@ -14,6 +14,7 @@ page 50103 "API - ShiptoAddress"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {

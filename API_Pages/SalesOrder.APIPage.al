@@ -14,6 +14,7 @@ page 50109 "API - Sales Orders"
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
+    DeleteAllowed = false;
     layout
     {
         area(content)
@@ -1035,6 +1036,15 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Location Code"));
                     end;
                 }
+                field(agreementNo; Rec."Agreement No.")
+                {
+                    Caption = 'Agreement No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Agreement No."));
+                    end;
+                }
                 field(orderDiscountDetails; Rec."Order Discount Details")
                 {
                     Caption = 'Order Discount Details';
@@ -1212,6 +1222,7 @@ page 50109 "API - Sales Orders"
             custombillto.Init();
             custombillto."Document Type" := custombillto."Document Type"::Order;
             custombillto."Document No." := Rec."No.";
+            custombillto.BillToName := Rec."Bill-to Name";
             custombillto.billtooptions := Rec.BillToOptions;
             custombillto.BilltoAdd1 := Rec."Bill-to Address";
             custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
@@ -1254,6 +1265,7 @@ page 50109 "API - Sales Orders"
         if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
             //Error('-%1 and %2 and %3 and %4', custombillto."Document No.", custombillto.BillToOptions, custombillto.BilltoAdd1, custombillto.billtoPostCode);
             Rec.BillToOptions := custombillto.BillToOptions;
+            Rec."Bill-to Name" := custombillto.BillToName;
             Rec."Bill-to Address" := custombillto.BilltoAdd1;
             Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
             Rec."Bill-to Post Code" := custombillto.billtoPostCode;
@@ -1261,6 +1273,7 @@ page 50109 "API - Sales Orders"
             Rec."Bill-to City" := custombillto.billtoCity;
             Rec."Bill-to County" := custombillto.billtoCounty;
             SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
+            SalesHeader."Bill-to Name" := custombillto.BillToName;
             SalesHeader."Bill-to Address" := custombillto.BilltoAdd1;
             SalesHeader."Bill-to Address 2" := custombillto.BilltoAdd2;
             SalesHeader."Bill-to Post Code" := custombillto.billtoPostCode;
