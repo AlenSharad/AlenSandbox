@@ -318,6 +318,24 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             Caption = 'Agreement No.';
             DataClassification = ToBeClassified;
         }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
+            DataClassification = ToBeClassified;
+        }
+        field(50250; "Ava Line Override Type"; Option)
+        {
+            Caption = 'Tax Override Type';
+            OptionMembers = " ",TaxDate,Amount;
+        }
+        field(50251; "Ava Line Override Amount"; Decimal)
+        {
+            Caption = 'Tax Override Amount';
+        }
+        field(50252; "Ava Line Override Reason"; Text[250])
+        {
+            Caption = 'Tax Override Reason';
+        }
     }
 
 }

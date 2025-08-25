@@ -9,12 +9,14 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 ApplicationArea = All;
                 Caption = 'Source No.';
                 Editable = false;
+                ToolTip = 'ALN - Specifies the source number associated with the sales shipment.';
             }
             field("Your Reference"; Rec."Your Reference")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'Your Reference';
+                ToolTip = 'ALN - Specifies your reference for the sales shipment.';
             }
             field("Order Type Code"; Rec."Order Type Code")
             {
@@ -22,6 +24,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 Editable = false;
                 Caption = 'Order Type Code';
                 TableRelation = "Order Type".Code;
+                ToolTip = 'ALN - Specifies the order type code associated with the sales shipment.';
             }
             // field("Shopify Variant Id"; Rec."Shopify Variant Id")
             // {
@@ -33,18 +36,21 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 ApplicationArea = All;
                 Caption = 'Sent to 3PL Date';
                 Editable = false;
+                ToolTip = 'ALN - Specifies the date when the sales shipment was sent to the third-party logistics provider (3PL).';
             }
             field("Sent to 3PL"; Rec."Sent to 3PL")
             {
                 ApplicationArea = All;
                 Caption = 'Sent to 3PL';
                 Editable = false;
+                ToolTip = 'ALN - Indicates whether the sales shipment has been sent to the third-party logistics provider (3PL).';
             }
             field("All Items Fully Commited"; Rec."All Items Fully Commited")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'All Items Fully Commited';
+                ToolTip = 'ALN - Indicates whether all items in the sales shipment have been fully committed.';
             }
             field("Order Source"; Rec."Order Source")
             {
@@ -52,18 +58,21 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 Editable = false;
                 Caption = 'Order Source';
                 TableRelation = "Order Source".Code;
+                ToolTip = 'ALN - Specifies the order source associated with the sales shipment.';
             }
             field("Storefront Name"; Rec."Storefront Name")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'Storefront Name';
+                ToolTip = 'ALN - Specifies the name of the storefront associated with the sales shipment.';
             }
             field("Store Front Payment Status"; Rec."Store Front Payment Status")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'Store Front Payment Status';
+                ToolTip = 'ALN - Specifies the payment status for the storefront associated with the sales shipment.';
 
             }
             field("Store Front Payment Gateway"; Rec."Store Front Payment Gateway")
@@ -71,19 +80,21 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'Store Front Payment Gateway';
-
+                ToolTip = 'ALN - Specifies the payment gateway used for the storefront associated with the sales shipment.';
             }
             field("Store Front Payment Event Type"; Rec."Store Front Payment Event Type")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'Store Front Payment Event Type';
+                ToolTip = 'ALN - Specifies the payment event type for the storefront associated with the sales shipment.';
             }
             field("Store Front Payment Authcode"; Rec."Store Front Payment Authcode")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Caption = 'Store Front Payment Authcode';
+                ToolTip = 'ALN - Specifies the authorization code for the storefront payment associated with the sales shipment.';
             }
             field("Order Total Check"; Rec."Order Total Check")
             {
@@ -91,6 +102,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 Visible = false;
                 Editable = false;
                 Caption = 'Order Total Check';
+                ToolTip = 'ALN - Specifies whether the order total check has been performed for the sales shipment.';
             }
             field("Order Total Variance"; Rec."Order Total Variance")
             {
@@ -98,6 +110,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 Visible = false;
                 Editable = false;
                 Caption = 'Order Total Variance';
+                ToolTip = 'ALN - Specifies the variance in the order total for the sales shipment.';
             }
         }
         addafter("Shipping")
@@ -111,6 +124,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Memo';
                     Editable = false;
                     Importance = Standard;
+                    ToolTip = 'ALN - Specifies any additional notes or comments related to the sales shipment.';
                 }
                 field("Vendor_Number"; Rec."Vendor_Number")
                 {
@@ -118,6 +132,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Vendor Number';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the vendor number associated with the sales shipment.';
                 }
                 field("shippingAddress_attention"; Rec."shippingAddress_attention")
                 {
@@ -125,6 +140,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Shipping Address Attention';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the attention line for the shipping address associated with the sales shipment.';
                 }
                 field("Store_number"; Rec."Store_number")
                 {
@@ -132,6 +148,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Store Number';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the store number associated with the sales shipment.';
                 }
                 field("Dealer_Department_Number"; Rec."Dealer_Department_Number")
                 {
@@ -139,6 +156,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Dealer Department Number';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the dealer department number associated with the sales shipment.';
                 }
                 field("Dealer_Department_Description"; Rec."Dealer_Department_Description")
                 {
@@ -146,6 +164,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Dealer Department Description';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the description of the dealer department associated with the sales shipment.';
                 }
                 field("Standard_Carrier_Alpha_Code"; Rec."Standard_Carrier_Alpha_Code")
                 {
@@ -153,6 +172,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Standard Carrier Alpha Code';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the standard carrier alpha code associated with the sales shipment.';
                 }
                 field("FOB_Qualifier"; Rec."FOB_Qualifier")
                 {
@@ -160,6 +180,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'FOB Qualifier';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the Free On Board (FOB) qualifier for the sales shipment.';
                 }
                 field("Carrier_Transportation_Method_Code"; Rec."Transportation_Method_Code")
                 {
@@ -167,6 +188,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Carrier Transportation Method Code';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the transportation method code for the carrier associated with the sales shipment.';
                 }
                 field("Transaction_ID"; Rec."Transaction_ID")
                 {
@@ -174,6 +196,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Transaction ID';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the transaction ID associated with the sales shipment.';
                 }
                 field("discountItem_intID"; Rec."discountItem_intID")
                 {
@@ -181,6 +204,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Discount Item - intID';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the internal ID of the discount item associated with the sales shipment.';
                 }
                 field("Customer_Account_Number"; Rec."Customer_Account_Number")
                 {
@@ -188,6 +212,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Customer Account Number';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the customer account number associated with the sales shipment.';
                 }
                 field("Special_Instructions"; Rec."Special_Instructions")
                 {
@@ -195,6 +220,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Special Instructions';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies any special instructions related to the sales shipment.';
                 }
                 field("Customer_Order_Number"; Rec."Customer_Order_Number")
                 {
@@ -202,6 +228,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Customer Order Number';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the customer order number associated with the sales shipment.';
                 }
                 field("Release_No"; Rec."Release_No")
                 {
@@ -209,6 +236,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Release No';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the release number associated with the sales shipment.';
                 }
                 field("Ship_To_Code_Qualifier"; Rec."Ship_To_Code_Qualifier")
                 {
@@ -216,6 +244,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Ship To Code Qualifier';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the ship-to code qualifier for the sales shipment.';
                 }
                 field("Requested_Ship_Date"; Rec."Requested_Ship_Date")
                 {
@@ -223,6 +252,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Requested Ship Date';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the requested ship date for the sales shipment.';
                 }
                 field("Current_Scheduled_Delivery"; Rec."Current_Scheduled_Delivery")
                 {
@@ -230,6 +260,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Current Scheduled Delivery';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the current scheduled delivery date for the sales shipment.';
                 }
                 field("Requested_PickUp_Date"; Rec."Requested_PickUp_Date")
                 {
@@ -237,6 +268,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Requested Pick Up Date';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the requested pick-up date for the sales shipment.';
                 }
                 field("Packaging_Type"; Rec."Packaging_Type")
                 {
@@ -244,6 +276,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Packaging Type';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the type of packaging used for the sales shipment.';
                 }
                 field("Total_Packages"; Rec."Total_Packages")
                 {
@@ -251,6 +284,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Total Packages';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the total number of packages in the sales shipment.';
                 }
                 field("PKG_PLT_Qty"; Rec."PKG_PLT_Qty")
                 {
@@ -258,6 +292,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'PKG PLT Qty';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the quantity of packages on a pallet in the sales shipment.';
                 }
                 field("Marketplace_Shipment_ID"; Rec."Marketplace_Shipment_ID")
                 {
@@ -265,6 +300,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Marketplace Shipment ID';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the marketplace shipment ID associated with the sales shipment.';
                 }
                 field("824_Received"; Rec."824_Received")
                 {
@@ -272,6 +308,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = '824 Received';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Indicates whether the 824 transaction set has been received for the sales shipment.';
                 }
                 field("824_Notes"; Rec."824_Notes")
                 {
@@ -279,6 +316,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = '824 Notes';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies any notes related to the 824 transaction set for the sales shipment.';
                 }
                 field("Routing_Request_Sent"; Rec."Routing_Request_Sent")
                 {
@@ -286,6 +324,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Routing Request Sent';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Indicates whether a routing request has been sent for the sales shipment.';
                 }
                 field("Processed"; Rec."Processed")
                 {
@@ -293,6 +332,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Processed';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Indicates whether the sales shipment has been processed.';
                 }
                 field("Supplier_Contact_Name"; Rec."Supplier_Contact_Name")
                 {
@@ -300,6 +340,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Supplier Contact Name';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the name of the supplier contact associated with the sales shipment.';
                 }
                 field("Supplier_Contact_No"; Rec."Supplier_Contact_No")
                 {
@@ -307,6 +348,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Supplier Contact No.';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the contact number of the supplier associated with the sales shipment.';
                 }
                 field("Supplier_Contact_Email"; Rec."Supplier_Contact_Email")
                 {
@@ -314,6 +356,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Supplier Contact Email';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the email address of the supplier contact associated with the sales shipment.';
                 }
                 field("Ship From"; Rec."Ship From")
                 {
@@ -321,7 +364,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Ship From';
                     Importance = Standard;
                     Editable = false;
-
+                    ToolTip = 'ALN - Specifies the location from which the sales shipment is shipped.';
                 }
                 field("3rd Party Billing Account"; Rec."3rd Party Billing Account")
                 {
@@ -329,6 +372,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = '3rd Party Billing Account';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the third-party billing account associated with the sales shipment.';
                 }
                 field("3rd Party Carrier"; Rec."3rd Party Carrier")
                 {
@@ -336,6 +380,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = '3rd Party Carrier';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the third-party carrier used for the sales shipment.';
                 }
                 field("3rd Party Zip"; Rec."3rd Party Zip")
                 {
@@ -343,6 +388,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = '3rd Party Zip';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Specifies the zip code for the third-party billing account associated with the sales shipment.';
                 }
 
                 field(isShipresidential; Rec.isShipresidential)
@@ -351,6 +397,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Caption = 'Is Ship Residential';
                     Importance = Standard;
                     Editable = false;
+                    ToolTip = 'ALN - Indicates whether the shipping address is residential for the sales shipment.';
                 }
             }
         }

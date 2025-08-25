@@ -9,6 +9,7 @@ pageextension 50132 "Location Card Extension" extends "Location Card"
             {
                 Caption = 'Include in Inventory';
                 ApplicationArea = all;
+                ToolTip = 'ALN - Specifies whether this location should be included in inventory assignments.';
             }
         }
     }
@@ -22,6 +23,7 @@ pageextension 50132 "Location Card Extension" extends "Location Card"
                 Caption = 'Location References';
                 ApplicationArea = All;
                 Image = Change;
+                ToolTip = 'ALN - Open the list of location references for this location.';
                 RunObject = page "Location Reference List";
                 RunPageLink = "Location Code" = field(Code);
             }

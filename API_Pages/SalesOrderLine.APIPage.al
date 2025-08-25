@@ -380,6 +380,30 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Customer Subscription No."));
                     end;
                 }
+                field(avaLineOverrideType; Rec."Ava Line Override Type")
+                {
+                    Caption = 'Ava Line Override Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Type"));
+                    end;
+                }
+                field(avaLineOverrideAmount; Rec."Ava Line Override Amount")
+                {
+                    Caption = 'Ava Line Override Amount';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Amount"));
+                    end;
+                }
+                field(avaLineOverrideReason; Rec."Ava Line Override Reason")
+                {
+                    Caption = 'Ava Line Override Reason';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Reason"));
+                    end;
+                }
                 field(shopifyVariantId; Rec."Shopify Variant Id")
                 {
                     Caption = 'Shopify Variant Id';
@@ -517,18 +541,31 @@ page 50114 "API - Sales Order Lines"
         SalesOrderEntityBuffer: Record "Sales Order Entity Buffer";
         SalesLine: Record "Sales Line";
         linediscountamt: Decimal;
+        avataxOvType: Option " ",TaxDate,Amount;
+        avataxOvAmount: Decimal;
+        avataxOvReason: Text[250];
+        QtyType: Option General,Invoicing,Shipping;
+        SalesHeader: Record "Sales Header";
     begin
         linediscountamt := Rec."Line Discount Amount";
+        avataxOvType := Rec."Ava Line Override Type";
+        avataxOvAmount := Rec."Ava Line Override Amount";
+        avataxOvReason := Rec."Ava Line Override Reason";
         GraphMgtSalesOrderBuffer.PropagateInsertLine(Rec, TempFieldBuffer);
         //Error('Document No. %1 and Discount %2', Rec."Document Id", Rec."Line Discount Amount");
         SalesOrderEntityBuffer.SetFilter(Id, Rec."Document Id");
         if SalesOrderEntityBuffer.FindFirst() then begin
+            SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderEntityBuffer."No.");
             SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
             SalesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
             SalesLine.SetRange("Line No.", Rec."Line No.");
             if SalesLine.FindFirst() then begin
                 SalesLine.Validate("Line Discount Amount", linediscountamt);
-                SalesLine.Modify();
+                SalesLine."Ava Line Override Type" := avataxOvType;
+                SalesLine."Ava Line Override Amount" := avataxOvAmount;
+                SalesLine."Ava Line Override Reason" := avataxOvReason;
+                //SalesLine.CalcVATAmountLines(QtyType, SalesHeader, SalesLine, VATAmountLine, false);
+                SalesLine.Modify(true);
             end;
         end;
 
@@ -537,8 +574,23 @@ page 50114 "API - Sales Order Lines"
     trigger OnModifyRecord(): Boolean
     var
         GraphMgtSalesOrderBuffer: Codeunit "Graph Mgt - Sales Order Buffer";
+        SalesOrderEntityBuffer: Record "Sales Order Entity Buffer";
+        SalesLine: Record "Sales Line";
+        QtyType: Option General,Invoicing,Shipping;
+        SalesHeader: Record "Sales Header";
     begin
         GraphMgtSalesOrderBuffer.PropagateModifyLine(Rec, TempFieldBuffer);
+        SalesOrderEntityBuffer.SetFilter(Id, Rec."Document Id");
+        if SalesOrderEntityBuffer.FindFirst() then begin
+            SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderEntityBuffer."No.");
+            SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+            SalesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
+            SalesLine.SetRange("Line No.", Rec."Line No.");
+            if SalesLine.FindFirst() then begin
+                //SalesLine.CalcVATAmountLines(QtyType, SalesHeader, SalesLine, VATAmountLine, false);
+                SalesLine.Modify(true);
+            end;
+        end;
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)

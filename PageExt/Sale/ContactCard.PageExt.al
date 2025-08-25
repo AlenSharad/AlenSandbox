@@ -7,14 +7,6 @@ pageextension 50100 ContactCardExtension extends "Contact Card"
         {
             Visible = true;
         }
-
     }
 
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }

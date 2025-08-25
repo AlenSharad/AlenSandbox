@@ -9,7 +9,7 @@ pageextension 50124 ItemReferencePageExtension extends "Item Reference Entries"
             {
                 ApplicationArea = All;
                 Caption = 'Item ID';
-                ToolTip = 'The unique identifier for the item.';
+                ToolTip = 'ALN - The unique identifier for the item.';
             }
         }
     }

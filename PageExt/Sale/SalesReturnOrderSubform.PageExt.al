@@ -9,6 +9,7 @@ pageextension 50130 "Sales Return Order Subform Ext" extends "Sales Return Order
             {
                 Caption = 'Line Tax Amount';
                 ApplicationArea = all;
+                ToolTip = 'ALN - Specifies the tax amount for the line item in the sales return.';
 
             }
         }
@@ -18,15 +19,8 @@ pageextension 50130 "Sales Return Order Subform Ext" extends "Sales Return Order
             {
                 Caption = 'Item Type';
                 ApplicationArea = all;
+                ToolTip = 'ALN - Specifies the item type for the line item in the sales return.';
             }
         }
     }
-
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }

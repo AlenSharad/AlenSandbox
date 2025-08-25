@@ -69,12 +69,13 @@ page 50135 "API -Create Whse Rcpt Transfer"
                 if WhseReceipt.FindFirst() then begin
                     receiptId := WhseReceipt.SystemId;
                     message := 'Receipt already exist.';
+                    Error('Receipt already exist.');
                     exit(false);
                 end;
                 createWarehouseReceipt(TransferHeader);
             end;
         end else begin
-            message := 'Request must have sales order id.';
+            Error('Request must have sales order id.');
         end;
 
         exit(true);
@@ -101,8 +102,10 @@ page 50135 "API -Create Whse Rcpt Transfer"
                 receiptId := WhseReceipt.SystemId;
                 message := 'Warehouse Receipt Created Successfully';
             end;
-        end else
+        end else begin
             message := GetLastErrorText;
+            Error(GetLastErrorText);
+        end;
     end;
 
     var

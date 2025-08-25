@@ -56,6 +56,7 @@ codeunit 50101 SalesEventSubs
     begin
         // if Rec."Shortcut Dimension 2 Code" = '410' then
         //     Rec."Shipping Advice" := Rec."Shipping Advice"::Complete;
+
         salesEntityBuffer.Reset();
         if salesEntityBuffer.Get(Rec."No.") then begin
             if salesEntityBuffer."Location Code" <> Rec."Location Code" then
@@ -88,6 +89,8 @@ codeunit 50101 SalesEventSubs
     var
         salesEntityBuffer: Record "Sales Order Entity Buffer";
     begin
+        if Rec."Document Type" <> Rec."Document Type"::Order then
+            exit;
         if Rec."Shortcut Dimension 2 Code" = '410' then
             Rec."Shipping Advice" := Rec."Shipping Advice"::Complete;
         salesEntityBuffer.Reset();
@@ -98,14 +101,12 @@ codeunit 50101 SalesEventSubs
         end;
     end;
 
-    local procedure MyProcedure()
-    begin
-
-    end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterUpdateUnitPrice, '', false, false)]
     local procedure UpdateBaseUnitPriceOnAfterUpdateUnitPrice(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; CalledByFieldNo: Integer; CurrFieldNo: Integer)
     begin
+        if SalesLine."Document Type" <> SalesLine."Document Type"::Order then
+            exit;
         if (CalledByFieldNo = SalesLine.FieldNo("No.")) and (SalesLine.Type = SalesLine.Type::Item) then begin
             SalesLine."BC Unit Price" := SalesLine."Unit Price";
             CalculateandUpdateTotalVarance(SalesLine);
@@ -118,6 +119,8 @@ codeunit 50101 SalesEventSubs
     var
         item: Record Item;
     begin
+        if Rec."Document Type" <> Rec."Document Type"::Order then
+            exit;
         if (Rec.Type = Rec.Type::Item) then begin
             if item.Get(Rec."No.") and (item.Type = item.Type::"Non-Inventory") then
                 Rec."BC Unit Price" := Rec."Unit Price";
@@ -131,34 +134,33 @@ codeunit 50101 SalesEventSubs
     var
         item: Record Item;
     begin
+        if Rec."Document Type" <> Rec."Document Type"::Order then
+            exit;
         if (Rec.Type = Rec.Type::Item) then begin
             if item.Get(Rec."No.") then
                 Rec."Item Type" := item.Type;
         end;
     end;
-
+    //20-08
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Amount", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
 
     begin
-        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
+        //Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
         CalculateandUpdateTotalVarance(Rec);
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Tax Amount", false, false)]
-    local procedure CalculateAmountInclTaxOnAfterValidateEventLineTaxAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
-    begin
-        Rec.validate("Amount Including VAT", (Rec."Line Amount" + Rec."Line Tax Amount"));
-        Rec.Amount := Rec."Line Amount";
-        CalculateandUpdateTotalVarance(Rec);
-    end;
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Tax Amount", false, false)]
+    // local procedure CalculateAmountInclTaxOnAfterValidateEventLineTaxAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
+    // begin
+    //     Rec.validate("Amount Including VAT", (Rec."Line Amount" + Rec."Line Tax Amount"));
+    //     Rec.Amount := Rec."Line Amount";
+    //     CalculateandUpdateTotalVarance(Rec);
+    // end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount Amount", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscAmount(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
     begin
-        //if xRec."No." = Rec."No." then
-
-        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
         CalculateandUpdateTotalVarance(Rec);
     end;
 
@@ -166,10 +168,9 @@ codeunit 50101 SalesEventSubs
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, "Line Discount %", false, false)]
     local procedure CalculateAmountInclTaxOnAfterValidateEventLineDiscPer(var Rec: Record "Sales Line"; var xRec: Record "Sales Line")
     begin
-        Rec."Amount Including VAT" := Rec."Line Amount" + Rec."Line Tax Amount";
         CalculateandUpdateTotalVarance(Rec);
     end;
-
+    //20-08
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "External Document No.", false, false)]
     local procedure DuplicateExternalDocCheck(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
     var
@@ -242,13 +243,16 @@ codeunit 50101 SalesEventSubs
 
         salesheader2: Record "Sales Header";
     begin
-
+        if SL."Document Type" <> SL."Document Type"::Order then
+            exit;
         Clear(SalesHeader);
         CurrLineTotal := 0;
         OtherTotal := 0;
         SalesHeader.Get(SL."Document Type", SL."Document No.");
         //CurrLineTotal := SL."Amount Including VAT";
-        CurrLineTotal := (((SL."BC Unit Price" * SL.Quantity) + SL."Line Tax Amount") - SL."Line Discount Amount");
+        //20-08CurrLineTotal := (((SL."BC Unit Price" * SL.Quantity) + SL."Line Tax Amount") - SL."Line Discount Amount");
+        //SL.CalcLineAmount();
+        CurrLineTotal := SL."Line Amount";
         SalesLine.Reset();
         SalesLine.SetRange("Document Type", SL."Document Type");
         SalesLine.SetRange("Document No.", SL."Document No.");
@@ -256,15 +260,17 @@ codeunit 50101 SalesEventSubs
         //SalesLine.SetRange(Type, SalesLine.Type::Item);
         if SalesLine.FindSet() then
             repeat
+                //      SalesLine.CalcLineAmount();
                 //    OtherTotal += SalesLine."Amount Including VAT";
-                OtherTotal += (((SalesLine."BC Unit Price" * SalesLine.Quantity) + SalesLine."Line Tax Amount") - SalesLine."Line Discount Amount");
+                //20-08 OtherTotal += (((SalesLine."BC Unit Price" * SalesLine.Quantity) + SalesLine."Line Tax Amount") - SalesLine."Line Discount Amount");
+                OtherTotal += SalesLine."Line Amount";
             until SalesLine.Next() = 0;
 
         if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
             salesheader2.Reset();
             salesheader2.GET(SalesHeader."Document Type", SalesHeader."No.");
             SalesHeader2."Order Total Amount" := (CurrLineTotal + OtherTotal);
-            SalesHeader2."Order Total Variance" := Abs(SalesHeader2."Order Total Amount" - (SalesHeader2."Order Total Check"));
+            SalesHeader2."Order Total Variance" := Abs(SalesHeader2."Order Total Amount" - (SalesHeader2."Order Total Excl Tax"));
             SalesHeader2.Modify();
         end;
 
@@ -279,13 +285,14 @@ codeunit 50101 SalesEventSubs
         SalesHeader."3rd Party Zip" := SellToCustomer."Third Party Zip Code";
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "Order Total Check", false, false)]
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnAfterValidateEvent, "Order Total Excl Tax", false, false)]
     local procedure UpdateOrderVariance(var Rec: Record "Sales Header")
     begin
         //Rec.CalcFields("Order Total Amount");
-
-        if UPPERCASE(GetUserNameFromSecurityId(Rec.SystemCreatedBy)) = 'OAUTH' then
-            Rec."Order Total Variance" := Abs(Rec."Order Total Check" - Rec."Order Total Amount");
+        if Rec."Document Type" = Rec."Document Type"::Order then begin
+            if UPPERCASE(GetUserNameFromSecurityId(Rec.SystemCreatedBy)) = 'OAUTH' then
+                Rec."Order Total Variance" := Abs(Rec."Order Total Excl Tax" - Rec."Order Total Amount");
+        end;
     end;
 
 
@@ -294,75 +301,114 @@ codeunit 50101 SalesEventSubs
     var
         LocationAssignment: Codeunit LocationAssignment;
     begin
-        if not SalesHeader."Location Assigned" then
-            LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
-        //Commit();
-        if SalesHeader."Location Code" = 'BACK ORDER' then
-            IsHandled := true;
-    end;
-
-    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCalcVATAmountLines, '', false, false)]
-    local procedure SkipVatCalculationOnBeforeCalcVATAmountLines(SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
-    begin
-        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
-            IsHandled := true;
-    end;
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnBeforeAddSalesLine, '', false, false)]
-    local procedure SkipSalesTaxCalcOnBeforeAddSalesLine(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
-    var
-        SalesHeader: Record "Sales Header";
-    begin
-        SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
-        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
-            IsHandled := true
-    end;
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnBeforeDistTaxOverSalesLines, '', false, false)]
-    local procedure SkipSalesTaxCalcOnBeforeDistTaxOverSalesLines(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
-    var
-        SalesHeader: Record "Sales Header";
-    begin
-        SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
-        if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
-            IsHandled := true
-    end;
-
-    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeUpdateUnitPrice, '', false, false)]
-    local procedure UpdateLineTaxAmountOnBeforeUpdateUnitPrice(CalledByFieldNo: Integer; var Handled: Boolean; var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
-    var
-        TaxBase, TaxAmount, TaxPercent : Decimal;
-    begin
-        if SalesLine."No." = xSalesLine."No." then begin
-            if SalesLine."Line Tax Amount" <> xSalesLine."Line Tax Amount" then begin
-                SalesLine.Validate("Line Tax Amount", xSalesLine."Line Tax Amount");
-                //TaxPercent := (xSalesLine."Line Tax Amount" / xSalesLine."Line Amount") * 100;
-                //Message('Tax Percent: %1', TaxPercent);
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
+            if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
+                SalesHeader.CalcFields("Amount Including VAT");
+                SalesHeader."Order Total Variance" := Abs(SalesHeader."Amount Including VAT" - SalesHeader."Order Total Excl Tax")
             end;
-            if SalesLine."Line Discount Amount" <> xSalesLine."Line Discount Amount" then begin
-                SalesLine.Validate("Line Discount Amount", xSalesLine."Line Discount Amount");
-                //TaxPercent := (xSalesLine."Line Tax Amount" / xSalesLine."Line Amount") * 100;
-                //Message('Tax Percent: %1', TaxPercent);
+            if not SalesHeader."Location Assigned" then begin
+                LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
+                Commit(); // to avoid calling location assignment again in same transaction if error occurs
             end;
-        end;
-
-    end;
-
-    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnUpdateUnitPriceByFieldOnBeforeValidateUnitPrice, '', false, false)]
-    local procedure UpdateLineTaxAmountOnAfterUpdateUnitPrice(CalledByFieldNo: Integer; var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
-    var
-        TaxBase, TaxAmount, TaxPercent : Decimal;
-    begin
-        if (SalesLine."Line Amount" <> 0) and (SalesLine.Type = SalesLine.Type::Item) and (SalesLine."No." = xSalesLine."No.") and (SalesLine.Quantity = xSalesLine.Quantity) then begin
-            if SalesLine."Line Discount %" <> xSalesLine."Line Discount %" then begin
-                SalesLine.Validate("Line Discount %", xSalesLine."Line Discount %");
-            end;
+            if SalesHeader."Location Code" = 'BACK ORDER' then
+                IsHandled := true;
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", OnAfterReleaseSalesDoc, '', false, false)]
+    local procedure UpdateVarianceOnAfterReleaseSalesDoc(var SalesHeader: Record "Sales Header")
+    var
+        ReleaseSalesDoc: Codeunit "Release Sales Document";
+        asmtolink: Record "Assemble-to-Order Link";
+        asmHeader: Record "Assembly Header";
+        ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
+    begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
+            if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
+                SalesHeader.CalcFields("Amount Including VAT");
+                SalesHeader."Order Total Amount" := (SalesHeader."Amount Including VAT");
+                SalesHeader."Order Total Variance" := Abs(SalesHeader."Amount Including VAT" - SalesHeader."Order Total Check");
+                if SalesHeader."Order Total Variance" > 0 then begin
+                    ReleaseSalesDoc.Reopen(SalesHeader);
+                    asmtolink.Reset();
+                    asmtolink.SetRange("Document Type", asmtolink."Document Type"::Order);
+                    asmtolink.SetRange("Document No.", SalesHeader."No.");
+                    //asmtolink.SetRange("Document Line No.", RecSalesLine."Line No.");
+                    if asmtolink.FindFirst() then begin
+                        asmHeader.Reset();
+                        asmHeader.Get(asmtolink."Assembly Document Type", asmtolink."Assembly Document No.");
+                        ReleaseAssemblyDoc.Reopen(asmHeader);
+                        asmHeader.Modify();
+                    end;
+                    SalesHeader.Modify();
+                end;
+            end;
+        end;
+    end;
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCalcVATAmountLines, '', false, false)]
+    // local procedure SkipVatCalculationOnBeforeCalcVATAmountLines(SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
+    // begin
+    //     if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
+    //         IsHandled := true;
+    // end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnBeforeAddSalesLine, '', false, false)]
+    // local procedure SkipSalesTaxCalcOnBeforeAddSalesLine(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    // var
+    //     SalesHeader: Record "Sales Header";
+    // begin
+    //     SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
+    //     if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
+    //         IsHandled := true
+    // end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnBeforeDistTaxOverSalesLines, '', false, false)]
+    // local procedure SkipSalesTaxCalcOnBeforeDistTaxOverSalesLines(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    // var
+    //     SalesHeader: Record "Sales Header";
+    // begin
+    //     SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
+    //     if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then
+    //         IsHandled := true
+    // end;
+    //20-08
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeUpdateUnitPrice, '', false, false)]
+    // local procedure UpdateLineTaxAmountOnBeforeUpdateUnitPrice(CalledByFieldNo: Integer; var Handled: Boolean; var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
+    // var
+    //     TaxBase, TaxAmount, TaxPercent : Decimal;
+    // begin
+    //     if SalesLine."No." = xSalesLine."No." then begin
+    //         if SalesLine."Line Tax Amount" <> xSalesLine."Line Tax Amount" then begin
+    //             SalesLine.Validate("Line Tax Amount", xSalesLine."Line Tax Amount");
+    //             //TaxPercent := (xSalesLine."Line Tax Amount" / xSalesLine."Line Amount") * 100;
+    //             //Message('Tax Percent: %1', TaxPercent);
+    //         end;
+    //         if SalesLine."Line Discount Amount" <> xSalesLine."Line Discount Amount" then begin
+    //             SalesLine.Validate("Line Discount Amount", xSalesLine."Line Discount Amount");
+    //             //TaxPercent := (xSalesLine."Line Tax Amount" / xSalesLine."Line Amount") * 100;
+    //             //Message('Tax Percent: %1', TaxPercent);
+    //         end;
+    //     end;
+
+    // end;
+    //20-08
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnUpdateUnitPriceByFieldOnBeforeValidateUnitPrice, '', false, false)]
+    // local procedure UpdateLineTaxAmountOnAfterUpdateUnitPrice(CalledByFieldNo: Integer; var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line")
+    // var
+    //     TaxBase, TaxAmount, TaxPercent : Decimal;
+    // begin
+    //     if (SalesLine."Line Amount" <> 0) and (SalesLine.Type = SalesLine.Type::Item) and (SalesLine."No." = xSalesLine."No.") and (SalesLine.Quantity = xSalesLine.Quantity) then begin
+    //         if SalesLine."Line Discount %" <> xSalesLine."Line Discount %" then begin
+    //             SalesLine.Validate("Line Discount %", xSalesLine."Line Discount %");
+    //         end;
+    //     end;
+    // end;
+    //20-08
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnValidateSellToCustomerNoOnAfterTestStatusOpen, '', false, false)]
     local procedure StopValidationOnValidateSellToCustomerNoOnAfterTestStatusOpen(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     begin
+        if SalesHeader."Document Type" <> SalesHeader."Document Type"::Order then
+            exit;
         if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
             if (SalesHeader."Sell-to Customer No." = xSalesHeader."Sell-to Customer No.") and
                (xSalesHeader."Sell-to Customer No." <> '')
@@ -389,6 +435,7 @@ codeunit 50101 SalesEventSubs
     var
         custombillto: Record "Custom Bill To Address";
     begin
+
         if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
             if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
                 BillToOptions := custombillto.BillToOptions;
@@ -401,6 +448,8 @@ codeunit 50101 SalesEventSubs
     var
         custombillto: Record "Custom Bill To Address";
     begin
+        if SalesHeader."Document Type" <> SalesHeader."Document Type"::Order then
+            exit;
         if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
             if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
                 Result := true;
@@ -412,6 +461,8 @@ codeunit 50101 SalesEventSubs
     var
         custombillto: Record "Custom Bill To Address";
     begin
+        if SellToSalesHeader."Document Type" <> SellToSalesHeader."Document Type"::Order then
+            exit;
         if custombillto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.") then begin
             if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
                 Result := false;
@@ -422,13 +473,49 @@ codeunit 50101 SalesEventSubs
     local procedure StopValidationOnBeforeValidateNo(var SalesLine: Record "Sales Line"; xSalesLine: Record "Sales Line"; var IsHandled: Boolean)
 
     begin
-        if UPPERCASE(GetUserNameFromSecurityId(SalesLine.SystemCreatedBy)) = 'OAUTH' then begin
-            if (SalesLine."No." = xSalesLine."No.") and
-               (xSalesLine."No." <> '')
-                    then
-                IsHandled := true;
+        if SalesLine."Document Type" = SalesLine."Document Type"::Order then begin
+            if UPPERCASE(GetUserNameFromSecurityId(SalesLine.SystemCreatedBy)) = 'OAUTH' then begin
+                if (SalesLine."No." = xSalesLine."No.") and
+                   (xSalesLine."No." <> '')
+                        then
+                    IsHandled := true;
+            end;
         end;
     end;
+
+
+    //OnBeforeCheckAsmToOrder
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCheckAsmToOrder, '', false, false)]
+    local procedure UpdateASMHeaderLocationOnBeforeCheckAsmToOrder(AsmHeader: Record "Assembly Header"; var SalesLine: Record "Sales Line")
+    var
+        AsmLine: Record "Assembly Line";
+    begin
+        AsmHeader."Location Code" := SalesLine."Location Code";
+        AsmHeader.Modify();
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Assemble-to-Order Link", OnSynchronizeAsmFromSalesLineOnAfterGetAsmHeader, '', false, false)]
+    local procedure SkipWindowOnSynchronizeAsmFromSalesLineOnAfterGetAsmHeader(var AssemblyHeader: Record "Assembly Header"; var NewSalesLine: Record "Sales Line"; var ShowWindow: Boolean)
+
+    begin
+        ShowWindow := false;
+    end;
+    //OnSynchronizeAsmFromSalesLineOnAfterGetAsmHeader
+    // [EventSubscriber(ObjectType::Table, Database::"Assemble-to-Order Link", OnSynchronizeAsmFromSalesLineOnAfterGetAsmHeader, '', false, false)]
+    // local procedure skipWindowOnSynchronizeAsmFromSalesLineOnAfterGetAsmHeader(var AssemblyHeader: Record "Assembly Header"; var NewSalesLine: Record "Sales Line"; var ShowWindow: Boolean)
+    // begin
+    //     if UPPERCASE(GetUserNameFromSecurityId(NewSalesLine.SystemCreatedBy)) = 'OAUTH' then
+    //         ShowWindow := false;
+    // end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Totals", OnAfterCalculateSalesSubPageTotals, '', false, false)]
+    // local procedure MyProcedussre(var TotalSalesLine2: Record "Sales Line"; var TotalSalesHeader: Record "Sales Header"; var TotalSalesLine: Record "Sales Line"; var VATAmount: Decimal)
+
+    // var
+    // begin
+    //     Error('SL1- %1 , SL2-%2 , SL3-%3', TotalSalesLine."Amount Including VAT", TotalSalesLine2."Amount Including VAT", VATAmount);
+    // end;
+
 
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
     var
@@ -440,4 +527,5 @@ codeunit 50101 SalesEventSubs
             exit('');
 
     end;
+
 }

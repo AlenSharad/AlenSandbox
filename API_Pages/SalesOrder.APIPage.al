@@ -602,6 +602,15 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Order Total Check"));
                     end;
                 }
+                field(orderTotalExclTax; Rec."Order Total Excl Tax")
+                {
+                    Caption = 'Order Total Excl. Tax';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Total Excl Tax"));
+                    end;
+                }
                 field(orderTotalVariance; Rec."Order Total Variance")
                 {
                     Caption = 'Order Total Variance';
@@ -1140,6 +1149,30 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Store Front Payment Event Type"));
                     end;
                 }
+                field(avataxOverrideType; Rec."Ava Line Override Type")
+                {
+                    Caption = 'Ava Line Override Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Type"));
+                    end;
+                }
+                field(avataxOverrideAmount; Rec."Ava Line Override Amount")
+                {
+                    Caption = 'Ava Line Override Amount';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Amount"));
+                    end;
+                }
+                field(avaLineOverrideReason; Rec."Ava Line Override Reason")
+                {
+                    Caption = 'Ava Line Override Reason';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Reason"));
+                    end;
+                }
                 field(storeFrontPaymentAuthcode; Rec."Store Front Payment Authcode")
                 {
                     Caption = 'Store Front Payment Authcode';
@@ -1206,6 +1239,10 @@ page 50109 "API - Sales Orders"
         taxliable: Boolean;
         orderTotalTax: Decimal;
         shipDate: Date;
+        Cust: Record Customer;
+        avataxOvType: Option " ",TaxDate,Amount;
+        avataxOvAmount: Decimal;
+        ordertotalexcltax: Decimal;
     begin
         LocCode := Rec."Location Code";
         yourReference := Rec."Your Reference";
@@ -1216,6 +1253,9 @@ page 50109 "API - Sales Orders"
         taxliable := Rec."Tax Liable";
         orderTotalTax := Rec."Order Total Tax";
         shipDate := Rec."Shipment Date";
+        avataxOvType := Rec."Ava Line Override Type";
+        avataxOvAmount := Rec."Ava Line Override Amount";
+        ordertotalexcltax := Rec."Order Total Excl Tax";
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
             // IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.") then
             custombillto.DeleteAll();
@@ -1289,7 +1329,8 @@ page 50109 "API - Sales Orders"
             SalesHeader."Tax Liable" := taxliable;
             SalesHeader."Order Total Tax" := orderTotalTax;
             SalesHeader."Shipment Date" := shipDate;
-            SalesHeader.modify;
+            SalesHeader."Order Total Excl Tax" := ordertotalexcltax;
+            SalesHeader.modify(true);
 
         end;
         SalesHeader2.Reset();
@@ -1313,14 +1354,20 @@ page 50109 "API - Sales Orders"
                 end;
             SalesHeader2."Location Code" := LocCode;
             SalesHeader2."Your Reference" := yourReference;
-            SalesHeader2."Tax Area Code" := taxareaCode;
+            //SalesHeader2."Tax Area Code" := taxareaCode;
+            Cust.Get(SalesHeader2."Sell-to Customer No.");
+            SalesHeader2.Validate("Tax Area Code", Cust."Tax Area Code");
             SalesHeader2."Payment Method Code" := paymentMethodCode;
             SalesHeader2."Shipping Agent Code" := shippingagentCode;
             SalesHeader2."Shipping Agent Service Code" := shippingAgentServiceCode;
-            SalesHeader2."Tax Liable" := taxliable;
+            SalesHeader2.Validate("Tax Liable", Cust."Tax Liable");
             SalesHeader2."Order Total Tax" := orderTotalTax;
             SalesHeader2."Shipment Date" := shipDate;
-            SalesHeader2.Modify(false);
+            SalesHeader2."Ava Tax Override Amount" := avataxOvAmount;
+            SalesHeader2."Ava Tax Override Type" := avataxOvType;
+            SalesHeader2."Order Total Excl Tax" := ordertotalexcltax;
+            //SalesHeader2.ava ta := Rec."Ava Line Override Reason";
+            SalesHeader2.Modify(true);
         end;
 
         Rec."Location Code" := LocCode;
@@ -1332,6 +1379,9 @@ page 50109 "API - Sales Orders"
         Rec."Tax Liable" := taxliable;
         Rec."Order Total Tax" := orderTotalTax;
         Rec."Shipment Date" := shipDate;
+        Rec."Ava Line Override Amount" := avataxOvAmount;
+        Rec."Ava Line Override Type" := avataxOvType;
+        Rec."Order Total Excl Tax" := ordertotalexcltax;
         Rec.Modify();
         exit(false);
     end;

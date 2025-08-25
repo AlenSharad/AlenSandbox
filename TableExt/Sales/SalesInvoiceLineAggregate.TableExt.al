@@ -64,5 +64,18 @@ tableextension 50120 "Sales Inv Line Agg Extension" extends "Sales Invoice Line 
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50250; "Ava Line Override Type"; Option)
+        {
+            Caption = 'Tax Override Type';
+            OptionMembers = " ",TaxDate,Amount;
+        }
+        field(50251; "Ava Line Override Amount"; Decimal)
+        {
+            Caption = 'Tax Override Amount';
+        }
+        field(50252; "Ava Line Override Reason"; Text[250])
+        {
+            Caption = 'Tax Override Reason';
+        }
     }
 }

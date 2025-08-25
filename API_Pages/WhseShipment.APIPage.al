@@ -88,6 +88,10 @@ page 50123 "API - Warehouse Shipments"
                 {
                     Caption = 'Shipping Agent Service Code';
                 }
+                field(trackingNo; Rec."Package Tracking No.")
+                {
+                    Caption = 'Package Tracking No.';
+                }
                 field(orderType; Rec."Order Type Code")
                 {
                     Caption = 'Order Type';

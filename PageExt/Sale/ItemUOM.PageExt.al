@@ -11,12 +11,4 @@ pageextension 50134 "Item Unit of Measures Ext" extends "Item Units of Measure"
             }
         }
     }
-
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }

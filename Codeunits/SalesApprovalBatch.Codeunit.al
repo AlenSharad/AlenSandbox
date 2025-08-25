@@ -13,6 +13,7 @@ codeunit 50104 "Sales Order Approval Processor"
         SalesLine: Record "Sales Line";
         customer: Record Customer;
         SORelease: Codeunit "Release Sales Order";
+        SH2: Record "Sales Header";
     begin
 
         if Rec."Parameter String" = 'Sales Order Approval' then begin
@@ -39,9 +40,23 @@ codeunit 50104 "Sales Order Approval Processor"
                         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
                         SalesLine.SetRange("Document No.", SalesHeader."No.");
                         SalesLine.Setfilter(Quantity, '<>%1', 0);
-                        if Not SalesLine.IsEmpty then
-                            SalesHeader.PerformManualRelease();
+                        if Not SalesLine.IsEmpty then begin
+                            if NOT SORelease.Run(SalesHeader) then begin
+                                SH2.Reset();
+                                SH2.Get(SalesHeader."Document Type", SalesHeader."No.");
+                                SH2."Error Description" := GetLastErrorText;
+                                SH2.Modify(true);
+                            end;
+
+                        end;
+                        // SalesHeader.PerformManualRelease();
+                    end else begin
+                        SH2.Reset();
+                        SH2.Get(SalesHeader."Document Type", SalesHeader."No.");
+                        SH2."Error Description" := 'Customer is blocked for release';
+                        SH2.Modify(true);
                     end;
+                    Commit();
                 until SalesHeader.Next() = 0;
         end;
 

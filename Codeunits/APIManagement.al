@@ -11,7 +11,12 @@ codeunit 50103 APIManagement
         content: HttpContent;
         ResponseMsgTXT: Text[500];
         RecSalesLine: Record "Sales Line";
+        asmtolink: Record "Assemble-to-Order Link";
+        asmHeader: Record "Assembly Header";
+        asmLine: Record "Assembly Line";
     begin
+        if SalesHeader."Document Type" <> SalesHeader."Document Type"::Order then
+            exit;
         finalLocation := '';
         finalAgentService := '';
         IntegrationSetup.Reset();
@@ -41,6 +46,27 @@ codeunit 50103 APIManagement
                 repeat
                     RecSalesLine."Location Code" := finalLocation;
                     RecSalesLine.Modify(true);
+                    asmtolink.Reset();
+                    asmtolink.SetRange("Document Type", asmtolink."Document Type"::Order);
+                    asmtolink.SetRange("Document No.", SalesHeader."No.");
+                    asmtolink.SetRange("Document Line No.", RecSalesLine."Line No.");
+                    if asmtolink.FindFirst() then begin
+                        asmHeader.Reset();
+                        asmHeader.Get(asmtolink."Assembly Document Type", asmtolink."Assembly Document No.");
+                        asmHeader."Location Code" := finalLocation;
+                        asmHeader.Modify();
+                        asmLine.Reset();
+                        asmLine.SetRange("Document Type", asmHeader."Document Type");
+                        asmLine.SetRange("Document No.", asmHeader."No.");
+
+                        if asmLine.FindSet() then begin
+                            repeat
+                                asmLine.Validate("Location Code", finalLocation);
+                                asmLine.Modify();
+                            until asmLine.Next() = 0;
+                        end;
+                    end;
+
                 until RecSalesLine.Next() = 0;
         end else
             Error('Location code not found in response.');

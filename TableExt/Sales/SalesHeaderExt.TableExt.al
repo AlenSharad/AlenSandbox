@@ -277,13 +277,18 @@ tableextension 50105 "Sales Header Ext" extends "Sales Header"
         }
         field(50161; "Location Assigned"; Boolean)
         {
-            Editable = false;
+            //Editable = false;
             Caption = 'Location Assigned';
             DataClassification = ToBeClassified;
         }
         field(50162; "Agreement No."; Text[30])
         {
             Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
             DataClassification = ToBeClassified;
         }
     }

@@ -70,12 +70,14 @@ page 50134 "API -Create Whse Ship Transfer"
                 if WhseShipment.FindFirst() then begin
                     shipmentId := WhseShipment.SystemId;
                     message := 'Shipment already exist.';
+                    Error('Shipment already exist.');
                     exit(false);
                 end;
                 createWarehouseShipment(TransferHeader);
             end;
         end else begin
             message := 'Request must have sales order id.';
+            Error('Request must have sales order id.');
         end;
 
         exit(true);
@@ -102,8 +104,10 @@ page 50134 "API -Create Whse Ship Transfer"
                 shipmentId := WhseShipment.SystemId;
                 message := 'Warehouse Shipment Created Successfully';
             end;
-        end else
+        end else begin
             message := GetLastErrorText;
+            Error(GetLastErrorText);
+        end;
     end;
 
     var

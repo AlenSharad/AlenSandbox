@@ -285,5 +285,10 @@ tableextension 50106 "Sales Invoice Header Ext" extends "Sales Invoice Header"
             Caption = 'Agreement No.';
             DataClassification = ToBeClassified;
         }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
+            DataClassification = ToBeClassified;
+        }
     }
 }

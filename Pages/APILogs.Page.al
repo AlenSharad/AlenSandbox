@@ -22,12 +22,12 @@ page 50131 "API Logs"
                 field(Request; Rec.Request)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'The request sent to the API.';
+                    ToolTip = 'ALN - The request sent to the API.';
                 }
                 field(Response; Rec.Response)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'The response received from the API.';
+                    ToolTip = 'ALN - The response received from the API.';
                 }
                 field("Status Code"; Rec."Status Code") { ApplicationArea = All; }
                 field(Success; Rec.Success) { ApplicationArea = All; }

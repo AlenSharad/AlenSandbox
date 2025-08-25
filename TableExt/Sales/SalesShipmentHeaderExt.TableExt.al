@@ -285,5 +285,10 @@ tableextension 50107 "Sales Shipment Header Ext" extends "Sales Shipment Header"
             Caption = 'Agreement No.';
             DataClassification = ToBeClassified;
         }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
+            DataClassification = ToBeClassified;
+        }
     }
 }

@@ -20,18 +20,21 @@ pageextension 50113 "Posted Purch Rcpt. Subform Ext" extends "Posted Purchase Rc
             {
                 ApplicationArea = All;
                 Caption = 'Container Number';
+                ToolTip = 'ALN - Specifies the container number associated with this purchase receipt.';
             }
 
             field("PO Line ID"; Rec."PO Line ID")
             {
                 ApplicationArea = All;
                 Caption = 'PO Line ID';
+                ToolTip = 'ALN - Specifies the purchase order line ID associated with this purchase receipt.';
             }
 
             field("Shipment ID"; Rec."Shipment ID")
             {
                 ApplicationArea = All;
                 Caption = 'Shipment ID';
+                ToolTip = 'ALN - Specifies the shipment ID associated with this purchase receipt.';
             }
         }
     }

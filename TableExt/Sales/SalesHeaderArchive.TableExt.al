@@ -272,5 +272,10 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             Caption = 'Agreement No.';
             DataClassification = ToBeClassified;
         }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
+            DataClassification = ToBeClassified;
+        }
     }
 }

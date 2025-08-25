@@ -7,7 +7,7 @@ pageextension 50125 CustomerListExtension extends "Customer List"
             field("E-Mail"; Rec."E-Mail")
             {
                 ApplicationArea = Basic, Suite;
-                ToolTip = 'Specifies the e-mail address of the customer.';
+                ToolTip = 'ALN - Specifies the e-mail address of the customer.';
                 Caption = 'E-Mail';
             }
 
