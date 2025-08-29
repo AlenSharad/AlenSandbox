@@ -276,6 +276,12 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
             Caption = 'Order Total Excl. Tax';
             DataClassification = ToBeClassified;
         }
+        field(50164; "Order Tax Variance"; Decimal)
+        {
+            Caption = 'Order Tax Variance';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
         field(50200; "Source No."; Code[20])
         {
             Editable = false;
@@ -291,6 +297,63 @@ tableextension 50110 "Whse Shipment Header Ext" extends "Warehouse Shipment Head
         {
             Caption = 'Package Tracking No.';
             DataClassification = ToBeClassified;
+        }
+        field(50203; "Requested Delivery Date"; Date)
+        {
+            Caption = 'Requested Delivery Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50204; "Shipping Address"; Text[100])
+        {
+            Caption = 'Shipping Address';
+            DataClassification = ToBeClassified;
+        }
+        field(50205; "Shipping Address 2"; Text[100])
+        {
+            Caption = 'Shipping Address 2';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; "Shipping City"; Text[50])
+        {
+            Caption = 'Shipping City';
+            DataClassification = ToBeClassified;
+        }
+        field(50207; "Shipping County"; Text[50])
+        {
+            Caption = 'Shipping County';
+            DataClassification = ToBeClassified;
+        }
+        field(50208; "Shipping Post Code"; Code[20])
+        {
+            Caption = 'Shipping Post Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50209; "Shipping Country/Region Code"; Code[10])
+        {
+            Caption = 'Shipping Country/Region Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50210; "Shipping Phone No."; Text[30])
+        {
+            Caption = 'Shipping Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50211; TotalWeight; Decimal)
+        {
+            Caption = 'Total Weight';
+            FieldClass = FlowField;
+            CalcFormula = Sum("Warehouse Shipment Line".Weight where("No." = field("No.")));
+        }
+        field(50212; "Ship to Name"; Text[100])
+        {
+            Caption = 'Ship to Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50213; "SO Date"; Date)
+        {
+            Caption = 'SO Date';
+            DataClassification = ToBeClassified;
+            Editable = false;
         }
     }
     keys

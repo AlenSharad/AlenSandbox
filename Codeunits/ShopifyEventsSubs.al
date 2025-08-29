@@ -63,6 +63,16 @@ codeunit 50100 ShopifyEventSubs
         WarehouseShipmentHeader."Source No." := SalesHeader."No.";
         WarehouseShipmentHeader."Your Reference" := SalesHeader."Your Reference";
         WarehouseShipmentHeader."Package Tracking No." := SalesHeader."Package Tracking No.";
+        WarehouseShipmentHeader."Requested Delivery Date" := SalesHeader."Requested Delivery Date";
+        WarehouseShipmentHeader."Ship to Name" := SalesHeader."Ship-to Name";
+        WarehouseShipmentHeader."Shipping Address" := SalesHeader."Ship-to Address";
+        WarehouseShipmentHeader."Shipping Address 2" := SalesHeader."Ship-to Address 2";
+        WarehouseShipmentHeader."Shipping City" := SalesHeader."Ship-to City";
+        WarehouseShipmentHeader."Shipping County" := SalesHeader."Ship-to County";
+        WarehouseShipmentHeader."Shipping Post Code" := SalesHeader."Ship-to Post Code";
+        WarehouseShipmentHeader."Shipping Country/Region Code" := SalesHeader."Ship-to Country/Region Code";
+        WarehouseShipmentHeader."Shipping Phone No." := SalesHeader."Ship-to Phone No.";
+        WarehouseShipmentHeader."SO Date" := SalesHeader."Posting Date";
         if TransferLine."Document No." <> '' then
             WarehouseShipmentHeader."Source No." := TransferLine."Document No.";
     end;
@@ -77,7 +87,8 @@ codeunit 50100 ShopifyEventSubs
         WarehouseShipmentLine."Amazon Item ID" := SalesLine."Amazon Item ID";
         WarehouseShipmentLine.UPC_Code := SalesLine.UPC_Code;
         WarehouseShipmentLine."PO Line" := SalesLine."PO Line";
-        //WarehouseShipmentLine.Modify();
+        WarehouseShipmentLine.Weight := SalesLine."Gross Weight";
+        WarehouseShipmentLine.Modify();
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Tax Calculate", OnDistTaxOverSalesLinesOnTempSalesTaxLineLoopOnAfterSetTempSalesTaxLineAmount, '', false, false)]
@@ -108,5 +119,87 @@ codeunit 50100 ShopifyEventSubs
     local procedure UpdateSourceNoinHeaderOnAfterCreateRcptLineFromTransLine(TransferLine: Record "Transfer Line"; WarehouseReceiptHeader: Record "Warehouse Receipt Header")
     begin
         WarehouseReceiptHeader."Source No." := TransferLine."Document No.";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", OnBeforePostedWhseShptHeaderInsert, '', false, false)]
+    local procedure UpdateFieldsinPostedShipmentOnBeforePostedWhseShptHeaderInsert(var PostedWhseShipmentHeader: Record "Posted Whse. Shipment Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header")
+    begin
+        PostedWhseShipmentHeader."Order Type Code" := WarehouseShipmentHeader."Order Type Code";
+        //PostedWhseShipmentHeader."Shopify Variant Id" := WarehouseShipmentHeader."Shopify Variant Id";
+        PostedWhseShipmentHeader."Sent to 3PL Date" := WarehouseShipmentHeader."Sent to 3PL Date";
+        PostedWhseShipmentHeader."Sent to 3PL" := WarehouseShipmentHeader."Sent to 3PL";
+        PostedWhseShipmentHeader."All Items Fully Commited" := WarehouseShipmentHeader."All Items Fully Commited";
+        PostedWhseShipmentHeader."Order Source" := WarehouseShipmentHeader."Order Source";
+        PostedWhseShipmentHeader."Store Front Payment Status" := WarehouseShipmentHeader."Store Front Payment Status";
+        PostedWhseShipmentHeader."Store Front Payment Gateway" := WarehouseShipmentHeader."Store Front Payment Gateway";
+        PostedWhseShipmentHeader."Store Front Payment Event Type" := WarehouseShipmentHeader."Store Front Payment Event Type";
+        PostedWhseShipmentHeader."Store Front Payment Authcode" := WarehouseShipmentHeader."Store Front Payment Authcode";
+        PostedWhseShipmentHeader."Order Total Check" := WarehouseShipmentHeader."Order Total Check";
+        PostedWhseShipmentHeader."Order Total Variance" := WarehouseShipmentHeader."Order Total Variance";
+        PostedWhseShipmentHeader."memo" := WarehouseShipmentHeader.memo;
+        PostedWhseShipmentHeader."Vendor_Number" := WarehouseShipmentHeader.Vendor_Number;
+        PostedWhseShipmentHeader."shippingAddress_attention" := WarehouseShipmentHeader.shippingAddress_attention;
+        PostedWhseShipmentHeader."Store_number" := WarehouseShipmentHeader.Store_number;
+        PostedWhseShipmentHeader."Dealer_Department_Number" := WarehouseShipmentHeader.Dealer_Department_Description;
+        PostedWhseShipmentHeader."Dealer_Department_Description" := WarehouseShipmentHeader.Dealer_Department_Description;
+        PostedWhseShipmentHeader."Standard_Carrier_Alpha_Code" := WarehouseShipmentHeader.Standard_Carrier_Alpha_Code;
+        PostedWhseShipmentHeader."FOB_Qualifier" := WarehouseShipmentHeader.FOB_Qualifier;
+        PostedWhseShipmentHeader."Transportation_Method_Code" := WarehouseShipmentHeader.Transportation_Method_Code;
+        PostedWhseShipmentHeader."Transaction_ID" := WarehouseShipmentHeader.Transaction_ID;
+        PostedWhseShipmentHeader."discountItem_intID" := WarehouseShipmentHeader.discountItem_intID;
+        PostedWhseShipmentHeader."Customer_Account_Number" := WarehouseShipmentHeader.Customer_Account_Number;
+        PostedWhseShipmentHeader."Special_Instructions" := WarehouseShipmentHeader.Special_Instructions;
+        PostedWhseShipmentHeader."Customer_Order_Number" := WarehouseShipmentHeader.Customer_Order_Number;
+        PostedWhseShipmentHeader."Release_No" := WarehouseShipmentHeader.Release_No;
+        PostedWhseShipmentHeader."Ship_To_Code_Qualifier" := WarehouseShipmentHeader.Ship_To_Code_Qualifier;
+        PostedWhseShipmentHeader."Requested_Ship_Date" := WarehouseShipmentHeader.Requested_Ship_Date;
+        PostedWhseShipmentHeader."Current_Scheduled_Delivery" := WarehouseShipmentHeader.Current_Scheduled_Delivery;
+        PostedWhseShipmentHeader."Requested_PickUp_Date" := WarehouseShipmentHeader."Requested_PickUp_Date";
+        PostedWhseShipmentHeader."Packaging_Type" := WarehouseShipmentHeader."Packaging_Type";
+        PostedWhseShipmentHeader."Total_Packages" := WarehouseShipmentHeader."Total_Packages";
+        PostedWhseShipmentHeader."PKG_PLT_Qty" := WarehouseShipmentHeader."PKG_PLT_Qty";
+        PostedWhseShipmentHeader."Marketplace_Shipment_ID" := WarehouseShipmentHeader."Marketplace_Shipment_ID";
+        PostedWhseShipmentHeader."824_Received" := WarehouseShipmentHeader."824_Received";
+        PostedWhseShipmentHeader."824_Notes" := WarehouseShipmentHeader."824_Notes";
+        PostedWhseShipmentHeader."Routing_Request_Sent" := WarehouseShipmentHeader."Routing_Request_Sent";
+        PostedWhseShipmentHeader."Processed" := WarehouseShipmentHeader."Processed";
+        PostedWhseShipmentHeader."Supplier_Contact_Name" := WarehouseShipmentHeader."Supplier_Contact_Name";
+        PostedWhseShipmentHeader."Supplier_Contact_No" := WarehouseShipmentHeader."Supplier_Contact_No";
+        PostedWhseShipmentHeader."Supplier_Contact_Email" := WarehouseShipmentHeader."Supplier_Contact_Email";
+        PostedWhseShipmentHeader."Ship From" := WarehouseShipmentHeader."Ship From";
+        PostedWhseShipmentHeader."3rd Party Billing Account" := WarehouseShipmentHeader."3rd Party Billing Account";
+        PostedWhseShipmentHeader."3rd Party Zip" := WarehouseShipmentHeader."3rd Party Zip";
+        PostedWhseShipmentHeader."3rd Party Carrier" := WarehouseShipmentHeader."3rd Party Carrier";
+        PostedWhseShipmentHeader."Storefront Name" := WarehouseShipmentHeader."Storefront Name";
+        PostedWhseShipmentHeader.isShipresidential := WarehouseShipmentHeader.isShipresidential;
+        PostedWhseShipmentHeader."Bill-to Phone No." := WarehouseShipmentHeader."Bill-to Phone No.";
+        PostedWhseShipmentHeader."Order Discount Details" := WarehouseShipmentHeader."Order Discount Details";
+        PostedWhseShipmentHeader."Order Total Tax" := WarehouseShipmentHeader."Order Total Tax";
+        PostedWhseShipmentHeader."Source No." := WarehouseShipmentHeader."Source No.";
+        PostedWhseShipmentHeader."Your Reference" := WarehouseShipmentHeader."Your Reference";
+        PostedWhseShipmentHeader."Package Tracking No." := WarehouseShipmentHeader."Package Tracking No.";
+        PostedWhseShipmentHeader."Requested Delivery Date" := WarehouseShipmentHeader."Requested Delivery Date";
+        PostedWhseShipmentHeader."Ship to Name" := WarehouseShipmentHeader."Ship to Name";
+        PostedWhseShipmentHeader."Shipping Address" := WarehouseShipmentHeader."Shipping Address";
+        PostedWhseShipmentHeader."Shipping Address 2" := WarehouseShipmentHeader."Shipping Address 2";
+        PostedWhseShipmentHeader."Shipping City" := WarehouseShipmentHeader."Shipping City";
+        PostedWhseShipmentHeader."Shipping County" := WarehouseShipmentHeader."Shipping County";
+        PostedWhseShipmentHeader."Shipping Post Code" := WarehouseShipmentHeader."Shipping Post Code";
+        PostedWhseShipmentHeader."Shipping Country/Region Code" := WarehouseShipmentHeader."Shipping Country/Region Code";
+        PostedWhseShipmentHeader."Shipping Phone No." := WarehouseShipmentHeader."Shipping Phone No.";
+        PostedWhseShipmentHeader."SO Date" := WarehouseShipmentHeader."SO Date";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", OnCreatePostedShptLineOnBeforePostedWhseShptLineInsert, '', false, false)]
+    local procedure UpdateRecordOnCreatePostedShptLineOnBeforePostedWhseShptLineInsert(var PostedWhseShptLine: Record "Posted Whse. Shipment Line"; WhseShptLine: Record "Warehouse Shipment Line")
+    begin
+        PostedWhseShptLine."Customer Subscription No." := WhseShptLine."Customer Subscription No.";
+        PostedWhseShptLine."Shopify Variant Id" := WhseShptLine."Shopify Variant Id";
+        PostedWhseShptLine."Dealer Item No." := WhseShptLine."Dealer Item No.";
+        PostedWhseShptLine."Discount Details" := WhseShptLine."Discount Details";
+        PostedWhseShptLine."Amazon Item ID" := WhseShptLine."Amazon Item ID";
+        PostedWhseShptLine.UPC_Code := WhseShptLine.UPC_Code;
+        PostedWhseShptLine."PO Line" := WhseShptLine."PO Line";
+        PostedWhseShptLine.Weight := WhseShptLine."Weight";
     end;
 }

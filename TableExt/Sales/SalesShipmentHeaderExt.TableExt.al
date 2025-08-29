@@ -290,5 +290,11 @@ tableextension 50107 "Sales Shipment Header Ext" extends "Sales Shipment Header"
             Caption = 'Order Total Excl. Tax';
             DataClassification = ToBeClassified;
         }
+        field(50164; "Order Tax Variance"; Decimal)
+        {
+            Caption = 'Order Tax Variance';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
     }
 }

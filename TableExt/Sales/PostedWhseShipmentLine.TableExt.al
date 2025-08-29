@@ -68,5 +68,11 @@ tableextension 50128 "Posted Whse Shpt Line Ext" extends "Posted Whse. Shipment 
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50115; Weight; Decimal)
+        {
+            Caption = 'Weight';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

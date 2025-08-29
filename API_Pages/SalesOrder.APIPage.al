@@ -1351,6 +1351,7 @@ page 50109 "API - Sales Orders"
                     SalesHeader2."Ship-to Country/Region Code" := customshipto.shiptoCountryRegionCode;
                     SalesHeader2."Ship-to City" := customshipto.shiptoCity;
                     SalesHeader2."Ship-to County" := customshipto.shiptoCounty;
+                    SalesHeader2."Ship-to City" := customshipto.shiptoCity;
                 end;
             SalesHeader2."Location Code" := LocCode;
             SalesHeader2."Your Reference" := yourReference;
@@ -1382,6 +1383,7 @@ page 50109 "API - Sales Orders"
         Rec."Ava Line Override Amount" := avataxOvAmount;
         Rec."Ava Line Override Type" := avataxOvType;
         Rec."Order Total Excl Tax" := ordertotalexcltax;
+        Rec.ShipToOptions := customshipto.ShipToOptions;
         Rec.Modify();
         exit(false);
     end;

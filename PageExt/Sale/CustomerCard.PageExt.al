@@ -3,6 +3,21 @@ pageextension 50101 CustomerCardExtension extends "Customer Card"
     layout
     {
         // Add changes to page layout here
+        addbefore("Name 2")
+        {
+            field("Last Name"; Rec."Last Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Last Name';
+                ToolTip = 'ALN - Specifies the last name of the customer.';
+            }
+            field("ALN Legacy Customer ID"; Rec."ALN Legacy Customer ID")
+            {
+                ApplicationArea = All;
+                Caption = 'ALN Legacy Customer ID';
+                ToolTip = 'ALN - Specifies the legacy customer ID.';
+            }
+        }
         addlast(General)
         {
 
@@ -65,6 +80,16 @@ pageextension 50101 CustomerCardExtension extends "Customer Card"
             {
                 ApplicationArea = All;
                 ToolTip = 'ALN - Specifies the value of the Zendesk Customer No. field.';
+            }
+            field("Customer Since Date"; Rec."Customer Since Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'ALN - Specifies the value of the Customer Since Date field.';
+            }
+            field("Accepts Marketing"; Rec."Accepts Marketing")
+            {
+                ApplicationArea = All;
+                ToolTip = 'ALN - Specifies the value of the Accepts Marketing field.';
             }
         }
         addafter("Tax Exemption No.")

@@ -74,6 +74,27 @@ tableextension 50100 CustomerExtension extends Customer
             DataClassification = ToBeClassified;
             ExtendedDatatype = URL;
         }
+        field(50015; "Last Name"; Text[50])
+        {
+            Caption = 'Last Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50016; "Customer Since Date"; Date)
+        {
+            Caption = 'Customer Since Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50017; "Accepts Marketing"; Boolean)
+        {
+            Caption = 'Accepts Marketing';
+            DataClassification = ToBeClassified;
+        }
+        field(50018; "ALN Legacy Customer ID"; Code[20])
+        {
+            Caption = 'ALN Legacy Customer ID';
+            DataClassification = ToBeClassified;
+        }
+
     }
 
     keys

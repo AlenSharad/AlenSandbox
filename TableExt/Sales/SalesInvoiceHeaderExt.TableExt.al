@@ -290,5 +290,11 @@ tableextension 50106 "Sales Invoice Header Ext" extends "Sales Invoice Header"
             Caption = 'Order Total Excl. Tax';
             DataClassification = ToBeClassified;
         }
+        field(50164; "Order Tax Variance"; Decimal)
+        {
+            Caption = 'Order Tax Variance';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
     }
 }

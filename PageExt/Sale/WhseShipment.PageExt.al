@@ -1,5 +1,6 @@
 pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
 {
+
     layout
     {
         addlast(General)
@@ -111,10 +112,73 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                 Caption = 'Order Total Variance';
                 ToolTip = 'ALN - Specifies the order total variance for the warehouse shipment.';
             }
+            field(TotalWeight; Rec.TotalWeight)
+            {
+                ApplicationArea = All;
+                Editable = false;
+                Caption = 'Total Weight';
+                ToolTip = 'Specifies the total weight of the items in the warehouse shipment.';
+            }
 
         }
         addlast(Shipping)
         {
+            field("Ship to Name"; Rec."Ship to Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Ship to Name';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the name of the recipient for the warehouse shipment.';
+            }
+            field("Shipping Address"; Rec."Shipping Address")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Address';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the shipping address for the warehouse shipment.';
+            }
+            field("Shipping Address 2"; Rec."Shipping Address 2")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Address 2';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the second line of the shipping address for the warehouse shipment.';
+            }
+            field("Shipping City"; Rec."Shipping City")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping City';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the city for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping County"; Rec."Shipping County")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping State';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the county for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping Post Code"; Rec."Shipping Post Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Post Code';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the postal code for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping Country/Region Code"; Rec."Shipping Country/Region Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Country/Region Code';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the country or region code for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping Phone No."; Rec."Shipping Phone No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Phone No.';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the phone number for the shipping address associated with the warehouse shipment.';
+            }
             field("Package Tracking No."; Rec."Package Tracking No.")
             {
                 ApplicationArea = All;
@@ -122,6 +186,14 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                 Importance = Standard;
                 ToolTip = 'ALN - Specifies the tracking number for the package associated with the warehouse shipment.';
             }
+            field("Requested Delivery Date"; Rec."Requested Delivery Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Requested Delivery Date';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the requested delivery date for the warehouse shipment.';
+            }
+
         }
         addafter("Shipping")
         {
@@ -402,5 +474,8 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
 
         }
     }
-
+    trigger OnAfterGetRecord()
+    begin
+        Rec.SetAutoCalcFields(TotalWeight);
+    end;
 }

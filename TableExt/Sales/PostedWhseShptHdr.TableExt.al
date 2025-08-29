@@ -286,8 +286,61 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
         }
         field(50202; "Package Tracking No."; Text[50])
         {
+
             Caption = 'Package Tracking No.';
             DataClassification = ToBeClassified;
+        }
+        field(50203; "Requested Delivery Date"; Date)
+        {
+            Caption = 'Requested Delivery Date';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50204; "Shipping Address"; Text[100])
+        {
+            Caption = 'Shipping Address';
+            DataClassification = ToBeClassified;
+        }
+        field(50205; "Shipping Address 2"; Text[100])
+        {
+            Caption = 'Shipping Address 2';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; "Shipping City"; Text[50])
+        {
+            Caption = 'Shipping City';
+            DataClassification = ToBeClassified;
+        }
+        field(50207; "Shipping County"; Text[50])
+        {
+            Caption = 'Shipping County';
+            DataClassification = ToBeClassified;
+        }
+        field(50208; "Shipping Post Code"; Code[20])
+        {
+            Caption = 'Shipping Post Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50209; "Shipping Country/Region Code"; Code[10])
+        {
+            Caption = 'Shipping Country/Region Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50210; "Shipping Phone No."; Text[30])
+        {
+            Caption = 'Shipping Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50212; "Ship to Name"; Text[100])
+        {
+            Caption = 'Ship to Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50213; "SO Date"; Date)
+        {
+            Caption = 'SO Date';
+            DataClassification = ToBeClassified;
+            Editable = false;
         }
     }
 }

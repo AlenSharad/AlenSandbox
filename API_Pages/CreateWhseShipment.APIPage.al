@@ -43,6 +43,16 @@ page 50125 "API - Create Whse Shipment"
                     Caption = 'Tracking No.';
                     Editable = true;
                 }
+                field(externalShipmentId; externalShipmentId)
+                {
+                    Caption = 'Shipment Id';
+                    Editable = true;
+                }
+                field(shipmentDate; shipmentDate)
+                {
+                    Caption = 'Shipment Date';
+                    Editable = true;
+                }
                 field(shipmentId; shipmentId)
                 {
                     Caption = 'Shipment Id';
@@ -73,6 +83,7 @@ page 50125 "API - Create Whse Shipment"
             salesHeader.SetRange("No.", Rec."External Document No.");
             if salesHeader.FindFirst() then begin
                 salesHeader."Package Tracking No." := trackingNo;
+                salesHeader.Marketplace_Shipment_ID := externalShipmentId;
                 salesHeader.Modify();
                 WhseShipment.Reset();
                 WhseShipment.SetRange("Source No.", salesHeader."No.");
@@ -99,6 +110,7 @@ page 50125 "API - Create Whse Shipment"
         ShipmentCreated: Boolean;
         GetSourceDocOB: codeunit "Get Source Doc. Outbound";
         WhseShipment: Record "Warehouse Shipment Header";
+        WarehouseShipmentLine: Record "Warehouse Shipment Line";
     begin
 
         if not SalesHeader.IsApprovedForPosting() then
@@ -112,6 +124,13 @@ page 50125 "API - Create Whse Shipment"
             if WhseShipment.FindFirst() then begin
                 shipmentId := WhseShipment.SystemId;
                 message := 'Warehouse Shipment Created Successfully';
+                WhseShipment."Shipment Date" := shipmentDate;
+                WhseShipment.Marketplace_Shipment_ID := externalShipmentId;
+                WarehouseShipmentLine.reset();
+                WarehouseShipmentLine.SetRange("No.", WhseShipment."No.");
+                if not WarehouseShipmentLine.IsEmpty() then
+                    WarehouseShipmentLine.ModifyAll("Shipment Date", WhseShipment."Shipment Date");
+                WhseShipment.Modify();
             end;
         end else begin
             message := GetLastErrorText;
@@ -122,5 +141,7 @@ page 50125 "API - Create Whse Shipment"
     var
         shipmentId: Guid;
         trackingNo: Text[500];
+        shipmentDate: Date;
         message: Text[250];
+        externalShipmentId: Text[50];
 }

@@ -113,6 +113,90 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 ToolTip = 'ALN - Specifies the variance in the order total for the sales shipment.';
             }
         }
+        addlast(Shipping)
+        {
+            field("Ship to Name"; Rec."Ship to Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Ship to Name';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the name of the recipient for the warehouse shipment.';
+            }
+            field("Shipping Address"; Rec."Shipping Address")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Address';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the shipping address for the warehouse shipment.';
+            }
+            field("Shipping Address 2"; Rec."Shipping Address 2")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Address 2';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the second line of the shipping address for the warehouse shipment.';
+            }
+            field("Shipping City"; Rec."Shipping City")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping City';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the city for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping County"; Rec."Shipping County")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping State';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the county for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping Post Code"; Rec."Shipping Post Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Post Code';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the postal code for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping Country/Region Code"; Rec."Shipping Country/Region Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Country/Region Code';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the country or region code for the shipping address associated with the warehouse shipment.';
+            }
+            field("Shipping Phone No."; Rec."Shipping Phone No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipping Phone No.';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the phone number for the shipping address associated with the warehouse shipment.';
+            }
+
+            field("Package Tracking No."; Rec."Package Tracking No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Package Tracking No.';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the tracking number for the package associated with the warehouse shipment.';
+            }
+            field("Requested Delivery Date"; Rec."Requested Delivery Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Requested Delivery Date';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the requested delivery date for the warehouse shipment.';
+            }
+        }
         addafter("Shipping")
         {
             group("Marketplace Details")
@@ -402,5 +486,28 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
             }
         }
     }
+    actions
+    {
+        addlast("&Shipment")
+        {
+            action(PackageContent)
+            {
+                ApplicationArea = All;
+                Caption = 'Package Content';
+                ToolTip = 'ALN - View the contents of the package associated with the warehouse shipment.';
+                Image = BinContent;
+                RunObject = Page "Package Contents";
+                RunPageLink = "Shipment No." = field("No.");
+                trigger OnAction()
+                begin
+                end;
+            }
+        }
+        addfirst(Category_Category7)
+        {
+            actionref(Promoted_PackageContent; PackageContent)
+            { }
 
+        }
+    }
 }

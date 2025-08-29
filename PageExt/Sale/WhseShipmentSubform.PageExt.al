@@ -49,6 +49,12 @@ pageextension 50129 "Whse Shipment Subform Ext" extends "Whse. Shipment Subform"
                 Caption = 'PO Line';
                 ToolTip = 'ALN - Specifies the purchase order line associated with the warehouse shipment.';
             }
+            field(Weight; Rec.Weight)
+            {
+                ApplicationArea = all;
+                Caption = 'Weight';
+                ToolTip = 'Specifies the weight of the item associated with the warehouse shipment.';
+            }
         }
         addafter(Description)
         {

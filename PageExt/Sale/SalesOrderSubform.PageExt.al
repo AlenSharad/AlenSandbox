@@ -25,7 +25,7 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
         {
             field("BC Unit Price"; Rec."BC Unit Price")
             {
-                Caption = 'Base Unit Price';
+                Caption = 'BC Price Level';
                 ApplicationArea = all;
                 Editable = false;
                 ToolTip = 'ALN - Specifies the Base unit price of the order.';

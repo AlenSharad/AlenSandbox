@@ -79,44 +79,78 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 Caption = 'Location Assigned';
                 ToolTip = 'ALN - Indicates the location assigned for this sales order.';
             }
-            field("Order Total Check"; Rec."Order Total Check")
-            {
-                ApplicationArea = All;
-                Caption = 'Order Total Check';
-                ToolTip = 'ALN - Displays the Shopify Order Total for the order for validation.';
-            }
-            field("Order Total Excl Tax"; Rec."Order Total Excl Tax")
-            {
-                ApplicationArea = All;
-                Caption = 'Order Total Excl Tax';
-                ToolTip = 'ALN - Displays the Shopify Order Total Excl Tax for the order for validation.';
-            }
-            field("Order Total Variance"; Rec."Order Total Variance")
-            {
-                ApplicationArea = All;
-                Caption = 'Order Total Variance';
-                ToolTip = 'ALN - Shows the variance between expected and actual order totals.';
-            }
+
+
             field("Order Discount Details"; Rec."Order Discount Details")
             {
                 ApplicationArea = All;
                 Caption = 'Order Discount Details';
                 ToolTip = 'ALN - Displays details about discounts applied to the order.';
             }
-            field("Order Total Amount"; Rec."Order Total Amount")
+
+            group("Store front Data")
             {
-                ApplicationArea = all;
-                Caption = 'Order Total Amount';
-                ToolTip = 'ALN - Shows the total amount for the order.';
+                Caption = 'Store front Data';
+                // Visible = false;
+                field("Order Total Check"; Rec."Order Total Check")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Order Total Check';
+                    ToolTip = 'ALN - Displays the Shopify Order Total for the order for validation.';
+                }
+                field("Order Total Excl Tax"; Rec."Order Total Excl Tax")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Order Total Excl Tax';
+                    ToolTip = 'ALN - Displays the Shopify Order Total Excl Tax for the order for validation.';
+                }
+                field("Order Total Tax"; Rec."Order Total Tax")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Order Total Tax';
+                    Editable = false;
+                    ToolTip = 'ALN - Displays the total tax amount for the order.';
+                }
+            }
+            group("BC Details")
+            {
+                field("Order Total Amount"; Rec."Order Total Amount")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Order Total Amount';
+                    ToolTip = 'ALN - Shows the total amount for the order.';
+                }
+
+
+                field("Ava Tax Amount"; Rec."Ava Tax Amount")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Total Tax';
+                    Editable = false;
+                    ToolTip = 'ALN - Displays the Avalara tax amount for the order.';
+                }
+            }
+            group("Variance Details")
+            {
+                Caption = 'Variance Details';
+                field("Order Total Variance"; Rec."Order Total Variance")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Order Total Variance';
+                    Editable = false;
+                    ToolTip = 'ALN - Shows the variance between expected and actual order totals.';
+                }
+                field("Order Tax Variance"; Rec."Order Tax Variance")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Order Tax Variance';
+                    Editable = false;
+                    ToolTip = 'ALN - Shows the variance between expected and actual order tax amounts.';
+                }
+
             }
 
-            field("Order Total Tax"; Rec."Order Total Tax")
-            {
-                ApplicationArea = all;
-                Caption = 'Order Total Tax';
-                Editable = false;
-                ToolTip = 'ALN - Displays the total tax amount for the order.';
-            }
+
             field("Ava Tax Override Type"; Rec."Ava Tax Override Type")
             {
                 ApplicationArea = all;
@@ -460,6 +494,7 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                     LocationAssignment: Codeunit LocationAssignment;
                     bomavailable: Record "Item Bom Available";
                 begin
+
                     LocationAssignment.FillItemAvailabilityLocationwise(Rec, true);
                     bomavailable.Reset();
                     bomavailable.SetRange("Order No.", Rec."No.");

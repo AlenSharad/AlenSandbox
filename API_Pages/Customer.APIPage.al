@@ -62,6 +62,42 @@ page 50100 "API - Customers"
                         RegisterFieldSet(Rec.FieldNo("Contact Type"));
                     end;
                 }
+                field(lastName; Rec."Last Name")
+                {
+                    Caption = 'Last Name';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Last Name"));
+                    end;
+                }
+                field(customerSinceDate; Rec."Customer Since Date")
+                {
+                    Caption = 'Customer Since Date';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer Since Date"));
+                    end;
+                }
+                field(legacyCustomerID; Rec."ALN Legacy Customer ID")
+                {
+                    Caption = 'ALN Legacy Customer ID';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("ALN Legacy Customer ID"));
+                    end;
+                }
+                field(acceptsMarketing; Rec."Accepts Marketing")
+                {
+                    Caption = 'Accepts Marketing';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Accepts Marketing"));
+                    end;
+                }
                 field(addressLine1; Rec.Address)
                 {
                     Caption = 'Address Line 1';
@@ -407,7 +443,7 @@ page 50100 "API - Customers"
                         RegisterFieldSet(Rec.FieldNo("Tax Area Code"));
                     end;
                 }
-                field(taxIdendification; Rec."Tax Identification Type")
+                field(taxIdentification; Rec."Tax Identification Type")
                 {
                     Caption = 'Tax Identification Type';
 

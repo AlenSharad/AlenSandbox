@@ -1,20 +1,20 @@
 
-page 50123 "API - Warehouse Shipments"
+page 50138 "API - Posted Whse Shipments"
 {
     APIVersion = 'v2.0';
-    EntityCaption = 'Warehouse Shipment';
-    EntitySetCaption = 'Warehouse Shipments';
+    EntityCaption = 'Posted Warehouse Shipment';
+    EntitySetCaption = 'Posted Warehouse Shipments';
     ChangeTrackingAllowed = true;
     DelayedInsert = true;
     DeleteAllowed = false;
-    Editable = true;
-    EntityName = 'warehouseShipment';
-    EntitySetName = 'warehouseShipments';
+    Editable = false;
+    EntityName = 'postedWhseShipment';
+    EntitySetName = 'postedWhseShipments';
     InsertAllowed = false;
-    ModifyAllowed = true;
+    ModifyAllowed = false;
     ODataKeyFields = SystemId;
     PageType = API;
-    SourceTable = "Warehouse Shipment Header";
+    SourceTable = "Posted Whse. Shipment Header";
     APIPublisher = 'HappiestMinds';
     APIGroup = 'AlenAPIS';
     Extensible = true;
@@ -58,18 +58,9 @@ page 50123 "API - Warehouse Shipments"
 
                 }
 
-                field(Status; Rec.Status)
-                {
-                    Caption = 'Status';
-                    Editable = false;
-                }
                 field(assignedUser; Rec."Assigned User ID")
                 {
                     Caption = 'Assigned User ID';
-                }
-                field(sortingMethod; Rec."Sorting Method")
-                {
-                    Caption = 'Sorting Method';
                 }
                 field(currencyCode; CurrencyCodeTxt)
                 {
@@ -273,56 +264,6 @@ page 50123 "API - Warehouse Shipments"
                     ApplicationArea = All;
                     Caption = 'Processed';
                 }
-                field(requestedDeliveryDate; Rec."Requested Delivery Date")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Requested Delivery Date';
-                }
-                field(soDate; Rec."SO Date")
-                {
-                    ApplicationArea = All;
-                    Caption = 'SO Date';
-                }
-                field(shippingName; Rec."Ship to Name")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Name';
-                }
-                field(shippingAddress; Rec."Shipping Address")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Address';
-                }
-                field(shippingAddress2; Rec."Shipping Address 2")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Address 2';
-                }
-                field(shippingCity; Rec."Shipping City")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping City';
-                }
-                field(shippingState; Rec."Shipping County")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping State';
-                }
-                field(shippingZipCode; Rec."Shipping Post Code")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Post Code';
-                }
-                field(shippingCountry; Rec."Shipping Country/Region Code")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Country/Region Code';
-                }
-                field(shippingPhoneNo; Rec."Shipping Phone No.")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Shipping Phone No.';
-                }
                 field("Supplier_Contact_Name"; Rec."Supplier_Contact_Name")
                 {
                     ApplicationArea = All;
@@ -362,11 +303,11 @@ page 50123 "API - Warehouse Shipments"
                 {
                     Caption = 'Is Ship Residential';
                 }
-                part(salesShipmentLines; "API - Warehouse Shipment Lines")
+                part(salesShipmentLines; "API - Posted Whse Shpmt Lines")
                 {
                     Caption = 'Lines';
-                    EntityName = 'warehouseShipmentLine';
-                    EntitySetName = 'warehouseShipmentLines';
+                    EntityName = 'postedWhseShipmentLine';
+                    EntitySetName = 'postedWhseShipmentLines';
                     SubPageLink = "No." = field("No.");
                 }
                 part(packageContents; "API - Package Content")
@@ -387,12 +328,6 @@ page 50123 "API - Warehouse Shipments"
                     Caption = 'Created Date';
                     Editable = false;
                 }
-                field(TotalWeight; Rec.TotalWeight)
-                {
-                    Caption = 'Total Weight';
-                    Editable = false;
-                }
-
                 // part(dimensionSetLines; "APIV2 - Dimension Set Lines")
                 // {
                 //     Caption = 'Dimension Set Lines';
@@ -410,13 +345,11 @@ page 50123 "API - Warehouse Shipments"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.SetAutoCalcFields(TotalWeight);
         //SetCalculatedFields();
     end;
 
     trigger OnOpenPage()
     begin
-        Rec.SetAutoCalcFields(TotalWeight);
     end;
 
     var
