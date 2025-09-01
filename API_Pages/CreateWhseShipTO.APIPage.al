@@ -14,8 +14,8 @@ page 50134 "API -Create Whse Ship Transfer"
     DeleteAllowed = false;
     InsertAllowed = true;
     ModifyAllowed = false;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     layout
     {

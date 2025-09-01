@@ -11,8 +11,8 @@ page 50101 "API - Contacts"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Contact Buffer";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
 

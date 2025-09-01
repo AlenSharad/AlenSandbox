@@ -10,8 +10,8 @@ page 50133 "API - Transfer Order Line"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Transfer Line";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     InsertAllowed = false;
     ModifyAllowed = false;

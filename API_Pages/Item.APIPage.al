@@ -11,8 +11,8 @@ page 50105 "API - Items"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = Item;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     layout

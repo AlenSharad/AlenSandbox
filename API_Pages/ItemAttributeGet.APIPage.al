@@ -11,8 +11,8 @@ page 50110 "API - Get Item Attributes"
     PageType = API;
     SourceTable = "Item Attribute Value Buffer";
     SourceTableTemporary = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     layout

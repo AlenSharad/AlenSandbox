@@ -11,8 +11,8 @@ page 50103 "API - ShiptoAddress"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Ship-to Address";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
 

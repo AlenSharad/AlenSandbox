@@ -13,8 +13,8 @@ page 50137 "API - Warehouse Receipt Lines"
     EntityName = 'warehouseReceiptLine';
     EntitySetName = 'warehouseReceiptLines';
     SourceTable = "Warehouse Receipt Line";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     Editable = true;
     layout

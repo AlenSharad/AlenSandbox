@@ -14,8 +14,8 @@ page 50135 "API -Create Whse Rcpt Transfer"
     DeleteAllowed = false;
     InsertAllowed = true;
     ModifyAllowed = false;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     layout
     {

@@ -11,8 +11,8 @@ page 50114 "API - Sales Order Lines"
     EntitySetName = 'salesItemList';
     SourceTable = "Sales Invoice Line Aggregate";
     SourceTableTemporary = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
 

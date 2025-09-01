@@ -10,8 +10,8 @@ page 50132 "API - Transfer Order"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Transfer Header";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     InsertAllowed = false;
     ModifyAllowed = false;

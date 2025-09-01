@@ -10,8 +10,8 @@ page 50106 "API - Item Attributes"
     PageType = API;
     SourceTable = "Item Attribute Value Selection";
     SourceTableTemporary = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     layout

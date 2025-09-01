@@ -15,8 +15,8 @@ page 50123 "API - Warehouse Shipments"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Warehouse Shipment Header";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
 
     layout

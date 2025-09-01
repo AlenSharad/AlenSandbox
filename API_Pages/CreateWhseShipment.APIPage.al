@@ -14,8 +14,8 @@ page 50125 "API - Create Whse Shipment"
     DeleteAllowed = false;
     InsertAllowed = true;
     ModifyAllowed = false;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     layout
     {

@@ -10,8 +10,8 @@ page 50108 "API - Item References"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Item Reference";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     layout

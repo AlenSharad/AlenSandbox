@@ -13,8 +13,8 @@ page 50139 "API - Posted Whse Shpmt Lines"
     EntityName = 'postedWhseShipmentLine';
     EntitySetName = 'postedWhseShipmentLines';
     SourceTable = "Posted Whse. Shipment Line";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     Editable = false;
     layout

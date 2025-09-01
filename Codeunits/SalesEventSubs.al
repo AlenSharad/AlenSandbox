@@ -365,7 +365,7 @@ codeunit 50101 SalesEventSubs
                 //SalesHeader."Order Total Variance" := Abs(SalesHeader."Amount Including VAT" - SalesHeader."Order Total Check");
                 SalesHeader."Order Tax Variance" := Abs(SalesHeader."Order Total Tax" - (SalesHeader."Ava Tax Amount"));
                 SalesHeader."Order Total Amount" := GetOrderTotalAfterTax(SalesHeader);
-                SalesHeader."Order Total Variance" := (SalesHeader."Order Total Amount" - SalesHeader."Order Total Check");
+                SalesHeader."Order Total Variance" := (SalesHeader."Order Total Amount" - SalesHeader."Order Total Excl Tax");
                 // if SalesHeader."Order Total Variance" > 0 then begin
                 // ReleaseSalesDoc.Reopen(SalesHeader);
                 // asmtolink.Reset();

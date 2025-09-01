@@ -15,8 +15,8 @@ page 50136 "API - Warehouse Receipt"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Warehouse Receipt Header";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
 
     layout

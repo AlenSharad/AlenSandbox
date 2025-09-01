@@ -95,12 +95,14 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 field("Order Total Check"; Rec."Order Total Check")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     Caption = 'Order Total Check';
                     ToolTip = 'ALN - Displays the Shopify Order Total for the order for validation.';
                 }
                 field("Order Total Excl Tax"; Rec."Order Total Excl Tax")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     Caption = 'Order Total Excl Tax';
                     ToolTip = 'ALN - Displays the Shopify Order Total Excl Tax for the order for validation.';
                 }
@@ -117,6 +119,7 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 field("Order Total Amount"; Rec."Order Total Amount")
                 {
                     ApplicationArea = all;
+                    Editable = false;
                     Caption = 'Order Total Amount';
                     ToolTip = 'ALN - Shows the total amount for the order.';
                 }

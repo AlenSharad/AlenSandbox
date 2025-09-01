@@ -15,8 +15,8 @@ page 50138 "API - Posted Whse Shipments"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Posted Whse. Shipment Header";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
 
     layout

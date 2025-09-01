@@ -9,8 +9,8 @@ page 50130 "API - Item Unit of Measure"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Item Unit of Measure";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     layout

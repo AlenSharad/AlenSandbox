@@ -11,8 +11,8 @@ page 50109 "API - Sales Orders"
     ODataKeyFields = Id;
     PageType = API;
     SourceTable = "Sales Order Entity Buffer";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     layout

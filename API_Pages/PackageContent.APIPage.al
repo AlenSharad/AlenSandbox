@@ -13,8 +13,8 @@ page 50126 "API - Package Content"
     EntityName = 'packageContent';
     EntitySetName = 'packageContents';
     SourceTable = "Package Content";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     Editable = true;
     layout

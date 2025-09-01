@@ -13,8 +13,8 @@ page 50124 "API - Warehouse Shipment Lines"
     EntityName = 'warehouseShipmentLine';
     EntitySetName = 'warehouseShipmentLines';
     SourceTable = "Warehouse Shipment Line";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
     Editable = true;
     layout

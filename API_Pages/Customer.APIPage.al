@@ -12,8 +12,8 @@ page 50100 "API - Customers"
     PageType = API;
     SourceTable = Customer;
     Extensible = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     DeleteAllowed = false;
     layout
     {
@@ -30,14 +30,13 @@ page 50100 "API - Customers"
                 {
                     Caption = 'No.';
                 }
-                field(extId; Rec."Name 2")
+                field(name2; Rec."Name 2")
                 {
-                    Caption = 'External Id';
+                    Caption = 'Name 2';
                     ShowMandatory = true;
 
                     trigger OnValidate()
                     begin
-
                         RegisterFieldSet(Rec.FieldNo("Name 2"));
                     end;
                 }
@@ -87,6 +86,15 @@ page 50100 "API - Customers"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("ALN Legacy Customer ID"));
+                    end;
+                }
+                field(searchName; Rec."Search Name")
+                {
+                    Caption = 'Search Name';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Search Name"));
                     end;
                 }
                 field(acceptsMarketing; Rec."Accepts Marketing")
@@ -579,16 +587,16 @@ page 50100 "API - Customers"
                 //         RegisterFieldSet(Rec.FieldNo("b2b_customer"));
                 //     end;
                 // }
-                field(shopifyCustomer; Rec."Shopify Customer No.")
+                field(shopifyCustomerNo; Rec."Shopify Customer No.")
                 {
-                    Caption = 'Shopify Customer';
+                    Caption = 'Shopify Customer No';
 
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Shopify Customer No."));
                     end;
                 }
-                field(zendeskCustomer; Rec."Zendesk Customer No.")
+                field(zendeskCustomerNo; Rec."Zendesk Customer No.")
                 {
                     Caption = 'Zendesk Customer No.';
 
