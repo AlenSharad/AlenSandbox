@@ -1257,8 +1257,8 @@ page 50109 "API - Sales Orders"
         avataxOvAmount := Rec."Ava Line Override Amount";
         ordertotalexcltax := Rec."Order Total Excl Tax";
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-            // IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.") then
-            custombillto.DeleteAll();
+            IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.") then
+                custombillto.DeleteAll();
             custombillto.Init();
             custombillto."Document Type" := custombillto."Document Type"::Order;
             custombillto."Document No." := Rec."No.";
@@ -1302,40 +1302,25 @@ page 50109 "API - Sales Orders"
 
         SetCalculatedFields();
         //if custombillto.get(custombillto."Document Type"::Order, Rec."No.") then
-        if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
-            //Error('-%1 and %2 and %3 and %4', custombillto."Document No.", custombillto.BillToOptions, custombillto.BilltoAdd1, custombillto.billtoPostCode);
-            Rec.BillToOptions := custombillto.BillToOptions;
-            Rec."Bill-to Name" := custombillto.BillToName;
-            Rec."Bill-to Address" := custombillto.BilltoAdd1;
-            Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
-            Rec."Bill-to Post Code" := custombillto.billtoPostCode;
-            Rec."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
-            Rec."Bill-to City" := custombillto.billtoCity;
-            Rec."Bill-to County" := custombillto.billtoCounty;
-            SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
-            SalesHeader."Bill-to Name" := custombillto.BillToName;
-            SalesHeader."Bill-to Address" := custombillto.BilltoAdd1;
-            SalesHeader."Bill-to Address 2" := custombillto.BilltoAdd2;
-            SalesHeader."Bill-to Post Code" := custombillto.billtoPostCode;
-            SalesHeader."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
-            SalesHeader."Bill-to City" := custombillto.billtoCity;
-            SalesHeader."Bill-to County" := custombillto.billtoCounty;
-            SalesHeader."Location Code" := LocCode;
-            SalesHeader."Your Reference" := yourReference;
-            SalesHeader."Tax Area Code" := taxareaCode;
-            SalesHeader."Payment Method Code" := paymentMethodCode;
-            SalesHeader."Shipping Agent Code" := shippingagentCode;
-            SalesHeader."Shipping Agent Service Code" := shippingAgentServiceCode;
-            SalesHeader."Tax Liable" := taxliable;
-            SalesHeader."Order Total Tax" := orderTotalTax;
-            SalesHeader."Shipment Date" := shipDate;
-            SalesHeader."Order Total Excl Tax" := ordertotalexcltax;
-            SalesHeader.modify(true);
+        // SalesHeader.Reset();
+        // if SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.") then begin
 
-        end;
+        //     SalesHeader."Location Code" := LocCode;
+        //     SalesHeader."Your Reference" := yourReference;
+        //     SalesHeader."Tax Area Code" := taxareaCode;
+        //     SalesHeader."Payment Method Code" := paymentMethodCode;
+        //     SalesHeader."Shipping Agent Code" := shippingagentCode;
+        //     SalesHeader."Shipping Agent Service Code" := shippingAgentServiceCode;
+        //     SalesHeader."Tax Liable" := taxliable;
+        //     SalesHeader."Order Total Tax" := orderTotalTax;
+        //     SalesHeader."Shipment Date" := shipDate;
+        //     SalesHeader."Order Total Excl Tax" := ordertotalexcltax;
+        //     SalesHeader.modify(true);
+
+        // end;
         SalesHeader2.Reset();
         if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
-            if customshipto.get(customshipto."Document Type"::Order, Rec."No.") then
+            if customshipto.get(customshipto."Document Type"::Order, Rec."No.") then begin
                 if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then begin
                     Rec.ShipToOptions := customshipto.ShipToOptions;
                     Rec."Ship-to Name" := customshipto.ShipToName;
@@ -1351,8 +1336,28 @@ page 50109 "API - Sales Orders"
                     SalesHeader2."Ship-to Country/Region Code" := customshipto.shiptoCountryRegionCode;
                     SalesHeader2."Ship-to City" := customshipto.shiptoCity;
                     SalesHeader2."Ship-to County" := customshipto.shiptoCounty;
-                    SalesHeader2."Ship-to City" := customshipto.shiptoCity;
                 end;
+            end;
+            if custombillto.get(customshipto."Document Type"::Order, Rec."No.") then begin
+                if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
+                    Rec.BillToOptions := custombillto.BillToOptions;
+                    Rec."Bill-to Name" := custombillto.BillToName;
+                    Rec."Bill-to Address" := custombillto.BilltoAdd1;
+                    Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
+                    Rec."Bill-to Post Code" := custombillto.billtoPostCode;
+                    Rec."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
+                    Rec."Bill-to City" := custombillto.billtoCity;
+                    Rec."Bill-to County" := custombillto.billtoCounty;
+
+                    SalesHeader2."Bill-to Name" := custombillto.BillToName;
+                    SalesHeader2."Bill-to Address" := custombillto.BilltoAdd1;
+                    SalesHeader2."Bill-to Address 2" := custombillto.BilltoAdd2;
+                    SalesHeader2."Bill-to Post Code" := custombillto.billtoPostCode;
+                    SalesHeader2."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
+                    SalesHeader2."Bill-to City" := custombillto.billtoCity;
+                    SalesHeader2."Bill-to County" := custombillto.billtoCounty;
+                end;
+            end;
             SalesHeader2."Location Code" := LocCode;
             SalesHeader2."Your Reference" := yourReference;
             //SalesHeader2."Tax Area Code" := taxareaCode;

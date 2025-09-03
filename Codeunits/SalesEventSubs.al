@@ -287,7 +287,7 @@ codeunit 50101 SalesEventSubs
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         if SalesLine.FindSet() then
             repeat
-                OtherTotal += (((SalesLine."BC Unit Price" * SalesLine.Quantity) + SalesLine."Ava Tax Amount") - SalesLine."Line Discount Amount");
+                OtherTotal += (((SalesLine."BC Unit Price" * SalesLine.Quantity)) - SalesLine."Line Discount Amount");
             //OtherTotal += SalesLine."Line Amount";
             until SalesLine.Next() = 0;
 

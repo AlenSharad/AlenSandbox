@@ -14,9 +14,9 @@ page 50132 "API - Transfer Order"
     APIGroup = 'BCAPI';
     Extensible = true;
     InsertAllowed = false;
-    ModifyAllowed = false;
+    ModifyAllowed = true;
     DeleteAllowed = false;
-
+    Editable = true;
     layout
     {
         area(content)
@@ -86,12 +86,12 @@ page 50132 "API - Transfer Order"
             field(sentTo3PL; Rec."Sent to 3PL")
             {
                 Caption = 'Sent to 3PL';
-                Editable = false;
+                Editable = true;
             }
             field(sentTo3PLDate; Rec."Sent to 3PL Date")
             {
                 Caption = 'Sent to 3PL Date';
-                Editable = false;
+                Editable = true;
             }
 
             field(lastModifiedDateTime; Rec.SystemModifiedAt)
