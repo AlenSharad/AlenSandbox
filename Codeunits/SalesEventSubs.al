@@ -17,6 +17,7 @@ codeunit 50101 SalesEventSubs
         //if billtooptions = billtooptions::"Custom Address" then begin
         custombillto.Reset();
         custombillto.SetRange("Document Type", custombillto."Document Type"::Order);
+        custombillto.SetRange("Document No.", SalesHeader."No.");
         if custombillto.FindFirst() then begin
             SalesHeader."Bill-to Address" := custombillto.BilltoAdd1;
             SalesHeader."Bill-to Address 2" := custombillto.BilltoAdd2;
@@ -37,6 +38,7 @@ codeunit 50101 SalesEventSubs
         //if billtooptions = billtooptions::"Custom Address" then begin
         customshipto.Reset();
         customshipto.SetRange("Document Type", customshipto."Document Type"::Order);
+        customshipto.SetRange("Document No.", SalesHeader."No.");
         if customshipto.FindFirst() then begin
             SalesHeader."ship-to Address" := customshipto.shiptoAdd1;
             SalesHeader."ship-to Address 2" := customshipto.shiptoAdd2;
@@ -53,6 +55,7 @@ codeunit 50101 SalesEventSubs
     local procedure ChangeBufferCustomFieldsOnAfterModifyEvent(var Rec: Record "Sales Header"; var xRec: Record "Sales Header")
     var
         salesEntityBuffer: Record "Sales Order Entity Buffer";
+        custombillto: Record "Custom Bill To Address";
     begin
         // if Rec."Shortcut Dimension 2 Code" = '410' then
         //     Rec."Shipping Advice" := Rec."Shipping Advice"::Complete;
@@ -79,6 +82,12 @@ codeunit 50101 SalesEventSubs
             //     salesEntityBuffer."Shipping Advice" := salesEntityBuffer."Shipping Advice"::Complete;
             if salesEntityBuffer."Shipment Date" <> Rec."Shipment Date" then
                 salesEntityBuffer."Shipment Date" := Rec."Shipment Date";
+
+            if custombillto.get(Rec."Document Type"::Order, Rec."No.", Rec."External Document No.") then begin
+                if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
+                    salesEntityBuffer.BillToOptions := custombillto.BillToOptions;
+                end;
+            end;
             salesEntityBuffer.Modify();
 
         end;
@@ -191,7 +200,7 @@ codeunit 50101 SalesEventSubs
     var
         customshipto: Record "Custom Ship To Address";
     begin
-        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.", SalesHeader."External Document No.") then begin
             if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
                 ShipToOptions := customshipto.ShipToOptions.AsInteger();
             IsHandled := true;
@@ -204,7 +213,7 @@ codeunit 50101 SalesEventSubs
     var
         customshipto: Record "Custom Ship To Address";
     begin
-        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.", SalesHeader."External Document No.") then begin
             if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
                 ShipToOptions := customshipto.ShipToOptions;
 
@@ -216,7 +225,7 @@ codeunit 50101 SalesEventSubs
     var
         customshipto: Record "Custom Ship To Address";
     begin
-        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+        if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.", SalesHeader."External Document No.") then begin
             if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
                 Result := true;
         end;
@@ -227,7 +236,7 @@ codeunit 50101 SalesEventSubs
     var
         customshipto: Record "Custom Ship To Address";
     begin
-        if customshipto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.") then begin
+        if customshipto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.", SellToSalesHeader."External Document No.") then begin
             if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
                 Result := false;
         end;
@@ -238,9 +247,7 @@ codeunit 50101 SalesEventSubs
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
         CurrLineTotal: Decimal;
-
         OtherTotal: Decimal;
-
         salesheader2: Record "Sales Header";
     begin
         if SL."Document Type" <> SL."Document Type"::Order then
@@ -295,6 +302,26 @@ codeunit 50101 SalesEventSubs
             exit(OtherTotal);
         end;
         exit(0);
+    end;
+
+    local procedure GetTotalBCTax(var SalesHeader: Record "Sales Header"): Decimal
+    var
+        SalesLine: Record "Sales Line";
+        TotalTax: Decimal;
+    begin
+        TotalTax := 0;
+        SalesHeader.CalcFields("Ava Tax Amount");
+        SalesLine.Reset();
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        if SalesLine.FindSet() then
+            repeat
+                TotalTax += (SalesLine."Amount Including VAT" - SalesLine.Amount);
+            until SalesLine.Next() = 0;
+        if TotalTax = 0 then
+            TotalTax := SalesHeader."Ava Tax Amount";
+        exit(TotalTax);
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnValidateSellToCustomerNoOnBeforeUpdateSellToCont, '', false, false)]
@@ -363,7 +390,7 @@ codeunit 50101 SalesEventSubs
                 SalesHeader.CalcFields("Amount Including VAT", "Ava Tax Amount");
                 //SalesHeader."Order Total Amount" := (SalesHeader."Amount Including VAT");
                 //SalesHeader."Order Total Variance" := Abs(SalesHeader."Amount Including VAT" - SalesHeader."Order Total Check");
-                SalesHeader."Order Tax Variance" := Abs(SalesHeader."Order Total Tax" - (SalesHeader."Ava Tax Amount"));
+                SalesHeader."Order Tax Variance" := Abs(SalesHeader."Order Total Tax" - GetTotalBCTax(SalesHeader));
                 SalesHeader."Order Total Amount" := GetOrderTotalAfterTax(SalesHeader);
                 SalesHeader."Order Total Variance" := (SalesHeader."Order Total Amount" - SalesHeader."Order Total Excl Tax");
                 // if SalesHeader."Order Total Variance" > 0 then begin
@@ -456,26 +483,13 @@ codeunit 50101 SalesEventSubs
         end;
     end;
 
-    //  [EventSubscriber(ObjectType::Page, PAge::"Sales Order", OnBeforeValidateBillToOptions, '', false, false)]
-    // local procedure SetBillToAsCustomOnBeforeValidateShipToOptions(ShipToOptions: Option; SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
-    // var
-    //     customshipto: Record "Custom Ship To Address";
-    // begin
-    //     if customshipto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
-    //         if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then
-    //             ShipToOptions := customshipto.ShipToOptions.AsInteger();
-    //         IsHandled := true;
-
-    //     end;
-    // end;
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Customer Mgt.", OnAfterCalculateShipBillToOptions, '', false, false)]
     local procedure SetBillToAsCustomOnAfterCalculateShipBillToOptions(var BillToOptions: Enum "Sales Bill-to Options"; SalesHeader: Record "Sales Header")
     var
         custombillto: Record "Custom Bill To Address";
     begin
 
-        if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+        if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.", SalesHeader."External Document No.") then begin
             if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
                 BillToOptions := custombillto.BillToOptions;
 
@@ -489,7 +503,7 @@ codeunit 50101 SalesEventSubs
     begin
         if SalesHeader."Document Type" <> SalesHeader."Document Type"::Order then
             exit;
-        if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.") then begin
+        if custombillto.Get(SalesHeader."Document Type", SalesHeader."No.", SalesHeader."External Document No.") then begin
             if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
                 Result := true;
         end;
@@ -502,7 +516,7 @@ codeunit 50101 SalesEventSubs
     begin
         if SellToSalesHeader."Document Type" <> SellToSalesHeader."Document Type"::Order then
             exit;
-        if custombillto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.") then begin
+        if custombillto.Get(SellToSalesHeader."Document Type", SellToSalesHeader."No.", SellToSalesHeader."External Document No.") then begin
             if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then
                 Result := false;
         end;
@@ -527,8 +541,10 @@ codeunit 50101 SalesEventSubs
     begin
 
         if (Rec."Document Type" = Rec."Document Type"::Order) and (Rec."No." <> xRec."No.") then
-            if Rec.Quantity <> 0 then
+            if Rec.Quantity <> 0 then begin
                 Rec."Gross Weight" := Rec.Quantity * Rec."Net Weight";
+                Rec."Total Cubage FT" := Rec."Total Cubage FT" * Rec.Quantity;
+            end;
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterValidateEvent, Quantity, false, false)]
@@ -536,8 +552,10 @@ codeunit 50101 SalesEventSubs
     begin
 
         if (Rec."Document Type" = Rec."Document Type"::Order) then
-            if Rec.Quantity <> 0 then
+            if Rec.Quantity <> 0 then begin
                 Rec."Gross Weight" := Rec.Quantity * Rec."Net Weight";
+                Rec."Total Cubage FT" := Rec."Total Cubage FT" * Rec.Quantity;
+            end;
     end;
 
 
@@ -573,6 +591,30 @@ codeunit 50101 SalesEventSubs
     //     Error('SL1- %1 , SL2-%2 , SL3-%3', TotalSalesLine."Amount Including VAT", TotalSalesLine2."Amount Including VAT", VATAmount);
     // end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment (Yes/No)", OnBeforeConfirmWhseShipmentPost, '', false, false)]
+    local procedure SkipPostingOnBeforeConfirmWhseShipmentPost(var IsPosted: Boolean; var WhseShptLine: Record "Warehouse Shipment Line")
+    var
+        WhseShpmtHdr: Record "Warehouse Shipment Header";
+    begin
+        WhseShpmtHdr.Get(WhseShptLine."No.");
+        if (WhseShpmtHdr.Processed = false) and (WhseShpmtHdr."Storefront Name" <> '') then
+            Error('Please ensure the following conditions are met before posting this shipment:The shipment tracking information has been sent to the storefront where the order was originally placed. The Processed flag is marked as True.');
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterAssignItemUOM, '', false, false)]
+    local procedure UpdateCubageOnAfterAssignItemUOM(Item: Record Item; var SalesLine: Record "Sales Line")
+    var
+        ItemUOM: Record "Item Unit of Measure";
+    begin
+        if ItemUOM.Get(Item."No.", SalesLine."Unit of Measure Code") then
+            if SalesLine.Quantity <> 0 then begin
+                if ItemUOM.Cubage > 0 then
+                    SalesLine."Total Cubage FT" := ((ItemUOM.Cubage / 1728) * SalesLine.Quantity)
+            end else begin
+                if ItemUOM.Cubage > 0 then
+                    SalesLine."Total Cubage FT" := (ItemUOM.Cubage / 1728);
+            end;
+    end;
 
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
     var

@@ -62,5 +62,11 @@ tableextension 50126 "Sales Shipment Line Extension" extends "Sales Shipment Lin
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50116; "Total Cubage FT"; Decimal)
+        {
+            Caption = 'Total Cubage FT';
+            DataClassification = CustomerContent;
+            Editable = true;
+        }
     }
 }

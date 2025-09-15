@@ -12,6 +12,7 @@ pageextension 50120 "Posted Sales Invoices Page Ext" extends "Posted Sales Invoi
                 Editable = false;
                 ToolTip = 'ALN - Specifies the order type code associated with the sales invoice.';
             }
+
             // field("Shopify Variant Id"; Rec."Shopify Variant Id")
             // {
             //     ApplicationArea = All;
@@ -75,6 +76,17 @@ pageextension 50120 "Posted Sales Invoices Page Ext" extends "Posted Sales Invoi
                 Editable = false;
                 ToolTip = 'ALN - Specifies the authorization code for the store front payment associated with the sales invoice.';
             }
+            field("Invoice Sent"; Rec."Invoice Sent")
+            {
+                ApplicationArea = All;
+                Caption = 'Invoice Sent';
+                Editable = false;
+                ToolTip = 'ALN - Specifies the confirmation for the invoice sent to customer.';
+            }
+        }
+        modify("Order No.")
+        {
+            Visible = true;
         }
     }
 }

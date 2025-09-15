@@ -226,7 +226,11 @@ codeunit 50102 LocationAssignment
                                 bomavailable.Weight := SalesLine."Gross Weight" * SalesLine.Quantity;
                                 bomavailable."Actual Count" := TotalRecord;
                                 bomavailable.Insert();
+                            end else begin
+                                bomavailable."Actual Count" -= 1;
+                                bomavailable.Modify();
                             end;
+
                         until location.Next() = 0;
                 end;
             until SalesLine.Next() = 0
@@ -324,7 +328,19 @@ codeunit 50102 LocationAssignment
     // local procedure OnAfterFillItemBomAvailable(bombuffercopy: Record "BOM Buffer Copy"; SalesHeader: Record "Sales Header")
     // begin
     // end;
+    //--------------------------- SMS API (Get Shipment Label)-------------------
+
+    procedure GETShipmentLabelAPI(WhseShipment: Record "Warehouse Shipment Header")
+    var
+        APIManagement: Codeunit APIManagement;
+    begin
+        if (WhseShipment.Processed) then //or (WhseShipment."Package Tracking No." <> '') or (WhseShipment."Location Code" <> 'SMS') then
+            exit;
+        APIManagement.ShipLabelAPICall(WhseShipment);
+
+    end;
 
     var
         gHidedialog: Boolean;
+        page: Page 1173;
 }

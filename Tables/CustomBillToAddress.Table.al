@@ -54,11 +54,16 @@ table 50105 "Custom Bill To Address"
             Caption = 'Bill-to Name';
             DataClassification = ToBeClassified;
         }
+        field(100; "External Document No."; Code[35])
+        {
+            Caption = 'External Document No.';
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys
     {
-        key(PK; "Document Type", "Document No.")
+        key(PK; "Document Type", "Document No.", "External Document No.")
         {
             Clustered = true;
         }

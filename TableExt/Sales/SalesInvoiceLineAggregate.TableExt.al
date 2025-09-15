@@ -64,6 +64,12 @@ tableextension 50120 "Sales Inv Line Agg Extension" extends "Sales Invoice Line 
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50116; "Total Cubage FT"; Decimal)
+        {
+            Caption = 'Total Cubage FT';
+            DataClassification = CustomerContent;
+            Editable = true;
+        }
         field(50250; "Ava Line Override Type"; Option)
         {
             Caption = 'Tax Override Type';

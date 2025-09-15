@@ -61,6 +61,15 @@ page 50100 "API - Customers"
                         RegisterFieldSet(Rec.FieldNo("Contact Type"));
                     end;
                 }
+                field(firstName; Rec."First Name")
+                {
+                    Caption = 'First Name';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("First Name"));
+                    end;
+                }
                 field(lastName; Rec."Last Name")
                 {
                     Caption = 'Last Name';

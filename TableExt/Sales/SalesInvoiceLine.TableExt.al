@@ -69,5 +69,11 @@ tableextension 50125 "Sales Invoice Line Extension" extends "Sales Invoice Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50116; "Total Cubage FT"; Decimal)
+        {
+            Caption = 'Total Cubage FT';
+            DataClassification = CustomerContent;
+            Editable = true;
+        }
     }
 }

@@ -367,6 +367,22 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                     Importance = Standard;
                     ToolTip = 'ALN - Specifies the quantity of packages per pallet.';
                 }
+                field("Shipment Weight"; Rec."Shipment Weight")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shipment Weight';
+                    Importance = Standard;
+                    ToolTip = 'ALN - Specifies the Shipment Weight for the order.';
+
+                }
+                field("Shipment Cubic FT"; Rec."Shipment Cubic FT")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shipment Cubic FT';
+                    Importance = Standard;
+                    ToolTip = 'ALN - Specifies the Shipment Cubic FT for the order.';
+
+                }
                 field("Marketplace_Shipment_ID"; Rec."Marketplace_Shipment_ID")
                 {
                     ApplicationArea = All;
@@ -496,6 +512,10 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 var
                     LocationAssignment: Codeunit LocationAssignment;
                     bomavailable: Record "Item Bom Available";
+                    customBillto: Record "Custom Bill To Address";
+                    customshipto: Record "Custom Ship To Address";
+                    salesheader: Record "Sales Header";
+                    salesorderentitybuffer: Record "Sales Order Entity Buffer";
                 begin
 
                     LocationAssignment.FillItemAvailabilityLocationwise(Rec, true);

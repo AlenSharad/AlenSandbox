@@ -141,7 +141,7 @@ tableextension 50132 "Sales Invoice Entity Aggr Ext" extends "Sales Invoice Enti
             Caption = 'Carrier Transportation Method Code';
             DataClassification = ToBeClassified;
         }
-        field(50121; "Transaction_ID"; Code[20])
+        field(50121; "Transaction_ID"; Code[60])
         {
             Caption = 'Transaction ID';
             DataClassification = ToBeClassified;

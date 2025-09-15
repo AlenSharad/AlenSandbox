@@ -4,6 +4,12 @@ pageextension 50125 CustomerListExtension extends "Customer List"
     {
         addbefore("Name 2")
         {
+            field("First Name"; Rec."First Name")
+            {
+                ApplicationArea = All;
+                Caption = 'First Name';
+                ToolTip = 'ALN - Specifies the First Name of the customer.';
+            }
             field("Last Name"; Rec."Last Name")
             {
                 ApplicationArea = All;

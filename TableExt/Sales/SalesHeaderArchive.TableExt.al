@@ -111,7 +111,7 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             Caption = 'Carrier Transportation Method Code';
             DataClassification = ToBeClassified;
         }
-        field(50121; "Transaction_ID"; Code[20])
+        field(50121; "Transaction_ID"; Code[60])
         {
             Caption = 'Transaction ID';
             DataClassification = ToBeClassified;
@@ -267,7 +267,7 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             Caption = 'Location Assigned';
             DataClassification = ToBeClassified;
         }
-        field(50162; "Agreement No."; Text[30])
+        field(50162; "Agreement No."; Text[60])
         {
             Caption = 'Agreement No.';
             DataClassification = ToBeClassified;
@@ -280,6 +280,18 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
         field(50164; "Order Tax Variance"; Decimal)
         {
             Caption = 'Order Tax Variance';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50165; "Shipment Weight"; Decimal)
+        {
+            Caption = 'Shipment Weight';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50166; "Shipment Cubic FT"; Decimal)
+        {
+            Caption = 'Shipment Cubic FT';
             Editable = false;
             DataClassification = ToBeClassified;
         }

@@ -345,10 +345,14 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Qty. to Ship"));
                     end;
                 }
-                // field(grossWeight; Rec."Gross Weight")
-                // {
-                //     Caption = 'Gross Weight';
-                // }
+                field(totalWeight; Rec."Gross Weight")
+                {
+                    Caption = 'Total Weight';
+                }
+                field(totalCubageFT; Rec."Total Cubage FT")
+                {
+                    Caption = 'Total Cubage FT';
+                }
                 field(netWeight; Rec."Net Weight")
                 {
                     Caption = 'Net Weight';
@@ -521,7 +525,7 @@ page 50114 "API - Sales Order Lines"
                     salesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
                     salesLine.SetRange("Line No.", Rec."Line No.");
                     if salesLine.FindFirst() then begin
-                        //Rec."Gross Weight" := salesLine."Gross Weight" * salesLine.Quantity;
+                        Rec."Gross Weight" := salesLine."Gross Weight";
                         Rec."Net Weight" := salesLine."Net Weight" * salesLine.Quantity;
                         Rec.Modify();
                     end;

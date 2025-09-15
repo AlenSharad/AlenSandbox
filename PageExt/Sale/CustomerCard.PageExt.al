@@ -5,6 +5,12 @@ pageextension 50101 CustomerCardExtension extends "Customer Card"
         // Add changes to page layout here
         addbefore("Name 2")
         {
+            field("First Name"; Rec."First Name")
+            {
+                ApplicationArea = All;
+                Caption = 'First Name';
+                ToolTip = 'ALN - Specifies the First Name of the customer.';
+            }
             field("Last Name"; Rec."Last Name")
             {
                 ApplicationArea = All;

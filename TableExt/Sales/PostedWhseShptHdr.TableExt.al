@@ -112,7 +112,7 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             Caption = 'Carrier Transportation Method Code';
             DataClassification = ToBeClassified;
         }
-        field(50121; "Transaction_ID"; Code[20])
+        field(50121; "Transaction_ID"; Code[60])
         {
             Caption = 'Transaction ID';
             DataClassification = ToBeClassified;
@@ -263,7 +263,7 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             Caption = 'Order Total Tax';
             DataClassification = ToBeClassified;
         }
-        field(50162; "Agreement No."; Text[30])
+        field(50162; "Agreement No."; Text[60])
         {
             Caption = 'Agreement No.';
             DataClassification = ToBeClassified;

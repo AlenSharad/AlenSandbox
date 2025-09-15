@@ -30,7 +30,7 @@ permissionset 50002 GeneratedPermission
         codeunit APIManagement = X,
         codeunit LocationAssignment = X,
         codeunit "Release Sales Order" = X,
-        codeunit "Sales Order Approval Processor" = X,
+        codeunit "Sales Order Release Processor" = X,
         codeunit SalesEventSubs = X,
         codeunit ShopifyEventSubs = X,
         codeunit WarehouseShipmentPostBatch = X,

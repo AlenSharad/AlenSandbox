@@ -84,6 +84,13 @@ pageextension 50105 "Posted Sales Invoice Page Ext" extends "Posted Sales Invoic
                 Caption = 'Order Total Variance';
                 ToolTip = 'ALN - Specifies the variance in the order total for the sales invoice.';
             }
+            field("Invoice Sent"; Rec."Invoice Sent")
+            {
+                ApplicationArea = All;
+                Caption = 'Invoice Sent';
+                Editable = false;
+                ToolTip = 'ALN - Specifies the confirmation for the invoice sent to customer.';
+            }
         }
         addafter("Shipping and Billing")
         {
@@ -337,6 +344,27 @@ pageextension 50105 "Posted Sales Invoice Page Ext" extends "Posted Sales Invoic
                     Importance = Standard;
                     ToolTip = 'ALN - Specifies whether the shipping address is residential for the sales invoice.';
                 }
+            }
+        }
+
+    }
+    actions
+    {
+        addlast(processing)
+        {
+            action(ReSendInvoice)
+            {
+                ApplicationArea = All;
+                Caption = 'Re-Send Invoice';
+                ToolTip = 'ALN - This action will update/uncheck the Invoice Sent field.';
+                Image = Action;
+                trigger OnAction()
+                var
+                    RelSO: Codeunit "Release Sales Order";
+                begin
+
+                    RelSO.ReSendInvoice(Rec);
+                end;
             }
         }
     }

@@ -74,5 +74,11 @@ tableextension 50128 "Posted Whse Shpt Line Ext" extends "Posted Whse. Shipment 
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(50116; "Total Cubage FT"; Decimal)
+        {
+            Caption = 'Total Cubage FT';
+            DataClassification = CustomerContent;
+            Editable = true;
+        }
     }
 }

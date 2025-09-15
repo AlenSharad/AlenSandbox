@@ -1,4 +1,4 @@
-codeunit 50104 "Sales Order Approval Processor"
+codeunit 50104 "Sales Order Release Processor"
 {
 
     Subtype = Normal;
@@ -14,6 +14,7 @@ codeunit 50104 "Sales Order Approval Processor"
         customer: Record Customer;
         SORelease: Codeunit "Release Sales Order";
         SH2: Record "Sales Header";
+        SAS: Record "Shipping Agent Services";
     begin
 
         if Rec."Parameter String" = 'Sales Order Approval' then begin
@@ -32,8 +33,13 @@ codeunit 50104 "Sales Order Approval Processor"
             SalesHeader.SetRange(Status, SalesHeader.Status::Open);
             SalesHeader.SetRange("Order Total Variance", 0);
             SalesHeader.SetFilter("Location Code", '<>%1', '');
+            //SalesHeader.SetRange("Location Assigned", true);
             if SalesHeader.FindSet() then
                 repeat
+                    SAS.Reset();
+                    if SAS.Get(SalesHeader."Shipping Agent Code", SalesHeader."Shipping Agent Service Code") then
+                        if SAS."Skip Auto Release" then
+                            continue;
                     customer.Get(SalesHeader."Sell-to Customer No.");
                     if (customer."Blocked" <> customer."Blocked"::"Release") then begin
                         SalesLine.Reset();

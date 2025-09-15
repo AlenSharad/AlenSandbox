@@ -94,6 +94,11 @@ tableextension 50100 CustomerExtension extends Customer
             Caption = 'ALN Legacy Customer ID';
             DataClassification = ToBeClassified;
         }
+        field(50019; "First Name"; Text[50])
+        {
+            Caption = 'First Name';
+            DataClassification = ToBeClassified;
+        }
 
     }
 

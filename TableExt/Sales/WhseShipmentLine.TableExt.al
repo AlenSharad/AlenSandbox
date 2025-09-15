@@ -69,5 +69,11 @@ tableextension 50129 "Whse. Shipment Line Extension" extends "Warehouse Shipment
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50116; "Total Cubage FT"; Decimal)
+        {
+            Caption = 'Total Cubage FT';
+            DataClassification = CustomerContent;
+            Editable = true;
+        }
     }
 }

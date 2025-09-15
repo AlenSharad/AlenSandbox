@@ -11,6 +11,7 @@ page 50109 "API - Sales Orders"
     ODataKeyFields = Id;
     PageType = API;
     SourceTable = "Sales Order Entity Buffer";
+    SourceTableView = where("Sales Order" = const(true));
     APIPublisher = 'ALEN';
     APIGroup = 'BCAPI';
     Extensible = true;
@@ -1124,6 +1125,22 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Storefront Name"));
                     end;
                 }
+                field(shipmentWeight; Rec."Shipment Weight")
+                {
+                    Caption = 'Shipment Weight';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Weight"));
+                    end;
+                }
+                field(shipmentCubicFT; Rec."Shipment Cubic FT")
+                {
+                    Caption = 'Shipment Cubic FT';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Cubic FT"));
+                    end;
+                }
                 field(storeFrontPaymentStatus; Rec."Store Front Payment Status")
                 {
                     Caption = 'Store Front Payment Status';
@@ -1230,6 +1247,8 @@ page 50109 "API - Sales Orders"
         SalesHeader2: Record "Sales Header";
         custombillto: Record "Custom Bill To Address";
         customshipto: Record "Custom Ship To Address";
+        custombillto2: Record "Custom Bill To Address";
+        customshipto2: Record "Custom Ship To Address";
         LocCode: Code[10];
         yourReference: Text[35];
         taxareaCode: Code[20];
@@ -1256,71 +1275,126 @@ page 50109 "API - Sales Orders"
         avataxOvType := Rec."Ava Line Override Type";
         avataxOvAmount := Rec."Ava Line Override Amount";
         ordertotalexcltax := Rec."Order Total Excl Tax";
+        Rec."Sales Order" := true;
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-            IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.") then
-                custombillto.DeleteAll();
-            custombillto.Init();
-            custombillto."Document Type" := custombillto."Document Type"::Order;
-            custombillto."Document No." := Rec."No.";
-            custombillto.BillToName := Rec."Bill-to Name";
-            custombillto.billtooptions := Rec.BillToOptions;
-            custombillto.BilltoAdd1 := Rec."Bill-to Address";
-            custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
-            custombillto.billtoPostCode := Rec."Bill-to Post Code";
-            custombillto.billtoCity := Rec."Bill-to City";
-            custombillto.billtoCountryRegionCode := Rec."Bill-to Country/Region Code";
-            custombillto.billtoCounty := Rec."Bill-to County";
-            custombillto.Insert();
-
+            if Rec."No." <> '' then begin
+                custombillto.Reset();
+                custombillto.SetRange("Document Type", custombillto."Document Type"::Order);
+                custombillto.SetRange("External Document No.", Rec."External Document No.");
+                if custombillto.FindFirst() then
+                    custombillto.Delete();
+                // IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.", Rec."External Document No.") then
+                //     custombillto.Init();
+                custombillto."Document Type" := custombillto."Document Type"::Order;
+                custombillto."Document No." := Rec."No.";
+                custombillto."External Document No." := Rec."External Document No.";
+                custombillto.BillToName := Rec."Bill-to Name";
+                custombillto.billtooptions := Rec.BillToOptions;
+                custombillto.BilltoAdd1 := Rec."Bill-to Address";
+                custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
+                custombillto.billtoPostCode := Rec."Bill-to Post Code";
+                custombillto.billtoCity := Rec."Bill-to City";
+                custombillto.billtoCountryRegionCode := Rec."Bill-to Country/Region Code";
+                custombillto.billtoCounty := Rec."Bill-to County";
+                custombillto.Insert();
+            end
+            else begin
+                custombillto.Reset();
+                custombillto.SetRange("Document Type", custombillto."Document Type"::Order);
+                custombillto.SetRange("External Document No.", Rec."External Document No.");
+                if custombillto.FindFirst() then
+                    custombillto.Delete();
+                custombillto.Reset();
+                custombillto.Init();
+                custombillto."Document Type" := custombillto."Document Type"::Order;
+                custombillto."Document No." := Rec."No.";
+                custombillto."External Document No." := Rec."External Document No.";
+                custombillto.BillToName := Rec."Bill-to Name";
+                custombillto.billtooptions := Rec.BillToOptions;
+                custombillto.BilltoAdd1 := Rec."Bill-to Address";
+                custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
+                custombillto.billtoPostCode := Rec."Bill-to Post Code";
+                custombillto.billtoCity := Rec."Bill-to City";
+                custombillto.billtoCountryRegionCode := Rec."Bill-to Country/Region Code";
+                custombillto.billtoCounty := Rec."Bill-to County";
+                custombillto.Insert();
+                //end;
+            end;
         end;
         if Rec.ShipToOptions = Rec.ShipToOptions::"Custom Address" then begin
-            IF customshipto.Get(customshipto."Document Type"::Order, Rec."No.") then
-                customshipto.DeleteAll();
-            customshipto.Init();
-            customshipto."Document Type" := customshipto."Document Type"::Order;
-            customshipto."Document No." := Rec."No.";
-            customshipto.ShipToName := Rec."Ship-to Name";
-            customshipto.shiptooptions := Rec.ShipToOptions;
-            customshipto.ShiptoAdd1 := Rec."Ship-to Address";
-            customshipto.ShiptoAdd2 := Rec."Ship-to Address 2";
-            customshipto.ShiptoPostCode := Rec."Ship-to Post Code";
-            customshipto.ShiptoCity := Rec."Ship-to City";
-            customshipto.ShiptoCountryRegionCode := Rec."Ship-to Country/Region Code";
-            customshipto.ShiptoCounty := Rec."Ship-to County";
-            customshipto.Insert();
+            if Rec."No." <> '' then begin
+                IF customshipto.Get(customshipto."Document Type"::Order, Rec."No.", Rec."External Document No.") then
+                    customshipto.Delete();
+                customshipto.Init();
+                customshipto."Document Type" := customshipto."Document Type"::Order;
+                customshipto."Document No." := Rec."No.";
+                customshipto."External Document No." := Rec."External Document No.";
+                customshipto.ShipToName := Rec."Ship-to Name";
+                customshipto.shiptooptions := Rec.ShipToOptions;
+                customshipto.ShiptoAdd1 := Rec."Ship-to Address";
+                customshipto.ShiptoAdd2 := Rec."Ship-to Address 2";
+                customshipto.ShiptoPostCode := Rec."Ship-to Post Code";
+                customshipto.ShiptoCity := Rec."Ship-to City";
+                customshipto.ShiptoCountryRegionCode := Rec."Ship-to Country/Region Code";
+                customshipto.ShiptoCounty := Rec."Ship-to County";
+                customshipto.Insert();
+            end else begin
+                customshipto.Reset();
+                customshipto.SetRange("Document Type", customshipto."Document Type"::Order);
+                customshipto.SetRange("External Document No.", Rec."External Document No.");
+                if customshipto.FindFirst() then
+                    customshipto.Delete();
+                customshipto.Reset();
+                customshipto.Init();
+                customshipto."Document Type" := customshipto."Document Type"::Order;
+                customshipto."Document No." := Rec."No.";
+                customshipto."External Document No." := Rec."External Document No.";
+                customshipto.ShipToName := Rec."Ship-to Name";
+                customshipto.shiptooptions := Rec.ShipToOptions;
+                customshipto.ShiptoAdd1 := Rec."Ship-to Address";
+                customshipto.ShiptoAdd2 := Rec."Ship-to Address 2";
+                customshipto.ShiptoPostCode := Rec."Ship-to Post Code";
+                customshipto.ShiptoCity := Rec."Ship-to City";
+                customshipto.ShiptoCountryRegionCode := Rec."Ship-to Country/Region Code";
+                customshipto.ShiptoCounty := Rec."Ship-to County";
+                customshipto.Insert();
+                //end;
 
+            end;
         end;
 
         CheckSellToCustomerSpecified();
-
         GraphMgtSalesOrderBuffer.PropagateOnInsert(Rec, TempFieldBuffer);
+        //Error('SS');
 
+        // SetDates();
 
-        SetDates();
+        // UpdateDiscount();
 
-        UpdateDiscount();
-
-        SetCalculatedFields();
-        //if custombillto.get(custombillto."Document Type"::Order, Rec."No.") then
-        // SalesHeader.Reset();
-        // if SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.") then begin
-
-        //     SalesHeader."Location Code" := LocCode;
-        //     SalesHeader."Your Reference" := yourReference;
-        //     SalesHeader."Tax Area Code" := taxareaCode;
-        //     SalesHeader."Payment Method Code" := paymentMethodCode;
-        //     SalesHeader."Shipping Agent Code" := shippingagentCode;
-        //     SalesHeader."Shipping Agent Service Code" := shippingAgentServiceCode;
-        //     SalesHeader."Tax Liable" := taxliable;
-        //     SalesHeader."Order Total Tax" := orderTotalTax;
-        //     SalesHeader."Shipment Date" := shipDate;
-        //     SalesHeader."Order Total Excl Tax" := ordertotalexcltax;
-        //     SalesHeader.modify(true);
-
-        // end;
+        // SetCalculatedFields();
         SalesHeader2.Reset();
+
         if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
-            if customshipto.get(customshipto."Document Type"::Order, Rec."No.") then begin
+            custombillto2.Reset();
+            custombillto2.SetRange("Document Type", custombillto."Document Type"::Order);
+            custombillto2.SetRange("External Document No.", Rec."External Document No.");
+            custombillto2.SetRange("Document No.", '');
+            if custombillto2.FindFirst() then
+                custombillto2.Rename(custombillto2."Document Type"::Order, Rec."No.", Rec."External Document No.");
+
+            customshipto2.Reset();
+            customshipto2.SetRange("Document Type", customshipto2."Document Type"::Order);
+            customshipto2.SetRange("External Document No.", Rec."External Document No.");
+            customshipto2.SetRange("Document No.", '');
+            if customshipto2.FindFirst() then
+                customshipto2.Rename(customshipto2."Document Type"::Order, Rec."No.", Rec."External Document No.");
+        END;
+
+        SalesHeader2.Reset();
+
+        if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+
+            if customshipto.get(customshipto."Document Type"::Order, Rec."No.", Rec."External Document No.") then begin
                 if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then begin
                     Rec.ShipToOptions := customshipto.ShipToOptions;
                     Rec."Ship-to Name" := customshipto.ShipToName;
@@ -1338,7 +1412,7 @@ page 50109 "API - Sales Orders"
                     SalesHeader2."Ship-to County" := customshipto.shiptoCounty;
                 end;
             end;
-            if custombillto.get(customshipto."Document Type"::Order, Rec."No.") then begin
+            if custombillto.get(custombillto."Document Type"::Order, Rec."No.", Rec."External Document No.") then begin
                 if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
                     Rec.BillToOptions := custombillto.BillToOptions;
                     Rec."Bill-to Name" := custombillto.BillToName;
@@ -1358,6 +1432,7 @@ page 50109 "API - Sales Orders"
                     SalesHeader2."Bill-to County" := custombillto.billtoCounty;
                 end;
             end;
+
             SalesHeader2."Location Code" := LocCode;
             SalesHeader2."Your Reference" := yourReference;
             //SalesHeader2."Tax Area Code" := taxareaCode;
@@ -1373,7 +1448,7 @@ page 50109 "API - Sales Orders"
             SalesHeader2."Ava Tax Override Type" := avataxOvType;
             SalesHeader2."Order Total Excl Tax" := ordertotalexcltax;
             //SalesHeader2.ava ta := Rec."Ava Line Override Reason";
-            SalesHeader2.Modify(true);
+            SalesHeader2.Modify();
         end;
 
         Rec."Location Code" := LocCode;
@@ -1389,8 +1464,11 @@ page 50109 "API - Sales Orders"
         Rec."Ava Line Override Type" := avataxOvType;
         Rec."Order Total Excl Tax" := ordertotalexcltax;
         Rec.ShipToOptions := customshipto.ShipToOptions;
+        Rec.BillToOptions := custombillto.BillToOptions;
+        Rec."Sales Order" := true;
         Rec.Modify();
         exit(false);
+
     end;
 
     trigger OnModifyRecord(): Boolean

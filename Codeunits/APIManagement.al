@@ -381,6 +381,329 @@ codeunit 50103 APIManagement
         HandleStreams(ApiLog, RequestBlob, ResponseBlob);
     end;
 
+
+    procedure ShipLabelAPICall(var WhseShipment: Record "Warehouse Shipment Header");
+    var
+        IntegrationSetup: Record "Integration Setup";
+        content: HttpContent;
+        ResponseMsgTXT: Text;
+        Handler: Codeunit Base64ToPDFHandler;
+    begin
+        IntegrationSetup.Reset();
+        IntegrationSetup.SetRange(Active, true);
+        IntegrationSetup.SetRange(Code, 'SMSAPI');
+        if not IntegrationSetup.FindFirst() then
+            Error('Integration Setup not found for Fedex Shipment Label.');
+        CheckMandatoryandReset(IntegrationSetup."API URL");
+        ResponseMsg := MakeRequestShipLabel(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayloadShipLabel(), IntegrationSetup."API Key", IntegrationSetup.Code, WhseShipment."No.");
+
+        content := ResponseMsg.Content();
+        content.ReadAs(ResponseMsgTXT);
+        //ParseShipmentJson(ResponseMsgTXT);
+        finalTracking := GetTrackingNofromResponse(ResponseMsgTXT);
+        finalLabel := GetLabelfromResponse(ResponseMsgTXT);
+        Handler.SaveBase64AsPDF(finalLabel, finalTracking + '_Label', Database::"Warehouse Shipment Header", WhseShipment."No.");
+        WhseShipment."Package Tracking No." := finalTracking;
+        WhseShipment.Modify();
+        Message('Shipment Label generated successfully.');
+    end;
+
+    local procedure MakeRequestShipLabel(APIUrl: Text; HttpMethod: Enum "Http Request Type"; var ResponseStatus: Boolean; Payload: Text; APIKey: Text[50]; APICode: Code[20]; DocumentNo: Code[20]) response: HttpResponseMessage;
+    var
+        contentHeader: HttpHeaders;
+        request: HttpRequestMessage;
+        client: HttpClient;
+        AuthString: Text;
+        EncodedAuth: Text;
+        TempBase64: Codeunit "Base64 Convert";
+    begin
+
+        Content.Clear();
+        if Payload <> '' then
+            Content.WriteFrom(Payload)
+        else
+            //Content.WriteFrom('');
+            exit;
+
+        contentHeader := client.DefaultRequestHeaders();
+        contentHeader.Add('x-api-key', ApiKey);
+        contentHeader.Add('Accept', 'application/json');
+
+        Content.GetHeaders(contentHeader);
+        request.Content := Content;
+
+        request.SetRequestUri(APIUrl);
+        case HttpMethod of
+            HttpMethod::GET:
+                request.Method := 'GET';
+            HttpMethod::POST:
+                request.Method := 'POST';
+            HttpMethod::PUT:
+                request.Method := 'PUT';
+            HttpMethod::PATCH:
+                request.Method := 'PATCH';
+            HttpMethod::DELETE:
+                request.Method := 'DELETE';
+            else
+                Error('Unsupported HTTP method.');
+        end;
+        ResponseStatus := client.Send(request, response);
+
+        LogApiTransactions(APIUrl, HttpMethod, ResponseStatus, Payload, response, APICode, DocumentNo);
+        //Message('Response Status: %1', Format(ResponseStatus));
+        //Log API Transactions
+    end;
+
+    local procedure GeneratePostPayloadShipLabel() payload: Text
+    var
+        RootObj, requestedShipmentObj, shipperObj, contactObj, addressObj, rescontactObj, resaddressObj, recipientsObj
+        , JsonObjectShippingChargesPayment, JsonObjectShipmentSpecialServices, JsonObjectReturnShipmentDetail, JsonObjectReturnEmailDetail
+        , JsonObjectPendingShipmentDetail, JsonObjectEmailLabelDetail, JsonObjectEmailRecipient, JsonObjectPackage, JsonObjectWeight
+        , JsonObjectAccountNumber : JsonObject;
+
+        JsonArrayStreetLines, JsonArraySpecialServiceTypes, JsonArrayEmailRecipients, JsonArrayPackageLineItems, JsonArrayStreetLinesRec : JsonArray;
+        salesheader: Record "Sales Header";
+        itemBomAvailable: Record "Item Bom Available";
+        LsalesLine: Record "Sales Line";
+        LocFilter: Text[300];
+        LocList: List of [Text];
+        Value: Text;
+        location: Record Location;
+    begin
+        // root object
+        RootObj.Add('labelResponseOptions', 'LABLE AND URL');
+        contactObj.Add('personName', 'test user');
+        contactObj.Add('phoneNumber', '1234567890');
+
+
+        // ShipmentWeight object
+
+        JsonArrayStreetLines.Add('900 waterford center blvd');
+        addressObj.Add('streetLines', JsonArrayStreetLines);
+        addressObj.Add('city', 'Austin');
+        addressObj.Add('stateOrProvinceCode', 'TX');
+        addressObj.Add('postalCode', '78750');
+        addressObj.Add('countryCode', 'US');
+        shipperObj.Add('contact', contactObj);
+        shipperObj.Add('address', addressObj);
+
+
+
+        rescontactObj.Add('personName', 'test user');
+        rescontactObj.Add('phoneNumber', '1234567890');
+        // ShipmentWeight object
+        JsonArrayStreetLinesRec.Add('280 East Corporate Drive');
+        resaddressObj.Add('streetLines', JsonArrayStreetLinesRec);
+        //resaddressObj.Add('streetLines', 'Lb');
+        resaddressObj.Add('city', 'Austin');
+        resaddressObj.Add('stateOrProvinceCode', 'TX');
+        resaddressObj.Add('postalCode', '78750');
+        resaddressObj.Add('countryCode', 'US');
+        recipientsObj.Add('contact', rescontactObj);
+        recipientsObj.Add('address', resaddressObj);
+
+        requestedShipmentObj.Add('shipper', shipperObj);
+        requestedShipmentObj.Add('recipients', recipientsObj);
+        requestedShipmentObj.Add('shipDatestamp', '2024-06-21');
+        requestedShipmentObj.Add('serviceType', 'FEDEX_GROUND');
+        requestedShipmentObj.Add('packagingType', 'YOUR_PACKAGING');
+        requestedShipmentObj.Add('pickupType', 'DROPOFF_AT_FEDEX_LOCATION');
+        requestedShipmentObj.Add('blockInsightVisibility', false);
+
+
+        // Shipping Charges Payment
+
+        JsonObjectShippingChargesPayment.Add('paymentType', 'SENDER');
+        requestedShipmentObj.Add('shippingChargesPayment', JsonObjectShippingChargesPayment);
+
+        // Shipment Special Services
+        JsonArraySpecialServiceTypes.Add('RETURN_SHIPMENT');
+        JsonObjectShipmentSpecialServices.Add('specialServiceTypes', JsonArraySpecialServiceTypes);
+
+        // Return Shipment Detail
+        JsonObjectReturnShipmentDetail.Add('returnType', 'PENDING');
+        JsonObjectReturnEmailDetail.Add('merchantPhoneNumber', '1234567890');
+        JsonObjectReturnShipmentDetail.Add('returnEmailDetail', JsonObjectReturnEmailDetail);
+
+        JsonObjectShipmentSpecialServices.Add('returnShipmentDetail', JsonObjectReturnShipmentDetail);
+
+        // Pending Shipment Detail
+        JsonObjectPendingShipmentDetail.Add('pendingShipmentType', 'EMAIL');
+        JsonObjectEmailRecipient.Add('emailAddress', 'pjayaraj@alen.com');
+        JsonObjectEmailRecipient.Add('role', 'SHIPMENT_COMPLETOR');
+        JsonObjectEmailRecipient.Add('locale', 'en_US');
+        JsonArrayEmailRecipients.Add(JsonObjectEmailRecipient);
+        JsonObjectEmailLabelDetail.Add('recipients', JsonArrayEmailRecipients);
+        JsonObjectPendingShipmentDetail.Add('emailLabelDetail', JsonObjectEmailLabelDetail);
+        JsonObjectPendingShipmentDetail.Add('expirationTimeStamp', '2024-06-30');
+
+        JsonObjectShipmentSpecialServices.Add('pendingShipmentDetail', JsonObjectPendingShipmentDetail);
+
+        requestedShipmentObj.Add('shipmentSpecialServices', JsonObjectShipmentSpecialServices);
+
+        // Total Package Count
+        requestedShipmentObj.Add('totalPackageCount', 1);
+
+        // Requested Package Line Items
+        JsonObjectPackage.Add('itemDescription', 'Return item description');
+
+        JsonObjectWeight.Add('value', 10);
+        JsonObjectWeight.Add('units', 'LB');
+        JsonObjectPackage.Add('weight', JsonObjectWeight);
+        JsonArrayPackageLineItems.Add(JsonObjectPackage);
+        requestedShipmentObj.Add('requestedPackageLineItems', JsonArrayPackageLineItems);
+
+        // requestedShipment object
+        RootObj.Add('requestedShipment', requestedShipmentObj);
+        // Account Number
+        JsonObjectAccountNumber.Add('value', '805376996');
+        RootObj.Add('accountNumber', JsonObjectAccountNumber);
+
+        // // Convert to text
+        RootObj.WriteTo(payload);
+        //Error('Payload: %1', payload);
+        exit(payload);
+    end;
+
+    local procedure GetTrackingNofromResponse(ResponseMsgTXT: Text): Text[100]
+    var
+        JsonObj, OutputObject, ShipmentObject : JsonObject;
+        ShipmentsArray: JsonArray;
+        OrderNumber: Text;
+        WarehouseCode: Text[50];
+        JToken: JsonToken;
+        output: Text;
+        WhToken: JsonToken;
+    begin
+        // Parse the JSON text into a JsonObject
+        if JsonObj.ReadFrom(ResponseMsgTXT) then begin
+            // Access "output"
+            OutputObject := JsonObj.GetObject('output');
+            ShipmentsArray := OutputObject.GetArray('transactionShipments');
+            // Access "transactionShipments" array
+
+            if ShipmentsArray.Count > 0 then begin
+                ShipmentsArray.Get(0, JToken);
+                if JToken.IsObject then begin
+                    JToken.WriteTo(output);
+                    ShipmentObject.ReadFrom(output);
+                    ShipmentObject.Get('masterTrackingNumber', WhToken);
+                    WarehouseCode := WhToken.AsValue().AsText();
+                end;
+            end;
+        end;
+        exit(WarehouseCode);
+    end;
+
+    local procedure GetLabelfromResponse(ResponseMsgTXT: Text): Text
+    var
+        JsonObj, OutputObject, ShipmentObject, PieceObject, PackageObject : JsonObject;
+        ShipmentsArray, PieceArray, PackageArray : JsonArray;
+        OrderNumber: Text;
+        EncodedLabel: Text;
+        JToken, JToken2, JToken3 : JsonToken;
+        output, output2, output3 : Text;
+        WhToken: JsonToken;
+    begin
+        if JsonObj.ReadFrom(ResponseMsgTXT) then begin
+            // Access "output"
+            OutputObject := JsonObj.GetObject('output');
+            ShipmentsArray := OutputObject.GetArray('transactionShipments');
+            // Access "transactionShipments" array
+
+            if ShipmentsArray.Count > 0 then begin
+                ShipmentsArray.Get(0, JToken);
+                if JToken.IsObject then begin
+                    JToken.WriteTo(output);
+                    ShipmentObject.ReadFrom(output);
+                    // ShipmentObject.Get('masterTrackingNumber', WhToken);
+                    // MasterTrackingNumber := WhToken.AsValue().AsText();
+                end;
+                // Access "pieceResponses" array
+                PieceArray := ShipmentObject.GetArray('pieceResponses');
+                if PieceArray.Count > 0 then begin
+                    PieceArray.Get(0, JToken2);
+                    if JToken2.IsObject then begin
+                        JToken2.WriteTo(output2);
+                        PieceObject.ReadFrom(output2);
+                        PackageArray := PieceObject.GetArray('packageDocuments');
+                        if PackageArray.Count > 0 then begin
+                            PackageArray.Get(0, JToken3);
+                            if JToken3.IsObject then begin
+                                JToken3.WriteTo(output3);
+                                PackageObject.ReadFrom(output3);
+                                if PackageObject.Get('encodedLabel', WhToken) then
+                                    EncodedLabel := WhToken.AsValue().AsText();
+                            end;
+                        end;
+                    end;
+                end;
+
+            end;
+        end;
+
+        Exit(EncodedLabel);
+    end;
+
+    procedure ParseShipmentJson(JsonText: Text)
+    var
+        JsonObject1: JsonObject;
+        JToken, WhToken, JToken2, JToken3 : JsonToken;
+        OutputObject: JsonObject;
+        ShipmentsArray: JsonArray;
+        ShipmentObject: JsonObject;
+        PieceArray: JsonArray;
+        PieceObject: JsonObject;
+        PackageArray: JsonArray;
+        PackageObject: JsonObject;
+        JsonValue1: JsonValue;
+        MasterTrackingNumber: Text;
+        EncodedLabel: Text;
+        output, output2, output3 : Text;
+    begin
+        // Parse the JSON text into a JsonObject
+        if JsonObject1.ReadFrom(JsonText) then begin
+            // Access "output"
+            OutputObject := JsonObject1.GetObject('output');
+            ShipmentsArray := OutputObject.GetArray('transactionShipments');
+            // Access "transactionShipments" array
+
+            if ShipmentsArray.Count > 0 then begin
+                ShipmentsArray.Get(0, JToken);
+                if JToken.IsObject then begin
+                    JToken.WriteTo(output);
+                    ShipmentObject.ReadFrom(output);
+                    ShipmentObject.Get('masterTrackingNumber', WhToken);
+                    MasterTrackingNumber := WhToken.AsValue().AsText();
+                end;
+                // Access "pieceResponses" array
+                PieceArray := ShipmentObject.GetArray('pieceResponses');
+                if PieceArray.Count > 0 then begin
+                    PieceArray.Get(0, JToken2);
+                    if JToken2.IsObject then begin
+                        JToken2.WriteTo(output2);
+                        PieceObject.ReadFrom(output2);
+                        PackageArray := PieceObject.GetArray('packageDocuments');
+                        if PackageArray.Count > 0 then begin
+                            PackageArray.Get(0, JToken3);
+                            if JToken3.IsObject then begin
+                                JToken3.WriteTo(output3);
+                                PackageObject.ReadFrom(output3);
+                                if PackageObject.Get('encodedLabel', WhToken) then
+                                    EncodedLabel := WhToken.AsValue().AsText();
+                            end;
+                        end;
+                    end;
+                end;
+
+            end;
+        end;
+
+        // Output the results (or you can return them)
+        Message('MasterTrackingNumber: %1', MasterTrackingNumber);
+        Message('EncodedLabel: %1', EncodedLabel);
+    end;
+
     var
         Content: HttpContent;
         ResponseMsg: HttpResponseMessage;
@@ -388,5 +711,7 @@ codeunit 50103 APIManagement
         ResponseStatus: Boolean;
         ResponseText: Text;
         finalLocation, finalAgentService : Code[20];
+        finalTracking: Text[50];
+        FinalLabel: Text;
 
 }

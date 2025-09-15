@@ -15,11 +15,11 @@ codeunit 50106 WarehouseShipmentPostBatch
             repeat
                 WhseShptLine.Reset();
                 WhseShptLine.SetRange("No.", WhseShptHeader."No.");
-                WhseShptLine.SetFilter("Qty. to Ship", '<>%1', 0);
+                //WhseShptLine.SetFilter("Qty. to Ship", '<>%1', 0);
                 if WhseShptLine.FindSet() then
                     repeat
                         //if WhseShptLine."Qty. to Ship" <> 0 then begin
-                        WhsePostShipment.SetPostingSettings(Invoice);
+                        WhsePostShipment.SetPostingSettings(true);
                         WhsePostShipment.SetPrint(false);
                         if not WhsePostShipment.Run(WhseShptLine) then begin
                             WhseShptHeader.Get(WhseShptLine."No.");

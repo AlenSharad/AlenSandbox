@@ -6,6 +6,11 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
         {
             Visible = true;
         }
+        modify("Gross Weight")
+        {
+            Visible = true;
+            Caption = 'Total Weight';
+        }
         movebefore("Line Discount %"; "Line Discount Amount")
         modify("Unit Price")
         {
@@ -131,6 +136,14 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
                 Editable = false;
                 ToolTip = 'ALN - Specifies the purchase order line associated with the sales order.';
             }
+            field("Total Cubage FT"; Rec."Total Cubage FT")
+            {
+                ApplicationArea = all;
+                Caption = 'Total Cubage FT';
+                Editable = true;
+                ToolTip = 'ALN - Specifies the Total Cubage Feet associated with the item of sales order line.';
+            }
+
         }
         addafter(Description)
         {

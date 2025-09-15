@@ -1,9 +1,16 @@
-pageextension 50118 "Whse Shipment List Page Ext" extends "Warehouse Shipment List"
+pageextension 50118 "Posted Whse Shpmt List Ext" extends "Posted Whse. Shipment List"
 {
     layout
     {
         addlast(Control1)
         {
+            field("Source No."; Rec."Source No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Source No.';
+                Editable = false;
+                ToolTip = 'ALN - Specifies the source number associated with the sales shipment.';
+            }
             field("Order Type Code"; Rec."Order Type Code")
             {
                 ApplicationArea = All;

@@ -3,6 +3,16 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
 
     layout
     {
+        addfirst(factboxes)
+        {
+            part("Attached Documents"; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                SubPageLink = "Table ID" = CONST(Database::"Warehouse Shipment Header"),
+                              "No." = FIELD("No.");
+            }
+        }
         addlast(General)
         {
             field("Source No."; Rec."Source No.")
@@ -466,13 +476,28 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                 begin
                 end;
             }
+            action(GetFedexLabel)
+            {
+                ApplicationArea = All;
+                Caption = 'Get Fedex Label';
+                ToolTip = 'ALN - Get the Fedex Label and update package tracking associated with the warehouse shipment.';
+                Image = GetLines;
+                trigger OnAction()
+                var
+                    LocationAssignment: Codeunit LocationAssignment;
+                begin
+                    LocationAssignment.GETShipmentLabelAPI(Rec);
+                end;
+            }
         }
         addfirst(Category_Category7)
         {
             actionref(Promoted_PackageContent; PackageContent)
             { }
-
+            actionref(Promoted_GetFedexLabel; GetFedexLabel)
+            { }
         }
+
     }
     trigger OnAfterGetRecord()
     begin
