@@ -10,7 +10,11 @@ table 50111 "Package Content"
             Caption = 'Shipment No.';
             DataClassification = CustomerContent;
         }
-
+        field(2; "Posted Shipment No."; Code[20])
+        {
+            Caption = 'Posted Shipment No.';
+            DataClassification = CustomerContent;
+        }
         field(3; "Item No."; Code[20])
         {
             Caption = 'Item No.';

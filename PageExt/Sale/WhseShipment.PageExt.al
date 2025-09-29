@@ -458,6 +458,45 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                     ToolTip = 'ALN - Indicates whether the shipping address is residential for the warehouse shipment.';
                 }
             }
+            group(SystemDetails)
+            {
+                Caption = 'System Details';
+                field("Created By"; GetUserNameFromSecurityId(Rec.SystemCreatedBy))
+                {
+                    ApplicationArea = All;
+                    Caption = 'Created By';
+                    Importance = Standard;
+                    ToolTip = 'ALN - Shows the user who created this record.';
+                }
+                field("Created At"; Rec.SystemCreatedAt)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Created At';
+                    Importance = Standard;
+                    ToolTip = 'ALN - Shows the date and time when this record was created.';
+                }
+                field("Modified By"; GetUserNameFromSecurityId(Rec.SystemModifiedBy))
+                {
+                    ApplicationArea = All;
+                    Caption = 'Modified By';
+                    Importance = Standard;
+                    ToolTip = 'ALN - Shows the user who last modified this record.';
+                }
+                field("Modified At"; Rec.SystemModifiedAt)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Modified At';
+                    Importance = Standard;
+                    ToolTip = 'ALN - Shows the date and time when this record was last modified.';
+                }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Error Description';
+                    Editable = false;
+                    ToolTip = 'ALN - Provides details about any errors associated with the order.';
+                }
+            }
         }
     }
     actions
@@ -499,8 +538,20 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
         }
 
     }
+
     trigger OnAfterGetRecord()
     begin
         Rec.SetAutoCalcFields(TotalWeight);
+    end;
+
+    procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
+    var
+        User: Record User;
+    begin
+        if User.Get(UserSecurityID) then
+            exit(User."User Name")
+        else
+            exit('');
+
     end;
 }

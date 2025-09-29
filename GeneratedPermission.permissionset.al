@@ -1,6 +1,6 @@
 namespace ALEN_SALES;
 
-permissionset 50002 GeneratedPermission
+permissionset 50002 ALEN_SALES
 {
     Assignable = true;
     Permissions = tabledata "API Log" = RIMD,
@@ -66,5 +66,10 @@ permissionset 50002 GeneratedPermission
         page "Order Source List" = X,
         page "Order Type List" = X,
         page "Package Contents" = X,
-        page PageName = X;
+        page PageName = X,
+        codeunit Base64ToPDFHandler = X,
+        codeunit "Document Attachment Handler" = X,
+        page "API - Sales Invoice Lines" = X,
+        page "API - Sales Invoices" = X,
+        page "Posted Package Contents" = X;
 }

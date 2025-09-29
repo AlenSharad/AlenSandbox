@@ -116,7 +116,7 @@ tableextension 50106 "Sales Invoice Header Ext" extends "Sales Invoice Header"
             Caption = 'Carrier Transportation Method Code';
             DataClassification = ToBeClassified;
         }
-        field(50121; "Transaction_ID"; Code[60])
+        field(50121; "Transaction_ID"; Text[200])
         {
             Caption = 'Transaction ID';
             DataClassification = ToBeClassified;

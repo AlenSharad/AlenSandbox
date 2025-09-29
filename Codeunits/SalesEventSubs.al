@@ -565,9 +565,39 @@ codeunit 50101 SalesEventSubs
     local procedure UpdateASMHeaderLocationOnBeforeCheckAsmToOrder(AsmHeader: Record "Assembly Header"; var SalesLine: Record "Sales Line")
     var
         AsmLine: Record "Assembly Line";
+        ReservationEntry: Record "Reservation Entry";
     begin
         AsmHeader."Location Code" := SalesLine."Location Code";
         AsmHeader.Modify();
+
+
+        AsmLine.Reset();
+        AsmLine.SetRange("Document Type", AsmLine."Document Type"::Order);
+        AsmLine.SetRange("Document No.", AsmHeader."No.");
+        if AsmLine.FindSet() then
+            repeat
+                AsmLine."Location Code" := SalesLine."Location Code";
+                AsmLine.Modify();
+            until AsmLine.Next() = 0;
+
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange("Source Type", 900);
+        ReservationEntry.SetRange("Source Subtype", 1);
+        ReservationEntry.SetRange("Source ID", AsmHeader."No.");
+        if ReservationEntry.FindSet() then
+            repeat
+                ReservationEntry."Location Code" := SalesLine."Location Code";
+                ReservationEntry.Modify();
+            until ReservationEntry.Next() = 0;
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange("Source Type", 37);
+        ReservationEntry.SetRange("Source Subtype", 1);
+        ReservationEntry.SetRange("Source ID", SalesLine."Document No.");
+        if ReservationEntry.FindSet() then
+            repeat
+                ReservationEntry."Location Code" := SalesLine."Location Code";
+                ReservationEntry.Modify();
+            until ReservationEntry.Next() = 0;
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Assemble-to-Order Link", OnSynchronizeAsmFromSalesLineOnAfterGetAsmHeader, '', false, false)]
@@ -601,6 +631,34 @@ codeunit 50101 SalesEventSubs
             Error('Please ensure the following conditions are met before posting this shipment:The shipment tracking information has been sent to the storefront where the order was originally placed. The Processed flag is marked as True.');
     end;
 
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", OnBeforePostSourceHeader, '', false, false)]
+    local procedure UpdateProcessFlagOnBeforePostSourceDocument(GlobalSourceHeader: Variant; var WhseShptLine: Record "Warehouse Shipment Line"; WhsePostParameters: Record "Whse. Post Parameters" temporary)
+    var
+        WhseShpmtHdr: Record "Warehouse Shipment Header";
+        SourceRecRef: RecordRef;
+        SalesHeader: Record "Sales Header";
+        SalesHeader2: Record "Sales Header";
+    begin
+        WhseShpmtHdr.Get(WhseShptLine."No.");
+        SourceRecRef.GetTable(GlobalSourceHeader);
+        case SourceRecRef.Number of
+            Database::Microsoft.Sales.Document."Sales Header":
+                begin
+                    SalesHeader := GlobalSourceHeader;
+                    SalesHeader2.Reset();
+                    SalesHeader2.get(SalesHeader."Document Type", SalesHeader."No.");
+
+                    SalesHeader2.Processed := WhseShpmtHdr.Processed;
+                    SalesHeader2.Modify();
+                end;
+        //Database::Microsoft.Inventory.Transfer."Transfer Header":
+        //  TransHeader := GlobalSourceHeader;
+
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnAfterAssignItemUOM, '', false, false)]
     local procedure UpdateCubageOnAfterAssignItemUOM(Item: Record Item; var SalesLine: Record "Sales Line")
     var
@@ -614,6 +672,20 @@ codeunit 50101 SalesEventSubs
                 if ItemUOM.Cubage > 0 then
                     SalesLine."Total Cubage FT" := (ItemUOM.Cubage / 1728);
             end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", OnAfterCreatePostedShptHeader, '', false, false)]
+    local procedure UpdatePackageContentOnAfterCreatePostedShptHeader(var PostedWhseShptHeader: Record "Posted Whse. Shipment Header"; var WarehouseShipmentHeader: Record "Warehouse Shipment Header")
+    var
+        packageContent: Record "Package Content";
+    begin
+        packageContent.Reset();
+        packageContent.SetRange("Shipment No.", WarehouseShipmentHeader."No.");
+        if packageContent.FindSet() then
+            repeat
+                packageContent."Posted Shipment No." := PostedWhseShptHeader."No.";
+                packageContent.Modify();
+            until packageContent.Next() = 0;
     end;
 
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]

@@ -23,6 +23,16 @@ pageextension 50143 "Whse Shipment List Ext" extends "Warehouse Shipment List"
                 ToolTip = 'ALN - Specifies the source number for the warehouse shipment.';
             }
         }
+        addlast(Control1)
+        {
+            field("Error Description"; Rec."Error Description")
+            {
+                ApplicationArea = All;
+                Caption = 'Error Description';
+                Editable = false;
+                ToolTip = 'ALN - Describes the error that occurred during processing.';
+            }
+        }
     }
 
     actions

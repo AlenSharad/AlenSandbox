@@ -16,7 +16,7 @@ page 50141 "API - Sales Invoice Lines"
     DeleteAllowed = false;
     InsertAllowed = false;
     ModifyAllowed = false;
-
+    SourceTableView = where(Type = const(Item));
     layout
     {
         area(content)
@@ -49,7 +49,6 @@ page 50141 "API - Sales Invoice Lines"
                         then
                             Error(CannotChangeLineNoErr);
 
-                        RegisterFieldSet(Rec.FieldNo("Line No."));
                     end;
                 }
                 field(lineType; Rec.Type)
@@ -111,7 +110,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo(Description));
                     end;
                 }
                 field(description2; Rec."Description 2")
@@ -120,7 +118,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Description 2"));
                     end;
                 }
                 field(unitOfMeasureId; Rec."Unit of Measure Code")
@@ -129,7 +126,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Unit of Measure Code"));
                     end;
                 }
                 field(unitOfMeasureCode; Rec."Unit of Measure Code")
@@ -138,7 +134,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Unit of Measure Code"));
                     end;
                 }
                 field(quantity; Rec.Quantity)
@@ -147,7 +142,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo(Quantity));
                     end;
                 }
                 field(unitPrice; Rec."Unit Price")
@@ -156,7 +150,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Unit Price"));
                     end;
                 }
                 field(discountAmount; Rec."Line Discount Amount")
@@ -165,7 +158,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Line Discount Amount"));
                     end;
                 }
                 field(discountPercent; Rec."Line Discount %")
@@ -174,7 +166,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Line Discount %"));
                     end;
                 }
                 field(lineDiscount; Rec."Line Discount Amount")
@@ -189,25 +180,12 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo(Amount));
                     end;
                 }
                 field(taxCode; Rec."Tax Area Code")
                 {
                     Caption = 'Tax Code';
 
-                    // trigger OnValidate()
-                    // var
-                    //     GeneralLedgerSetup: Record "General Ledger Setup";
-                    // begin
-                    //     if GeneralLedgerSetup.UseVat() then begin
-                    //         Rec.Validate("VAT Prod. Posting Group", COPYSTR(Rec."Tax Code", 1, 20));
-                    //         RegisterFieldSet(Rec.FieldNo("VAT Prod. Posting Group"));
-                    //     end else begin
-                    //         Rec.Validate("Tax Group Code", COPYSTR(Rec."Tax Code", 1, 20));
-                    //         RegisterFieldSet(Rec.FieldNo("Tax Group Code"));
-                    //     end;
-                    // end;
                 }
                 field(taxPercent; Rec."VAT %")
                 {
@@ -226,14 +204,9 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Amount Including VAT"));
                     end;
                 }
-                // field(invoiceDiscountAllocation; Rec."Inv. Discount Amount Excl. VAT")
-                // {
-                //     Caption = 'Invoice Discount Allocation';
-                //     Editable = false;
-                // }
+
                 field(netAmount; Rec.Amount)
                 {
                     Caption = 'Net Amount';
@@ -255,25 +228,15 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Shipment Date"));
                     end;
                 }
-                // field(itemVariantId; Rec."Variant Id")
-                // {
-                //     Caption = 'Item Variant Id';
 
-                //     trigger OnValidate()
-                //     begin
-                //         RegisterFieldSet(Rec.FieldNo("Variant Code"));
-                //     end;
-                // }
                 field(locationId; Rec."Location Code")
                 {
                     Caption = 'Location Id';
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Location Code"));
                     end;
                 }
                 field(shopifyVariantId; Rec."Shopify Variant Id")
@@ -282,7 +245,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Shopify Variant Id"));
                     end;
                 }
                 field(dealerItemNo; Rec."Dealer Item No.")
@@ -291,7 +253,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Dealer Item No."));
                     end;
                 }
                 field(discountDetails; Rec."Discount Details")
@@ -300,7 +261,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Discount Details"));
                     end;
                 }
                 field(amazonItemId; Rec."Amazon Item ID")
@@ -309,17 +269,13 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Amazon Item ID"));
                     end;
                 }
                 field(upcCode; Rec.UPC_Code)
                 {
                     Caption = 'Marketplace UPC Code';
 
-                    trigger OnValidate()
-                    begin
-                        RegisterFieldSet(Rec.FieldNo("UPC_Code"));
-                    end;
+
                 }
                 field(poLine; Rec."PO Line")
                 {
@@ -327,7 +283,6 @@ page 50141 "API - Sales Invoice Lines"
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("PO Line"));
                     end;
                 }
                 field(totalWeight; Rec."Gross Weight")
@@ -342,10 +297,7 @@ page 50141 "API - Sales Invoice Lines"
                 {
                     Caption = 'Customer Subscription No.';
 
-                    trigger OnValidate()
-                    begin
-                        RegisterFieldSet(Rec.FieldNo("Customer Subscription No."));
-                    end;
+
                 }
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
                 {
@@ -370,62 +322,6 @@ page 50141 "API - Sales Invoice Lines"
     {
     }
 
-    trigger OnDeleteRecord(): Boolean
-    var
-        SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
-    begin
-        // SalesInvoiceAggregator.PropagateDeleteLine(Rec);
-    end;
-
-    trigger OnFindRecord(Which: Text): Boolean
-    var
-        SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
-        GraphMgtSalesInvLines: Codeunit "Graph Mgt - Sales Inv. Lines";
-        SysId: Guid;
-        DocumentIdFilter: Text;
-        IdFilter: Text;
-        FilterView: Text;
-    begin
-        // if not LinesLoaded then begin
-        //     FilterView := Rec.GetView();
-        //     IdFilter := Rec.GetFilter(SystemId);
-        //     DocumentIdFilter := Rec.GetFilter("Document No.");
-        //     if (IdFilter = '') and (DocumentIdFilter = '') then
-        //         Error(IDOrDocumentIdShouldBeSpecifiedForLinesErr);
-        //     if IdFilter <> '' then begin
-        //         Evaluate(SysId, IdFilter);
-        //         DocumentIdFilter := GraphMgtSalesInvLines.GetSalesInvoiceDocumentIdFilterFromSystemId(SysId);
-        //     end else
-        //         DocumentIdFilter := Rec.GetFilter("Document No.");
-        //     //SalesInvoiceAggregator.LoadLines(Rec, DocumentIdFilter);
-        //     Rec.SetView(FilterView);
-        //     if not Rec.FindFirst() then
-        //         exit(false);
-        //     LinesLoaded := true;
-        // end;
-
-        exit(true);
-    end;
-
-    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
-    var
-        SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
-    begin
-        //        SalesInvoiceAggregator.PropagateInsertLine(Rec, TempFieldBuffer);
-    end;
-
-    trigger OnModifyRecord(): Boolean
-    var
-        SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
-    begin
-        //      SalesInvoiceAggregator.PropagateModifyLine(Rec, TempFieldBuffer);
-    end;
-
-    trigger OnNewRecord(BelowxRec: Boolean)
-    begin
-        ClearCalculatedFields();
-        RegisterFieldSet(Rec.FieldNo(Type));
-    end;
 
     var
         TempFieldBuffer: Record "Field Buffer" temporary;
@@ -440,28 +336,6 @@ page 50141 "API - Sales Invoice Lines"
         AccountDoesNotExistErr: Label 'Account does not exist.';
         CannotChangeLineObjectNoErr: Label 'The value for "lineObjectNumber" cannot be modified.', Comment = 'lineObjectNumber is a field name and should not be translated.';
 
-    local procedure RegisterFieldSet(FieldNo: Integer)
-    var
-        LastOrderNo: Integer;
-    begin
-        LastOrderNo := 1;
-        if TempFieldBuffer.FindLast() then
-            LastOrderNo := TempFieldBuffer.Order + 1;
 
-        Clear(TempFieldBuffer);
-        TempFieldBuffer.Order := LastOrderNo;
-        TempFieldBuffer."Table ID" := Database::"Sales Invoice Line Aggregate";
-        TempFieldBuffer."Field ID" := FieldNo;
-        TempFieldBuffer.Insert();
-    end;
 
-    local procedure ClearCalculatedFields()
-    begin
-        TempFieldBuffer.Reset();
-        TempFieldBuffer.DeleteAll();
-        TempItemFieldSet.Reset();
-        TempItemFieldSet.DeleteAll();
-
-        Clear(Item);
-    end;
 }

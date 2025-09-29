@@ -495,6 +495,12 @@ page 50140 "API - Sales Invoices"
                     Caption = 'Supplier Contact Name';
                     Editable = false;
                 }
+                field(locationCode; Rec."Location Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Location Code';
+                    Editable = false;
+                }
                 field("Supplier_Contact_No"; Rec."Supplier_Contact_No")
                 {
                     ApplicationArea = All;
@@ -562,30 +568,6 @@ page 50140 "API - Sales Invoices"
     {
     }
 
-    trigger OnAfterGetRecord()
-    var
-        SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
-    begin
-
-        // SetCalculatedFields();
-    end;
-
-
-
-    trigger OnModifyRecord(): Boolean
-    var
-        SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
-    begin
-
-    end;
-
-    trigger OnNewRecord(BelowxRec: Boolean)
-    begin
-    end;
-
-    trigger OnOpenPage()
-    begin
-    end;
 
     var
         TempFieldBuffer: Record 8450 temporary;

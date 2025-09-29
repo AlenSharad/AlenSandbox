@@ -563,6 +563,9 @@ page 50109 "API - Sales Orders"
 
                     trigger OnValidate()
                     begin
+                        if Rec."Shipping Agent Service Code" = '' then
+                            Error('Shipping Agent Service Code must have a value.');
+
                         RegisterFieldSet(Rec.FieldNo("Shipping Agent Service Code"));
                     end;
                 }
@@ -1475,6 +1478,7 @@ page 50109 "API - Sales Orders"
     var
         SalesHeader: Record "Sales Header";
     begin
+
         if xRec.Id <> Rec.Id then
             Error(CannotChangeIDErr);
 

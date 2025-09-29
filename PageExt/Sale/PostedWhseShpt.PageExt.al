@@ -488,7 +488,7 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
     }
     actions
     {
-        addlast("&Shipment")
+        addafter("Co&mments")
         {
             action(PackageContent)
             {
@@ -496,18 +496,18 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 Caption = 'Package Content';
                 ToolTip = 'ALN - View the contents of the package associated with the warehouse shipment.';
                 Image = BinContent;
-                RunObject = Page "Package Contents";
-                RunPageLink = "Shipment No." = field("No.");
+                RunObject = Page "Posted Package Contents";
+                RunPageLink = "Shipment No." = field("Whse. Shipment No.");
                 trigger OnAction()
                 begin
                 end;
             }
         }
-        addfirst(Category_Category7)
-        {
-            actionref(Promoted_PackageContent; PackageContent)
-            { }
+        // addfirst("&Shipment")
+        // {
+        //     actionref(Promoted_PackageContent; PackageContent)
+        //     { }
 
-        }
+        // }
     }
 }
