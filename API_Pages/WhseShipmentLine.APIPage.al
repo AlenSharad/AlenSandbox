@@ -28,6 +28,11 @@ page 50124 "API - Warehouse Shipment Lines"
                     Caption = 'Id';
                     Editable = false;
                 }
+                field(documentId; Rec."No.")
+                {
+                    Caption = 'Document Id';
+                    Editable = false;
+                }
                 field(sourceDocument; Rec."Source Document")
                 {
                     Caption = 'Source Document';
@@ -76,6 +81,10 @@ page 50124 "API - Warehouse Shipment Lines"
                 field(qtytoShip; Rec."Qty. to Ship")
                 {
                     Caption = 'Qty. to Ship';
+                }
+                field(qtyShipped; Rec."Qty. Shipped")
+                {
+                    Caption = 'Qty. Shipped';
                 }
                 field(cubage; Rec.Cubage)
                 {

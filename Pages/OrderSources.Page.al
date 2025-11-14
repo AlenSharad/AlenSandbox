@@ -4,7 +4,7 @@ page 50112 "Order Source List"
     PageType = List;
     SourceTable = "Order Source";
     ApplicationArea = All;
-
+    UsageCategory = Lists;
     layout
     {
         area(content)

@@ -2,6 +2,7 @@ tableextension 50105 "Sales Header Ext" extends "Sales Header"
 {
     fields
     {
+
         field(50100; "Order Type Code"; Code[20])
         {
             Caption = 'Order Type Code';
@@ -306,6 +307,24 @@ tableextension 50105 "Sales Header Ext" extends "Sales Header"
         {
             Caption = 'Shipment Cubic FT';
             DataClassification = ToBeClassified;
+        }
+        // CarrierPRONumber, BillofLading
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
+        field(50300; "Shipment Exist"; Boolean)
+        {
+            Caption = 'Shipment Exist';
+            FieldClass = FlowField;
+            CalcFormula = exist("Warehouse Shipment Header" where("Source No." = field("No.")));
+            Editable = false;
         }
     }
 }

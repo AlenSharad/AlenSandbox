@@ -39,6 +39,11 @@ page 50123 "API - Warehouse Shipments"
                 {
                     Caption = 'External Document No.';
                 }
+                field(yourReference; Rec."Your Reference")
+                {
+                    Caption = 'Your Reference';
+                }
+
                 field(sourceNo; Rec."Source No.")
                 {
                     Caption = 'Source No.';
@@ -51,6 +56,7 @@ page 50123 "API - Warehouse Shipments"
                 {
                     Caption = 'Posting Date';
                 }
+
 
                 field(locationId; Rec."Location Code")
                 {
@@ -223,6 +229,11 @@ page 50123 "API - Warehouse Shipments"
                     ApplicationArea = All;
                     Caption = 'Requested Ship Date';
                 }
+                field(shipToState; Rec."Shipping County")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ship To State';
+                }
                 field("Current_Scheduled_Delivery"; Rec."Current_Scheduled_Delivery")
                 {
                     ApplicationArea = All;
@@ -347,9 +358,24 @@ page 50123 "API - Warehouse Shipments"
                     Caption = '3rd Party Billing Account';
                     Editable = false;
                 }
+
                 field(thirdPartyZip; Rec."3rd Party Zip")
                 {
                     Caption = '3rd Party Zip';
+                    Editable = false;
+                }
+                field(CarrierPRONumber; Rec.CarrierPRONumber)
+                {
+                    Caption = 'Carrier PRO Number';
+                    Editable = false;
+                }
+                field(orderTotalVariance; Rec."Order Total Variance")
+                {
+                    Caption = 'Order Total Variance';
+                }
+                field(BillofLading; Rec.BillofLading)
+                {
+                    Caption = 'Bill of Lading';
                     Editable = false;
                 }
                 field(thirdPartyCarrier; Rec."3rd Party Carrier")
@@ -385,6 +411,16 @@ page 50123 "API - Warehouse Shipments"
                 field(createdDateTime; Rec.SystemCreatedAt)
                 {
                     Caption = 'Created Date';
+                    Editable = false;
+                }
+                field(modifiedBy; Rec.SystemModifiedBy)
+                {
+                    Caption = 'Modified By';
+                    Editable = false;
+                }
+                field(createdBy; Rec.SystemCreatedBy)
+                {
+                    Caption = 'Created By';
                     Editable = false;
                 }
                 field(TotalWeight; Rec.TotalWeight)

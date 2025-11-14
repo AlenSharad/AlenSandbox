@@ -308,6 +308,16 @@ tableextension 50106 "Sales Invoice Header Ext" extends "Sales Invoice Header"
             Editable = false;
             DataClassification = ToBeClassified;
         }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
         field(50200; "Invoice Sent"; Boolean)
         {
             Caption = 'Invoice Sent';

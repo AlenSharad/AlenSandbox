@@ -346,7 +346,23 @@ pageextension 50105 "Posted Sales Invoice Page Ext" extends "Posted Sales Invoic
                 }
             }
         }
-
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+        }
     }
     actions
     {

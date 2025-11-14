@@ -475,6 +475,7 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                     ToolTip = 'ALN - Indicates if the shipping address is residential.';
                 }
             }
+
         }
         addafter("Bill-to Post Code")
         {
@@ -494,6 +495,30 @@ pageextension 50104 "Sales Order Page Ext" extends "Sales Order"
                 Caption = 'Shipping Address Attention';
                 Importance = Standard;
                 ToolTip = 'ALN - Specifies the attention line for the shipping address.';
+            }
+        }
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+            field("Shipment Exist"; Rec."Shipment Exist")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipment Exist';
+                Importance = Standard;
+                ToolTip = 'ALN - Indicates whether a shipment exists for the sales order.';
             }
         }
     }

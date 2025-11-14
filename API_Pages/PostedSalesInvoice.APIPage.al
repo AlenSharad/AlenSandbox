@@ -41,6 +41,11 @@ page 50140 "API - Sales Invoices"
                     Caption = 'External Document No.';
                     Editable = false;
                 }
+                field(customerPostingGroup; Rec."Customer Posting Group")
+                {
+                    Caption = 'Customer Posting Group';
+                    Editable = false;
+                }
                 field(invoiceDate; Rec."Document Date")
                 {
                     Caption = 'Invoice Date';
@@ -211,11 +216,25 @@ page 50140 "API - Sales Invoices"
                     Caption = 'Order No.';
                     Editable = false;
                 }
+                field(orderType; Rec."Order Type Code")
+                {
+                    Caption = 'Order Type';
+                    Editable = false;
+                }
+                field(orderTotalVariance; Rec."Order Total Variance")
+                {
+                    Caption = 'Order Total Variance';
+                }
                 field(paymentTermsId; Rec."Payment Terms Code")
                 {
                     Caption = 'Payment Terms Id';
                     Editable = false;
 
+                }
+                field(paymentMethodCode; Rec."Payment Method Code")
+                {
+                    Caption = 'Payment Method Code';
+                    Editable = false;
                 }
                 field(shipmentMethodId; Rec."Shipment Method Code")
                 {
@@ -239,6 +258,11 @@ page 50140 "API - Sales Invoices"
                     Editable = false;
 
                 }
+                field(shippingAgentCode; Rec."Shipping Agent Code")
+                {
+                    Caption = 'Shipping Agent Code';
+                    Editable = false;
+                }
                 field(shippingAgentServiceCode; Rec."Shipping Agent Service Code")
                 {
                     Caption = 'shippingAgentServiceCode';
@@ -260,7 +284,7 @@ page 50140 "API - Sales Invoices"
                     Editable = false;
                 }
 
-                field(remainingAmount; RemainingAmountVar)
+                field(remainingAmount; Rec."Remaining Amount")
                 {
                     Caption = 'Remaining Amount';
                     Editable = false;
@@ -298,6 +322,11 @@ page 50140 "API - Sales Invoices"
                     Caption = 'Total Amount Excluding Tax';
                     Editable = false;
                 }
+                field(orderDiscountDetails; Rec."Order Discount Details")
+                {
+                    Caption = 'Order Discount Details';
+
+                }
                 field(totalTaxAmount; Rec."Ava Tax Amount")
                 {
                     Caption = 'Total Tax Amount';
@@ -314,6 +343,21 @@ page 50140 "API - Sales Invoices"
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
                     Caption = 'Last Modified Date';
+                    Editable = false;
+                }
+                field(createdDateTime; Rec.SystemCreatedAt)
+                {
+                    Caption = 'Created Date';
+                    Editable = false;
+                }
+                field(modifiedBy; Rec.SystemModifiedBy)
+                {
+                    Caption = 'Modified By';
+                    Editable = false;
+                }
+                field(createdBy; Rec.SystemCreatedBy)
+                {
+                    Caption = 'Created By';
                     Editable = false;
                 }
                 field(phoneNumber; Rec."Sell-to Phone No.")
@@ -350,6 +394,11 @@ page 50140 "API - Sales Invoices"
                     ApplicationArea = All;
                     Caption = 'Store Number';
                     Editable = false;
+                }
+                field(storeFrontName; Rec."Storefront Name")
+                {
+                    Caption = 'Storefront Name';
+
                 }
                 field("Dealer_Department_Number"; Rec."Dealer_Department_Number")
                 {
@@ -423,7 +472,7 @@ page 50140 "API - Sales Invoices"
                     Caption = 'Ship To Code Qualifier';
                     Editable = false;
                 }
-                field("Requested_Ship_Date"; Rec."Requested_Ship_Date")
+                field(requestedShipDate; Rec."Requested_Ship_Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Requested Ship Date';
@@ -465,6 +514,18 @@ page 50140 "API - Sales Invoices"
                     Caption = 'Marketplace Shipment ID';
                     Editable = false;
                 }
+                field(carrierPRONumber; Rec.CarrierPRONumber)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Carrier PRO Number';
+                    Editable = false;
+                }
+                field(billofLading; Rec.BillofLading)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Bill of Lading';
+                    Editable = false;
+                }
                 field("824_Received"; Rec."824_Received")
                 {
                     ApplicationArea = All;
@@ -482,6 +543,12 @@ page 50140 "API - Sales Invoices"
                     ApplicationArea = All;
                     Caption = 'Routing Request Sent';
                     Editable = false;
+                }
+                field(sentTo3PLDate; Rec."Sent to 3PL Date")
+                {
+                    Caption = 'Sent to 3PL Date';
+                    Editable = false;
+
                 }
                 field("Processed"; Rec."Processed")
                 {

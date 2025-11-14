@@ -295,5 +295,17 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             Editable = false;
             DataClassification = ToBeClassified;
         }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
     }
 }

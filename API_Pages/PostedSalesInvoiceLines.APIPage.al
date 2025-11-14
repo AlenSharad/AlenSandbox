@@ -9,13 +9,14 @@ page 50141 "API - Sales Invoice Lines"
     ODataKeyFields = SystemId;
     EntityName = 'salesInvoiceLine';
     EntitySetName = 'salesInvoiceLines';
+    Permissions = tabledata "Sales Invoice Line" = rm;
     SourceTable = "Sales Invoice Line";
     APIPublisher = 'ALEN';
     APIGroup = 'BCAPI';
     Extensible = true;
     DeleteAllowed = false;
     InsertAllowed = false;
-    ModifyAllowed = false;
+    ModifyAllowed = true;
     SourceTableView = where(Type = const(Item));
     layout
     {
@@ -31,83 +32,46 @@ page 50141 "API - Sales Invoice Lines"
                 field(documentId; Rec."Document No.")
                 {
                     Caption = 'Document Id';
-
-                    trigger OnValidate()
-                    begin
-                        // if (not IsNullGuid(xRec."Document Id")) and (xRec."Document Id" <> Rec."Document Id") then
-                        //     Error(CannotChangeDocumentIdNoErr);
-                    end;
+                    Editable = false;
                 }
                 field(sequence; Rec."Line No.")
                 {
                     Caption = 'Sequence';
-
-                    trigger OnValidate()
-                    begin
-                        if (xRec."Line No." <> Rec."Line No.") and
-                           (xRec."Line No." <> 0)
-                        then
-                            Error(CannotChangeLineNoErr);
-
-                    end;
+                    Editable = false;
                 }
                 field(lineType; Rec.Type)
                 {
                     Caption = 'Item Id';
+                    Editable = false;
+                }
+                field(orderNumber; Rec."Order No.")
+                {
+                    Caption = 'Order No.';
+                    Editable = false;
                 }
                 field(itemId; Rec."No.")
                 {
                     Caption = 'Item Id';
+                    Editable = false;
 
-                    // trigger OnValidate()
-                    // begin
-                    //     if not Item.GetBySystemId(Rec."Item Id") then
-                    //         Error(ItemDoesNotExistErr);
-
-                    //     RegisterFieldSet(Rec.FieldNo(Type));
-                    //     RegisterFieldSet(Rec.FieldNo("No."));
-                    //     RegisterFieldSet(Rec.FieldNo("Item Id"));
-
-                    //     Rec."No." := Item."No.";
-                    // end;
                 }
 
                 field(lineObjectNumber; Rec."No.")
                 {
                     Caption = 'Line Object No.';
-
+                    Editable = false;
                     trigger OnValidate()
                     var
                         GLAccount: Record "G/L Account";
                     begin
                         if (xRec."No." <> Rec."No.") and (xRec."No." <> '') then
                             Error(CannotChangeLineObjectNoErr);
-
-                        // case Rec."API Type" of
-                        //     Rec."API Type"::Item:
-                        //         begin
-                        //             if not Item.Get(Rec."No.") then
-                        //                 Error(ItemDoesNotExistErr);
-
-                        //             RegisterFieldSet(Rec.FieldNo("Item Id"));
-                        //             Rec."Item Id" := Item.SystemId;
-                        //         end;
-                        //     Rec."API Type"::Account:
-                        //         begin
-                        //             if not GLAccount.Get(Rec."No.") then
-                        //                 Error(AccountDoesNotExistErr);
-
-                        //             RegisterFieldSet(Rec.FieldNo("Account Id"));
-                        //             Rec."Account Id" := GLAccount.SystemId;
-                        //         end;
-                        // end;
-                        // RegisterFieldSet(Rec.FieldNo("No."));
                     end;
                 }
                 field(description; Rec.Description)
                 {
                     Caption = 'Description';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -115,7 +79,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(description2; Rec."Description 2")
                 {
                     Caption = 'Description 2';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -123,7 +87,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(unitOfMeasureId; Rec."Unit of Measure Code")
                 {
                     Caption = 'Unit Of Measure Id';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -131,7 +95,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(unitOfMeasureCode; Rec."Unit of Measure Code")
                 {
                     Caption = 'Unit Of Measure Code';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -139,7 +103,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(quantity; Rec.Quantity)
                 {
                     Caption = 'Quantity';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -147,7 +111,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(unitPrice; Rec."Unit Price")
                 {
                     Caption = 'Unit Price';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -155,7 +119,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(discountAmount; Rec."Line Discount Amount")
                 {
                     Caption = 'Discount Amount';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -163,7 +127,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(discountPercent; Rec."Line Discount %")
                 {
                     Caption = 'Discount Percent';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -185,7 +149,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(taxCode; Rec."Tax Area Code")
                 {
                     Caption = 'Tax Code';
-
+                    Editable = false;
                 }
                 field(taxPercent; Rec."VAT %")
                 {
@@ -225,7 +189,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(shipmentDate; Rec."Shipment Date")
                 {
                     Caption = 'Shipment Date';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -234,7 +198,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(locationId; Rec."Location Code")
                 {
                     Caption = 'Location Id';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -242,7 +206,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(shopifyVariantId; Rec."Shopify Variant Id")
                 {
                     Caption = 'Shopify Variant Id';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -250,7 +214,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(dealerItemNo; Rec."Dealer Item No.")
                 {
                     Caption = 'Dealer Item No.';
-
+                    Editable = true;
                     trigger OnValidate()
                     begin
                     end;
@@ -258,7 +222,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(discountDetails; Rec."Discount Details")
                 {
                     Caption = 'Discount Details';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -266,7 +230,7 @@ page 50141 "API - Sales Invoice Lines"
                 field(amazonItemId; Rec."Amazon Item ID")
                 {
                     Caption = 'Amazon Item ID';
-
+                    Editable = false;
                     trigger OnValidate()
                     begin
                     end;
@@ -274,31 +238,53 @@ page 50141 "API - Sales Invoice Lines"
                 field(upcCode; Rec.UPC_Code)
                 {
                     Caption = 'Marketplace UPC Code';
-
+                    Editable = false;
 
                 }
                 field(poLine; Rec."PO Line")
                 {
                     Caption = 'PO Line';
-
+                    Editable = true;
                     trigger OnValidate()
                     begin
                     end;
                 }
+                field(storeFrontLineAmt; Rec.StoreFront_LineAmount)
+                {
+                    Caption = 'Store Front Line Amount';
+                    Editable = true;
+                    trigger OnValidate()
+                    begin
+                    end;
+                }
+                field(shortcutDimension1Code; Rec."Shortcut Dimension 1 Code")
+                {
+                    Caption = 'Shortcut Dimension 1 Code';
+
+
+                }
+                field(shortcutDimension2Code; Rec."Shortcut Dimension 2 Code")
+                {
+                    Caption = 'Shortcut Dimension 2 Code';
+
+                }
                 field(totalWeight; Rec."Gross Weight")
                 {
                     Caption = 'Total Weight';
+                    Editable = false;
                 }
                 field(totalCubageFT; Rec."Total Cubage FT")
                 {
                     Caption = 'Total Cubage FT';
+                    Editable = false;
                 }
                 field(customerSubscription; Rec."Customer Subscription No.")
                 {
                     Caption = 'Customer Subscription No.';
-
+                    Editable = false;
 
                 }
+
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
                 {
                     Caption = 'Dimension Set Lines';

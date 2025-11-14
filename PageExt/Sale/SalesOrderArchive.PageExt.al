@@ -415,6 +415,23 @@ pageextension 50107 "Sales Order Archive Page Ext" extends "Sales Order Archive"
                 ToolTip = 'ALN - Specifies the attention line for the shipping address.';
             }
         }
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+        }
     }
     procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
     var

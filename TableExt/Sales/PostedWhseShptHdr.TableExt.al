@@ -273,6 +273,16 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             Caption = 'Order Total Excl. Tax';
             DataClassification = ToBeClassified;
         }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
         field(50200; "Source No."; Code[20])
         {
             Editable = false;
@@ -339,6 +349,24 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
         field(50213; "SO Date"; Date)
         {
             Caption = 'SO Date';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50214; "Customer No."; Code[20])
+        {
+            Caption = 'Customer No.';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50215; "Customer Name"; Text[100])
+        {
+            Caption = 'Customer Name';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50216; "Customer Posting Group"; Code[20])
+        {
+            Caption = 'Customer Posting Group';
             DataClassification = ToBeClassified;
             Editable = false;
         }

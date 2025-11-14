@@ -40,6 +40,11 @@ page 50132 "API - Transfer Order"
                 Caption = 'Company Code';
                 Editable = false;
             }
+            field(department; Rec."Shortcut Dimension 2 Code")
+            {
+                Caption = 'Department Code';
+                Editable = false;
+            }
             field(transferFrom; Rec."Transfer-from Code")
             {
                 Caption = 'Transfer-from Code';
@@ -102,6 +107,16 @@ page 50132 "API - Transfer Order"
             field(creationDateTime; Rec.SystemCreatedAt)
             {
                 Caption = 'Created At';
+                Editable = false;
+            }
+            field(modifiedBy; Rec.SystemModifiedBy)
+            {
+                Caption = 'Modified By';
+                Editable = false;
+            }
+            field(createdBy; Rec.SystemCreatedBy)
+            {
+                Caption = 'Created By';
                 Editable = false;
             }
             part(transOrderLines; "API - Transfer Order Line")

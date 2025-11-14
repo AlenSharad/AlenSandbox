@@ -601,7 +601,15 @@ page 50100 "API - Customers"
                     Caption = 'Shopify Customer No';
 
                     trigger OnValidate()
+                    var
+                        Customer: Record Customer;
                     begin
+                        if Rec."Shopify Customer No." <> '' then begin
+                            Customer.Reset();
+                            Customer.SetRange("Shopify Customer No.", Rec."Shopify Customer No.");
+                            if not Customer.IsEmpty() then
+                                Error('A customer %1 with the same "Shopify Customer No." already exists.', Customer."No.");
+                        end;
                         RegisterFieldSet(Rec.FieldNo("Shopify Customer No."));
                     end;
                 }

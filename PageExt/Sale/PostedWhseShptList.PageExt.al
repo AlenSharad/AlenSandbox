@@ -54,6 +54,30 @@ pageextension 50118 "Posted Whse Shpmt List Ext" extends "Posted Whse. Shipment 
                 Editable = false;
                 ToolTip = 'ALN - Specifies the source of the order associated with the sales shipment.';
             }
+            field("Customer No."; Rec."Customer No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer No.';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer number associated with the warehouse shipment.';
+            }
+            field("Customer Name"; Rec."Customer Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Name';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer name associated with the warehouse shipment.';
+            }
+            field("Customer Posting Group"; Rec."Customer Posting Group")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Posting Group';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer posting group associated with the warehouse shipment.';
+            }
             field("Store Front Payment Status"; Rec."Store Front Payment Status")
             {
                 ApplicationArea = All;

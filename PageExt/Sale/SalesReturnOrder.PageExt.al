@@ -342,6 +342,23 @@ pageextension 50123 "Sales Return Order Page Ext" extends "Sales Return Order"
                 }
             }
         }
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+        }
 
     }
 }

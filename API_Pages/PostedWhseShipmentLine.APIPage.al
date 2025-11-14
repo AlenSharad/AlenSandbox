@@ -28,6 +28,11 @@ page 50139 "API - Posted Whse Shpmt Lines"
                     Caption = 'Id';
                     Editable = false;
                 }
+                field(documentId; Rec."No.")
+                {
+                    Caption = 'Document Id';
+                    Editable = false;
+                }
                 field(sourceDocument; Rec."Source Document")
                 {
                     Caption = 'Source Document';
@@ -51,6 +56,10 @@ page 50139 "API - Posted Whse Shpmt Lines"
                 field(itemNo; Rec."Item No.")
                 {
                     Caption = 'Item No.';
+                }
+                field(shipmentNo; Rec."Whse. Shipment No.")
+                {
+                    Caption = 'Whse. Shipment No.';
                 }
                 field(description; Rec.Description)
                 {

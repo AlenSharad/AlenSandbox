@@ -696,6 +696,24 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("FOB_Qualifier"));
                     end;
                 }
+                field(carrierPRONumber; Rec.CarrierPRONumber)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Carrier PRO Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(CarrierPRONumber));
+                    end;
+                }
+                field(billofLading; Rec.BillofLading)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Bill of Lading';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(BillofLading));
+                    end;
+                }
                 field("Carrier_Transportation_Method_Code"; Rec."Transportation_Method_Code")
                 {
                     ApplicationArea = All;
@@ -1007,6 +1025,17 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Completely Shipped"));
                     end;
                 }
+                field(shipmentExist; Rec."Shipment Exist")
+                {
+                    Caption = 'Shipment Exist';
+                    Editable = false;
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Exist"));
+                    end;
+                }
+
                 field(status; Rec.Status)
                 {
                     Caption = 'Status';
@@ -1204,6 +1233,21 @@ page 50109 "API - Sales Orders"
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
                     Caption = 'Last Modified Date';
+                    Editable = false;
+                }
+                field(createdDateTime; Rec.SystemCreatedAt)
+                {
+                    Caption = 'Created Date';
+                    Editable = false;
+                }
+                field(modifiedBy; Rec.SystemModifiedBy)
+                {
+                    Caption = 'Modified By';
+                    Editable = false;
+                }
+                field(createdBy; Rec.SystemCreatedBy)
+                {
+                    Caption = 'Created By';
                     Editable = false;
                 }
                 part(attachments; "APIV2 - Attachments")

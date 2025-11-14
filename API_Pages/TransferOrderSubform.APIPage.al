@@ -10,6 +10,7 @@ page 50133 "API - Transfer Order Line"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Transfer Line";
+    //SourceTableView = where("Derived From Line No." = filter(<> 0));
     APIPublisher = 'ALEN';
     APIGroup = 'BCAPI';
     Extensible = true;
@@ -47,6 +48,22 @@ page 50133 "API - Transfer Order Line"
             field(unitOfMeasure; Rec."Unit of Measure Code")
             {
                 Caption = 'Unit of Measure Code';
+            }
+            field(qtytoShip; Rec."Qty. to Ship")
+            {
+                Caption = 'Quantity to Ship';
+            }
+            field(qtytoReceive; Rec."Qty. to Receive")
+            {
+                Caption = 'Quantity to Receive';
+            }
+            field(qtyShipped; Rec."Quantity Shipped")
+            {
+                Caption = 'Quantity Shipped';
+            }
+            field(qtyReceived; Rec."Quantity Received")
+            {
+                Caption = 'Quantity Received';
             }
 
         }

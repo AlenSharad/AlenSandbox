@@ -103,7 +103,7 @@ pageextension 50126 "Sales Order Subform Extension" extends "Sales Order Subform
             field("Dealer Item No."; Rec."Dealer Item No.")
             {
                 ApplicationArea = All;
-                Editable = false;
+                Editable = true;
                 Caption = 'Dealer Item No.';
                 ToolTip = 'ALN - Specifies the dealer item number associated with the sales order.';
             }

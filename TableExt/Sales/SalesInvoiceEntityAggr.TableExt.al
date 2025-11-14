@@ -296,6 +296,16 @@ tableextension 50132 "Sales Invoice Entity Aggr Ext" extends "Sales Invoice Enti
             Caption = 'Shipment Date';
             DataClassification = ToBeClassified;
         }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
     }
 
 }

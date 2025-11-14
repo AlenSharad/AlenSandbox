@@ -338,5 +338,22 @@ pageextension 50106 "Posted Sales Shipment Page Ext" extends "Posted Sales Shipm
                 }
             }
         }
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+        }
     }
 }

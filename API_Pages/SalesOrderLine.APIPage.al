@@ -444,6 +444,7 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Amazon Item ID"));
                     end;
                 }
+
                 field(upcCode; Rec.UPC_Code)
                 {
                     Caption = 'Marketplace UPC Code';

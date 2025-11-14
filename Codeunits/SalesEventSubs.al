@@ -362,12 +362,15 @@ codeunit 50101 SalesEventSubs
         LocationAssignment: Codeunit LocationAssignment;
     begin
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
+            SalesHeader.TestField("Shipping Agent Service Code");
+            SalesHeader.TestField("Shipping Agent Code");
             if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
                 SalesHeader.CalcFields("Amount Including VAT");
 
                 SalesHeader."Order Total Variance" := (SalesHeader."Order Total Amount" - SalesHeader."Order Total Excl Tax");
                 SalesHeader."Order Tax Variance" := Abs(SalesHeader."Order Total Tax" - (SalesHeader."Ava Tax Amount"));
-            end;
+            end else
+                SalesHeader.TestField("Location Code");
             if not SalesHeader."Location Assigned" then begin
                 LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
                 Commit(); // to avoid calling location assignment again in same transaction if error occurs

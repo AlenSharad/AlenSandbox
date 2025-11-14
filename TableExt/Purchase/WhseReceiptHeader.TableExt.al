@@ -7,5 +7,10 @@ tableextension 50135 "Whse Receipt Header Ext" extends "Warehouse Receipt Header
             Caption = 'Source No.';
             DataClassification = ToBeClassified;
         }
+        field(50101; "Error Description"; Text[250])
+        {
+            Caption = 'Error Description';
+            DataClassification = ToBeClassified;
+        }
     }
 }

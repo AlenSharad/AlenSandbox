@@ -11,6 +11,12 @@ pageextension 50137 "Warehouse Receipt Extension" extends "Warehouse Receipt"
                 ApplicationArea = All;
                 ToolTip = 'ALN - Specifies the source number associated with this warehouse receipt.';
             }
+            field("Error Description"; Rec."Error Description")
+            {
+                Caption = 'Error Description';
+                ApplicationArea = All;
+                ToolTip = 'ALN - Specifies the posting error description associated with this warehouse receipt.';
+            }
         }
     }
 }

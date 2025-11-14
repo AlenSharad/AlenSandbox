@@ -58,8 +58,8 @@ codeunit 50102 LocationAssignment
                         location.FindSet();
                         repeat
                             Item.Reset();
-                            if SalesHeader."Shipment Date" <> 0D then
-                                Item.SetRange("Date Filter", 0D, SalesHeader."Shipment Date")
+                            if SalesHeader."Posting Date" <> 0D then
+                                Item.SetRange("Date Filter", 0D, SalesHeader."Posting Date")
                             else
                                 Item.SetRange("Date Filter", 0D, Today);
                             Item.SetFilter("Location Filter", location.Code);
@@ -98,8 +98,8 @@ codeunit 50102 LocationAssignment
                         location.FindSet();
                         repeat
                             Item.Reset();
-                            if SalesHeader."Shipment Date" <> 0D then
-                                Item.SetRange("Date Filter", 0D, SalesHeader."Shipment Date")
+                            if SalesHeader."Posting Date" <> 0D then
+                                Item.SetRange("Date Filter", 0D, SalesHeader."Posting Date")
                             else
                                 Item.SetRange("Date Filter", 0D, Today);
                             Item.SetFilter("Location Filter", location.Code);

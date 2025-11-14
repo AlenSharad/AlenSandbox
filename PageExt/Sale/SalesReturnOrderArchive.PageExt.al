@@ -387,7 +387,23 @@ pageextension 50127 "Sales Return Order Archive Ext" extends "Sales Return Order
                     ToolTip = 'ALN - Indicates whether the shipping address for the sales return is residential.';
                 }
             }
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+
         }
+
 
     }
 }

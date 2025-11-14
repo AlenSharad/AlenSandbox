@@ -36,33 +36,36 @@ codeunit 50104 "Sales Order Release Processor"
             //SalesHeader.SetRange("Location Assigned", true);
             if SalesHeader.FindSet() then
                 repeat
-                    SAS.Reset();
-                    if SAS.Get(SalesHeader."Shipping Agent Code", SalesHeader."Shipping Agent Service Code") then
-                        if SAS."Skip Auto Release" then
-                            continue;
-                    customer.Get(SalesHeader."Sell-to Customer No.");
-                    if (customer."Blocked" <> customer."Blocked"::"Release") then begin
-                        SalesLine.Reset();
-                        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
-                        SalesLine.SetRange("Document No.", SalesHeader."No.");
-                        SalesLine.Setfilter(Quantity, '<>%1', 0);
-                        if Not SalesLine.IsEmpty then begin
-                            if NOT SORelease.Run(SalesHeader) then begin
-                                SH2.Reset();
-                                SH2.Get(SalesHeader."Document Type", SalesHeader."No.");
-                                SH2."Error Description" := GetLastErrorText;
-                                SH2.Modify(true);
-                            end;
+                    if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
+                        SAS.Reset();
+                        if SAS.Get(SalesHeader."Shipping Agent Code", SalesHeader."Shipping Agent Service Code") then
+                            if SAS."Skip Auto Release" then
+                                continue;
 
+                        customer.Get(SalesHeader."Sell-to Customer No.");
+                        if (customer."Blocked" <> customer."Blocked"::"Release") then begin
+                            SalesLine.Reset();
+                            SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                            SalesLine.SetRange("Document No.", SalesHeader."No.");
+                            SalesLine.Setfilter(Quantity, '<>%1', 0);
+                            if Not SalesLine.IsEmpty then begin
+                                if NOT SORelease.Run(SalesHeader) then begin
+                                    SH2.Reset();
+                                    SH2.Get(SalesHeader."Document Type", SalesHeader."No.");
+                                    SH2."Error Description" := GetLastErrorText;
+                                    SH2.Modify(true);
+                                end;
+
+                            end;
+                            // SalesHeader.PerformManualRelease();
+                        end else begin
+                            SH2.Reset();
+                            SH2.Get(SalesHeader."Document Type", SalesHeader."No.");
+                            SH2."Error Description" := 'Customer is blocked for release';
+                            SH2.Modify(true);
                         end;
-                        // SalesHeader.PerformManualRelease();
-                    end else begin
-                        SH2.Reset();
-                        SH2.Get(SalesHeader."Document Type", SalesHeader."No.");
-                        SH2."Error Description" := 'Customer is blocked for release';
-                        SH2.Modify(true);
+                        Commit();
                     end;
-                    Commit();
                 until SalesHeader.Next() = 0;
         end;
 
@@ -97,5 +100,16 @@ codeunit 50104 "Sales Order Release Processor"
             repeat
                 ProcessSalesOrderApproval(SalesHeader);
             until SalesHeader.Next() = 0;
+    end;
+
+    procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
+    var
+        User: Record User;
+    begin
+        if User.Get(UserSecurityID) then
+            exit(User."User Name")
+        else
+            exit('');
+
     end;
 }

@@ -58,7 +58,31 @@ page 50125 "API - Create Whse Shipment"
                     Caption = 'Shipment Id';
                     Editable = false;
                 }
-
+                field(carrierPRONumber; carrierPRONumber)
+                {
+                    Caption = 'Carrier PRO Number';
+                    Editable = true;
+                }
+                field(billOfLading; billOfLading)
+                {
+                    Caption = 'billOfLading';
+                    Editable = true;
+                }
+                field(pkgType; pkgType)
+                {
+                    Caption = 'Package Type';
+                    Editable = true;
+                }
+                field(pkgPLTQty; pkgPLTQty)
+                {
+                    Caption = 'Package Pallet Quantity';
+                    Editable = true;
+                }
+                field(totalPkg; totalPkg)
+                {
+                    Caption = 'Total Package';
+                    Editable = true;
+                }
                 field(message; message)
                 {
                     Caption = 'Response Message';
@@ -84,6 +108,11 @@ page 50125 "API - Create Whse Shipment"
             if salesHeader.FindFirst() then begin
                 salesHeader."Package Tracking No." := trackingNo;
                 salesHeader.Marketplace_Shipment_ID := externalShipmentId;
+                salesHeader.CarrierPRONumber := carrierPRONumber;
+                salesHeader.BillofLading := billOfLading;
+                salesHeader.Packaging_Type := pkgType;
+                salesHeader.PKG_PLT_Qty := pkgPLTQty;
+                salesHeader.Total_Packages := totalPkg;
                 salesHeader.Modify();
                 WhseShipment.Reset();
                 WhseShipment.SetRange("Source No.", salesHeader."No.");
@@ -126,6 +155,11 @@ page 50125 "API - Create Whse Shipment"
                 message := 'Warehouse Shipment Created Successfully';
                 WhseShipment."Shipment Date" := shipmentDate;
                 WhseShipment.Marketplace_Shipment_ID := externalShipmentId;
+                WhseShipment.CarrierPRONumber := carrierPRONumber;
+                WhseShipment.BillofLading := billOfLading;
+                WhseShipment.Packaging_Type := pkgType;
+                WhseShipment.PKG_PLT_Qty := pkgPLTQty;
+                WhseShipment.Total_Packages := totalPkg;
                 WarehouseShipmentLine.reset();
                 WarehouseShipmentLine.SetRange("No.", WhseShipment."No.");
                 if not WarehouseShipmentLine.IsEmpty() then
@@ -144,4 +178,9 @@ page 50125 "API - Create Whse Shipment"
         shipmentDate: Date;
         message: Text[250];
         externalShipmentId: Text[50];
+        carrierPRONumber: Text[50];
+        billOfLading: Text[50];
+        pkgType: Text[50];
+        pkgPLTQty: Decimal;
+        totalPkg: Decimal;
 }

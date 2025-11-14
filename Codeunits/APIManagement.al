@@ -395,7 +395,7 @@ codeunit 50103 APIManagement
         if not IntegrationSetup.FindFirst() then
             Error('Integration Setup not found for Fedex Shipment Label.');
         CheckMandatoryandReset(IntegrationSetup."API URL");
-        ResponseMsg := MakeRequestShipLabel(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayloadShipLabel(), IntegrationSetup."API Key", IntegrationSetup.Code, WhseShipment."No.");
+        ResponseMsg := MakeRequestShipLabel(IntegrationSetup."API URL", httpMethod::POST, ResponseStatus, GeneratePostPayloadShipLabel(WhseShipment), IntegrationSetup."API Key", IntegrationSetup.Code, WhseShipment."No.");
 
         content := ResponseMsg.Content();
         content.ReadAs(ResponseMsgTXT);
@@ -454,14 +454,14 @@ codeunit 50103 APIManagement
         //Log API Transactions
     end;
 
-    local procedure GeneratePostPayloadShipLabel() payload: Text
+    local procedure GeneratePostPayloadShipLabel(var whseshipmenthdr: Record "Warehouse Shipment Header") payload: Text
     var
-        RootObj, requestedShipmentObj, shipperObj, contactObj, addressObj, rescontactObj, resaddressObj, recipientsObj
+        RootObj, requestedShipmentObj, shipperObj, contactObj1, addressObj1, rescontactObj, resaddressObj, recipientsObj
         , JsonObjectShippingChargesPayment, JsonObjectShipmentSpecialServices, JsonObjectReturnShipmentDetail, JsonObjectReturnEmailDetail
         , JsonObjectPendingShipmentDetail, JsonObjectEmailLabelDetail, JsonObjectEmailRecipient, JsonObjectPackage, JsonObjectWeight
         , JsonObjectAccountNumber : JsonObject;
 
-        JsonArrayStreetLines, JsonArraySpecialServiceTypes, JsonArrayEmailRecipients, JsonArrayPackageLineItems, JsonArrayStreetLinesRec : JsonArray;
+        JsonArrayStreetLines, JsonArraySpecialServiceTypes, JsonArrayEmailRecipients, JsonArrayPackageLineItems, JsonArrayStreetLinesRec, RecipientsArray : JsonArray;
         salesheader: Record "Sales Header";
         itemBomAvailable: Record "Item Bom Available";
         LsalesLine: Record "Sales Line";
@@ -469,99 +469,127 @@ codeunit 50103 APIManagement
         LocList: List of [Text];
         Value: Text;
         location: Record Location;
+        country: Record "Country/Region";
     begin
+        salesheader.Get(salesheader."Document Type"::Order, whseshipmenthdr."Source No.");
+        whseshipmenthdr.CalcFields(TotalWeight);
         // root object
-        RootObj.Add('labelResponseOptions', 'LABLE AND URL');
-        contactObj.Add('personName', 'test user');
-        contactObj.Add('phoneNumber', '1234567890');
+        RootObj.Add('orderNumber', salesheader."No.");
+        RootObj.Add('warehouseId', whseshipmenthdr."No.");
 
+        resaddressObj.Add('addressee', '');
+        resaddressObj.Add('addr1', salesheader."Ship-to Address");
+        resaddressObj.Add('add2', salesheader."Ship-to Address 2");
+        resaddressObj.Add('addrPhone', salesheader."Ship-to Phone No.");
+
+        resaddressObj.Add('city', salesheader."Ship-to City");
+        resaddressObj.Add('state', salesheader."Ship-to County");
+
+        resaddressObj.Add('zip', salesheader."Ship-to Post Code");
+        resaddressObj.Add('stateCode', salesheader."Ship-to County");
+        if country.Get(salesheader."Ship-to Country/Region Code") then
+            resaddressObj.Add('country', country.Name)
+        else
+            resaddressObj.Add('country', '');
+        resaddressObj.Add('countryCode', salesheader."Ship-to Country/Region Code");
+        RootObj.Add('RecipientsAddress', resaddressObj);
+        RootObj.Add('TotalShipmentWeight', whseshipmenthdr.TotalWeight);
+
+        /*
+        // recipientsObj.Add('contact', rescontactObj);
+        // recipientsObj.Add('address', resaddressObj);
+        // // contactObj.Add('personName', 'test user');
+        // contactObj.Add('phoneNumber', '1234567890');
+
+
+        // // ShipmentWeight object
+
+        // JsonArrayStreetLines.Add('900 waterford center blvd');
+        // addressObj.Add('streetLines', JsonArrayStreetLines);
+        // addressObj.Add('city', 'Austin');
+        // addressObj.Add('stateOrProvinceCode', 'TX');
+        // addressObj.Add('postalCode', '78750');
+        // addressObj.Add('countryCode', 'US');
+        // shipperObj.Add('contact', contactObj);
+        // shipperObj.Add('address', addressObj);
+
+
+        
+        rescontactObj.Add('companyName', salesheader."Ship-to Name");
 
         // ShipmentWeight object
-
-        JsonArrayStreetLines.Add('900 waterford center blvd');
-        addressObj.Add('streetLines', JsonArrayStreetLines);
-        addressObj.Add('city', 'Austin');
-        addressObj.Add('stateOrProvinceCode', 'TX');
-        addressObj.Add('postalCode', '78750');
-        addressObj.Add('countryCode', 'US');
-        shipperObj.Add('contact', contactObj);
-        shipperObj.Add('address', addressObj);
-
-
-
-        rescontactObj.Add('personName', 'test user');
-        rescontactObj.Add('phoneNumber', '1234567890');
-        // ShipmentWeight object
-        JsonArrayStreetLinesRec.Add('280 East Corporate Drive');
+        JsonArrayStreetLinesRec.Add(salesheader."Ship-to Address" + salesheader."Ship-to Address 2");
         resaddressObj.Add('streetLines', JsonArrayStreetLinesRec);
         //resaddressObj.Add('streetLines', 'Lb');
-        resaddressObj.Add('city', 'Austin');
-        resaddressObj.Add('stateOrProvinceCode', 'TX');
-        resaddressObj.Add('postalCode', '78750');
-        resaddressObj.Add('countryCode', 'US');
+        resaddressObj.Add('city', salesheader."Ship-to City");
+        resaddressObj.Add('stateOrProvinceCode', salesheader."Ship-to County");
+        resaddressObj.Add('postalCode', salesheader."Ship-to Post Code");
+        resaddressObj.Add('countryCode', salesheader."Ship-to Country/Region Code");
         recipientsObj.Add('contact', rescontactObj);
         recipientsObj.Add('address', resaddressObj);
-
-        requestedShipmentObj.Add('shipper', shipperObj);
-        requestedShipmentObj.Add('recipients', recipientsObj);
-        requestedShipmentObj.Add('shipDatestamp', '2024-06-21');
-        requestedShipmentObj.Add('serviceType', 'FEDEX_GROUND');
-        requestedShipmentObj.Add('packagingType', 'YOUR_PACKAGING');
-        requestedShipmentObj.Add('pickupType', 'DROPOFF_AT_FEDEX_LOCATION');
-        requestedShipmentObj.Add('blockInsightVisibility', false);
+        RecipientsArray.Add(recipientsObj);
+        RootObj.Add('recipients', RecipientsArray);
+        //requestedShipmentObj.Add('shipper', shipperObj);
+        // requestedShipmentObj.Add('recipients', recipientsObj);
+        // requestedShipmentObj.Add('shipDatestamp', whseshipmenthdr."Shipment Date");
+        // requestedShipmentObj.Add('serviceType', 'FEDEX_GROUND');
+        // requestedShipmentObj.Add('packagingType', 'YOUR_PACKAGING');
+        // requestedShipmentObj.Add('pickupType', 'DROPOFF_AT_FEDEX_LOCATION');
+        // requestedShipmentObj.Add('blockInsightVisibility', false);
 
 
         // Shipping Charges Payment
 
-        JsonObjectShippingChargesPayment.Add('paymentType', 'SENDER');
-        requestedShipmentObj.Add('shippingChargesPayment', JsonObjectShippingChargesPayment);
+        // JsonObjectShippingChargesPayment.Add('paymentType', 'SENDER');
+        // requestedShipmentObj.Add('shippingChargesPayment', JsonObjectShippingChargesPayment);
 
         // Shipment Special Services
-        JsonArraySpecialServiceTypes.Add('RETURN_SHIPMENT');
-        JsonObjectShipmentSpecialServices.Add('specialServiceTypes', JsonArraySpecialServiceTypes);
+        // JsonArraySpecialServiceTypes.Add('RETURN_SHIPMENT');
+        // JsonObjectShipmentSpecialServices.Add('specialServiceTypes', JsonArraySpecialServiceTypes);
 
-        // Return Shipment Detail
-        JsonObjectReturnShipmentDetail.Add('returnType', 'PENDING');
-        JsonObjectReturnEmailDetail.Add('merchantPhoneNumber', '1234567890');
-        JsonObjectReturnShipmentDetail.Add('returnEmailDetail', JsonObjectReturnEmailDetail);
+        // // Return Shipment Detail
+        // JsonObjectReturnShipmentDetail.Add('returnType', 'PENDING');
+        // JsonObjectReturnEmailDetail.Add('merchantPhoneNumber', '1234567890');
+        // JsonObjectReturnShipmentDetail.Add('returnEmailDetail', JsonObjectReturnEmailDetail);
 
-        JsonObjectShipmentSpecialServices.Add('returnShipmentDetail', JsonObjectReturnShipmentDetail);
+        // JsonObjectShipmentSpecialServices.Add('returnShipmentDetail', JsonObjectReturnShipmentDetail);
 
-        // Pending Shipment Detail
-        JsonObjectPendingShipmentDetail.Add('pendingShipmentType', 'EMAIL');
-        JsonObjectEmailRecipient.Add('emailAddress', 'pjayaraj@alen.com');
-        JsonObjectEmailRecipient.Add('role', 'SHIPMENT_COMPLETOR');
-        JsonObjectEmailRecipient.Add('locale', 'en_US');
-        JsonArrayEmailRecipients.Add(JsonObjectEmailRecipient);
-        JsonObjectEmailLabelDetail.Add('recipients', JsonArrayEmailRecipients);
-        JsonObjectPendingShipmentDetail.Add('emailLabelDetail', JsonObjectEmailLabelDetail);
-        JsonObjectPendingShipmentDetail.Add('expirationTimeStamp', '2024-06-30');
+        // // Pending Shipment Detail
+        // JsonObjectPendingShipmentDetail.Add('pendingShipmentType', 'EMAIL');
+        // JsonObjectEmailRecipient.Add('emailAddress', 'pjayaraj@alen.com');
+        // JsonObjectEmailRecipient.Add('role', 'SHIPMENT_COMPLETOR');
+        // JsonObjectEmailRecipient.Add('locale', 'en_US');
+        // JsonArrayEmailRecipients.Add(JsonObjectEmailRecipient);
+        // JsonObjectEmailLabelDetail.Add('recipients', JsonArrayEmailRecipients);
+        // JsonObjectPendingShipmentDetail.Add('emailLabelDetail', JsonObjectEmailLabelDetail);
+        // JsonObjectPendingShipmentDetail.Add('expirationTimeStamp', '2024-06-30');
 
-        JsonObjectShipmentSpecialServices.Add('pendingShipmentDetail', JsonObjectPendingShipmentDetail);
+        // JsonObjectShipmentSpecialServices.Add('pendingShipmentDetail', JsonObjectPendingShipmentDetail);
 
-        requestedShipmentObj.Add('shipmentSpecialServices', JsonObjectShipmentSpecialServices);
+        // requestedShipmentObj.Add('shipmentSpecialServices', JsonObjectShipmentSpecialServices);
 
-        // Total Package Count
-        requestedShipmentObj.Add('totalPackageCount', 1);
+        // // Total Package Count
+        // requestedShipmentObj.Add('totalPackageCount', 1);
 
-        // Requested Package Line Items
-        JsonObjectPackage.Add('itemDescription', 'Return item description');
+        // // Requested Package Line Items
+        // JsonObjectPackage.Add('itemDescription', 'Return item description');
 
-        JsonObjectWeight.Add('value', 10);
+
+        JsonObjectWeight.Add('value', whseshipmenthdr.TotalWeight);
         JsonObjectWeight.Add('units', 'LB');
         JsonObjectPackage.Add('weight', JsonObjectWeight);
         JsonArrayPackageLineItems.Add(JsonObjectPackage);
-        requestedShipmentObj.Add('requestedPackageLineItems', JsonArrayPackageLineItems);
+        RootObj.Add('requestedPackageLineItems', JsonArrayPackageLineItems);
 
         // requestedShipment object
-        RootObj.Add('requestedShipment', requestedShipmentObj);
-        // Account Number
-        JsonObjectAccountNumber.Add('value', '805376996');
-        RootObj.Add('accountNumber', JsonObjectAccountNumber);
-
+        // RootObj.Add('requestedShipment', requestedShipmentObj);
+        // // Account Number
+        // JsonObjectAccountNumber.Add('value', '805376996');
+        // RootObj.Add('accountNumber', JsonObjectAccountNumber);
+*/
         // // Convert to text
         RootObj.WriteTo(payload);
-        //Error('Payload: %1', payload);
+        Error('Payload: %1', payload);
         exit(payload);
     end;
 

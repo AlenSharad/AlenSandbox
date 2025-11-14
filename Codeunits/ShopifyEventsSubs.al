@@ -72,7 +72,12 @@ codeunit 50100 ShopifyEventSubs
         WarehouseShipmentHeader."Shipping Post Code" := SalesHeader."Ship-to Post Code";
         WarehouseShipmentHeader."Shipping Country/Region Code" := SalesHeader."Ship-to Country/Region Code";
         WarehouseShipmentHeader."Shipping Phone No." := SalesHeader."Ship-to Phone No.";
+        WarehouseShipmentHeader.BillofLading := SalesHeader.BillofLading;
+        WarehouseShipmentHeader.CarrierPRONumber := SalesHeader.CarrierPRONumber;
         WarehouseShipmentHeader."SO Date" := SalesHeader."Posting Date";
+        WarehouseShipmentHeader."Customer No." := SalesHeader."Sell-to Customer No.";
+        WarehouseShipmentHeader."Customer Name" := SalesHeader."Sell-to Customer Name";
+        WarehouseShipmentHeader."Customer Posting Group" := SalesHeader."Customer Posting Group";
         if TransferLine."Document No." <> '' then
             WarehouseShipmentHeader."Source No." := TransferLine."Document No.";
     end;
@@ -188,6 +193,11 @@ codeunit 50100 ShopifyEventSubs
         PostedWhseShipmentHeader."Shipping Country/Region Code" := WarehouseShipmentHeader."Shipping Country/Region Code";
         PostedWhseShipmentHeader."Shipping Phone No." := WarehouseShipmentHeader."Shipping Phone No.";
         PostedWhseShipmentHeader."SO Date" := WarehouseShipmentHeader."SO Date";
+        PostedWhseShipmentHeader.BillofLading := WarehouseShipmentHeader.BillofLading;
+        PostedWhseShipmentHeader.CarrierPRONumber := WarehouseShipmentHeader.CarrierPRONumber;
+        PostedWhseShipmentHeader."Customer No." := WarehouseShipmentHeader."Customer No.";
+        PostedWhseShipmentHeader."Customer Name" := WarehouseShipmentHeader."Customer Name";
+        PostedWhseShipmentHeader."Customer Posting Group" := WarehouseShipmentHeader."Customer Posting Group";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", OnCreatePostedShptLineOnBeforePostedWhseShptLineInsert, '', false, false)]
@@ -201,5 +211,79 @@ codeunit 50100 ShopifyEventSubs
         PostedWhseShptLine.UPC_Code := WhseShptLine.UPC_Code;
         PostedWhseShptLine."PO Line" := WhseShptLine."PO Line";
         PostedWhseShptLine.Weight := WhseShptLine."Weight";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Label Attachments", OnAfterInsertEvent, '', false, false)]
+    local procedure CreateDocAttachment(var Rec: Record "Label Attachments"; RunTrigger: Boolean)
+    begin
+        copydocumentattachment(Rec);
+        RemovefromLabelattachment(DT2Date(Rec."Attached Date"));
+    end;
+
+    procedure copydocumentattachment(var Reclblattach: Record "Label Attachments")
+    var
+        DocAttachment: Record "Document Attachment";
+        InStr: InStream;
+        FileName: Text;
+        RecRef: RecordRef;
+        whseshipment: Record "Warehouse Shipment Header";
+        custRec: Record Customer;
+        vendRec: Record Vendor;
+    begin
+        case Reclblattach.DocumentType of
+            Reclblattach.DocumentType::"Warehouse Shipment":
+                RecRef.GetTable(whseshipment);
+            Reclblattach.DocumentType::Customer:
+                RecRef.GetTable(custRec);
+            Reclblattach.DocumentType::Vendor:
+                RecRef.GetTable(vendRec);
+        end;
+        Reclblattach.CalcFields(Attachment);
+        if Reclblattach.Attachment.HasValue then begin
+
+            DocAttachment.Reset();
+            DocAttachment.SetRange("No.", Reclblattach.Code);
+            DocAttachment.SetRange("File Name", Reclblattach.FileName);
+            if not DocAttachment.FindFirst() then begin
+
+                Reclblattach.Attachment.CreateInStream(InStr);
+                DocAttachment.Init();
+                DocAttachment."Table ID" := RecRef.Number;
+                DocAttachment."No." := Reclblattach.Code;
+                DocAttachment."File Name" := Reclblattach.FileName;
+                DocAttachment."Attached Date" := Reclblattach."Attached Date";
+                DocAttachment."Attached By" := Reclblattach."Attached By";
+                DocAttachment."File Extension" := Reclblattach.FileExtension;
+                DocAttachment."Document Type" := Reclblattach.DocumentType;
+                Clear(DocAttachment."Document Reference ID");
+                DocAttachment."Document Reference ID".ImportStream(InStr, FileName);
+                DocAttachment.Insert(true);
+
+            end;
+        end;
+
+    end;
+
+
+    procedure RemovefromLabelattachment(tillDate: Date)
+    var
+        DocAttachment: Record "Document Attachment";
+        labelAttachment: Record "Label Attachments";
+        DateVar: Date;
+        DTVar: DateTime;
+    begin
+        DateVar := CalcDate('CD-1D', tillDate);
+        DTVar := CreateDateTime(DateVar, 0T);
+        labelAttachment.Reset();
+        labelAttachment.SetRange("Attached Date", 0DT, DTVar);
+        if labelAttachment.FindSet() then
+            repeat
+                DocAttachment.Reset();
+                DocAttachment.SetRange("No.", labelAttachment.Code);
+                DocAttachment.SetRange("File Name", labelAttachment.FileName);
+                if DocAttachment.FindFirst() then
+                    labelAttachment.Delete();
+            until labelAttachment.Next() = 0;
+
     end;
 }

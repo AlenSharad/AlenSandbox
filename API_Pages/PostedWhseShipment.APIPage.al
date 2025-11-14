@@ -39,14 +39,23 @@ page 50138 "API - Posted Whse Shipments"
                 {
                     Caption = 'External Document No.';
                 }
+                field(yourReference; Rec."Your Reference")
+                {
+                    Caption = 'Your Reference';
+                }
                 field(sourceNo; Rec."Source No.")
                 {
                     Caption = 'Source No.';
+                }
+                field(shipmentNo; Rec."Whse. Shipment No.")
+                {
+                    Caption = 'Whse. Shipment No.';
                 }
                 field(shipmentDate; Rec."Shipment Date")
                 {
                     Caption = 'Shipment Date';
                 }
+
                 field(postingDate; Rec."Posting Date")
                 {
                     Caption = 'Posting Date';
@@ -74,6 +83,11 @@ page 50138 "API - Posted Whse Shipments"
                 field(shippingAgentCode; Rec."Shipping Agent Code")
                 {
                     Caption = 'Shipping Agent Code';
+                }
+                field(shippingName; Rec."Ship to Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shipping Name';
                 }
                 field(shippingAgentServiceCode; Rec."Shipping Agent Service Code")
                 {
@@ -144,6 +158,12 @@ page 50138 "API - Posted Whse Shipments"
                     ApplicationArea = All;
                     Caption = 'Shipping Address Attention';
                 }
+                field(shipToState; Rec."Shipping County")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ship To State';
+                }
+
                 field("Store_number"; Rec."Store_number")
                 {
                     ApplicationArea = All;
@@ -168,6 +188,18 @@ page 50138 "API - Posted Whse Shipments"
                 {
                     ApplicationArea = All;
                     Caption = 'FOB Qualifier';
+                }
+                field(carrierPRONumber; Rec.CarrierPRONumber)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Carrier PRO Number';
+                    Editable = false;
+                }
+                field(billofLading; Rec.BillofLading)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Bill of Lading';
+                    Editable = false;
                 }
                 field("Carrier_Transportation_Method_Code"; Rec."Transportation_Method_Code")
                 {
@@ -208,6 +240,11 @@ page 50138 "API - Posted Whse Shipments"
                 {
                     ApplicationArea = All;
                     Caption = 'Ship To Code Qualifier';
+                }
+                field(requestedDeliveryDate; Rec."Requested Delivery Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Requested Delivery Date';
                 }
                 field("Requested_Ship_Date"; Rec."Requested_Ship_Date")
                 {
@@ -298,7 +335,10 @@ page 50138 "API - Posted Whse Shipments"
                     Caption = '3rd Party Carrier';
                     Editable = false;
                 }
-
+                field(orderTotalVariance; Rec."Order Total Variance")
+                {
+                    Caption = 'Order Total Variance';
+                }
                 field(isShipResidential; Rec.isShipresidential)
                 {
                     Caption = 'Is Ship Residential';
@@ -326,6 +366,17 @@ page 50138 "API - Posted Whse Shipments"
                 field(createdDateTime; Rec.SystemCreatedAt)
                 {
                     Caption = 'Created Date';
+                    Editable = false;
+                }
+
+                field(modifiedBy; Rec.SystemModifiedBy)
+                {
+                    Caption = 'Modified By';
+                    Editable = false;
+                }
+                field(createdBy; Rec.SystemCreatedBy)
+                {
+                    Caption = 'Created By';
                     Editable = false;
                 }
                 // part(dimensionSetLines; "APIV2 - Dimension Set Lines")

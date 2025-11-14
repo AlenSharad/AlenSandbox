@@ -28,6 +28,11 @@ page 50137 "API - Warehouse Receipt Lines"
                     Caption = 'Id';
                     Editable = false;
                 }
+                field(number; Rec."No.")
+                {
+                    Caption = 'No.';
+                    Editable = false;
+                }
                 field(sourceDocument; Rec."Source Document")
                 {
                     Caption = 'Source Document';
@@ -75,7 +80,11 @@ page 50137 "API - Warehouse Receipt Lines"
                 }
                 field(qtytoShip; Rec."Qty. to Receive")
                 {
-                    Caption = 'Qty. to Ship';
+                    Caption = 'Qty. to Receive';
+                }
+                field(qtyReceived; Rec."Qty. Received")
+                {
+                    Caption = 'Qty. Received';
                 }
                 field(cubage; Rec.Cubage)
                 {

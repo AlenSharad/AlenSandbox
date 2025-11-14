@@ -339,6 +339,16 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             Caption = 'Shipment Cubic FT';
             DataClassification = ToBeClassified;
         }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
         field(50250; "Ava Line Override Type"; Option)
         {
             Caption = 'Tax Override Type';
@@ -355,6 +365,13 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
         field(50253; "Sales Order"; Boolean)
         {
             Caption = 'Sales Order';
+        }
+        field(50300; "Shipment Exist"; Boolean)
+        {
+            Caption = 'Shipment Exist';
+            FieldClass = FlowField;
+            CalcFormula = exist("Warehouse Shipment Header" where("Source No." = field("No.")));
+            Editable = false;
         }
     }
 

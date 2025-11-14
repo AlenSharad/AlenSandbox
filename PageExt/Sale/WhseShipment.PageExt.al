@@ -203,6 +203,30 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                 Importance = Standard;
                 ToolTip = 'ALN - Specifies the requested delivery date for the warehouse shipment.';
             }
+            field("Customer No."; Rec."Customer No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer No.';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer number associated with the warehouse shipment.';
+            }
+            field("Customer Name"; Rec."Customer Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Name';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer name associated with the warehouse shipment.';
+            }
+            field("Customer Posting Group"; Rec."Customer Posting Group")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Posting Group';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer posting group associated with the warehouse shipment.';
+            }
 
         }
         addafter("Shipping")
@@ -498,6 +522,23 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                 }
             }
         }
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
+            }
+        }
     }
     actions
     {
@@ -528,6 +569,52 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
                     LocationAssignment.GETShipmentLabelAPI(Rec);
                 end;
             }
+            action(CopytoDocAttachment)
+            {
+                ApplicationArea = All;
+                Caption = 'Copy to Document Attachment';
+                ToolTip = 'ALN - Copy the warehouse shipment details to a document attachment.';
+                Image = Copy;
+                trigger OnAction()
+                var
+                    DocAttachment: Record "Document Attachment";
+                    labelAttachment: Record "Label Attachments";
+                    InStr: InStream;
+                    FileName: Text;
+                    RecRef: RecordRef;
+                begin
+                    RecRef.GetTable(Rec);
+                    labelAttachment.Reset();
+                    labelAttachment.SetRange(Code, Rec."No.");
+                    labelAttachment.SetRange(DocumentType, labelAttachment.DocumentType::"Warehouse Shipment");
+                    if labelAttachment.FindSet() then
+                        repeat
+                            labelAttachment.CalcFields(Attachment);
+                            if labelAttachment.Attachment.HasValue then begin
+                                DocAttachment.Reset();
+                                DocAttachment.SetRange("No.", labelAttachment.Code);
+                                DocAttachment.SetRange("File Name", labelAttachment.FileName);
+                                if not DocAttachment.FindFirst() then begin
+                                    labelAttachment.Attachment.CreateInStream(InStr);
+                                    DocAttachment.Init();
+                                    DocAttachment."Table ID" := RecRef.Number;
+                                    DocAttachment."No." := labelAttachment.Code;
+                                    DocAttachment."File Name" := labelAttachment.FileName;
+                                    DocAttachment."Attached Date" := labelAttachment."Attached Date";
+                                    DocAttachment."Attached By" := labelAttachment."Attached By";
+                                    DocAttachment."File Extension" := labelAttachment.FileExtension;
+                                    DocAttachment."Document Type" := labelAttachment.DocumentType;
+                                    Clear(DocAttachment."Document Reference ID");
+                                    DocAttachment."Document Reference ID".ImportStream(InStr, FileName);
+                                    DocAttachment.Insert(true);
+
+                                    //DocAttachment.Modify(true);
+                                end;
+                            end;
+                        until labelAttachment.Next() = 0;
+                end;
+            }
+
         }
         addfirst(Category_Category7)
         {
@@ -535,6 +622,9 @@ pageextension 50108 "Whse Shipment Page Ext" extends "Warehouse Shipment"
             { }
             actionref(Promoted_GetFedexLabel; GetFedexLabel)
             { }
+            actionref(Promoted_CopytoDocAttachment; CopytoDocAttachment)
+            { }
+
         }
 
     }

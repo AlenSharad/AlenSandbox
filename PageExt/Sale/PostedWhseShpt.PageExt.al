@@ -196,6 +196,30 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                 Importance = Standard;
                 ToolTip = 'ALN - Specifies the requested delivery date for the warehouse shipment.';
             }
+            field("Customer No."; Rec."Customer No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer No.';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer number associated with the warehouse shipment.';
+            }
+            field("Customer Name"; Rec."Customer Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Name';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer name associated with the warehouse shipment.';
+            }
+            field("Customer Posting Group"; Rec."Customer Posting Group")
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Posting Group';
+                Editable = false;
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the customer posting group associated with the warehouse shipment.';
+            }
         }
         addafter("Shipping")
         {
@@ -483,6 +507,23 @@ pageextension 50117 "Posted Whse Shipment Page Ext" extends "Posted Whse. Shipme
                     Editable = false;
                     ToolTip = 'ALN - Indicates whether the shipping address is residential for the sales shipment.';
                 }
+            }
+        }
+        addafter("Package Tracking No.")
+        {
+            field(CarrierPRONumber; Rec.CarrierPRONumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Carrier PRO Number';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Carrier PRO Number for the shipment.';
+            }
+            field(BillofLading; Rec.BillofLading)
+            {
+                ApplicationArea = All;
+                Caption = 'Bill of Lading';
+                Importance = Standard;
+                ToolTip = 'ALN - Specifies the Bill of Lading for the shipment.';
             }
         }
     }

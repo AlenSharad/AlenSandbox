@@ -7,8 +7,23 @@ pageextension 50119 "Sales Order List Page Ext" extends "Sales Order List"
         {
             Visible = true;
         }
+        modify("Shipping Agent Code")
+        {
+            Visible = true;
+        }
+        modify("Shipping Agent Service Code")
+        {
+            Visible = true;
+        }
         addlast(Control1)
         {
+            field(WorkDescription; WorkDescription)
+            {
+                ApplicationArea = All;
+                Caption = 'Work Description';
+                Editable = false;
+                ToolTip = 'Provides a description of the work associated with the sales order.';
+            }
             field("Order Type Code"; Rec."Order Type Code")
             {
                 ApplicationArea = All;
@@ -101,6 +116,7 @@ pageextension 50119 "Sales Order List Page Ext" extends "Sales Order List"
                 Editable = false;
                 ToolTip = 'ALN - Shows the variance between expected and actual order totals.';
             }
+
             field("Error Description"; Rec."Error Description")
             {
                 ApplicationArea = All;
@@ -108,6 +124,55 @@ pageextension 50119 "Sales Order List Page Ext" extends "Sales Order List"
                 Editable = false;
                 ToolTip = 'ALN - Provides details about any errors associated with the order.';
             }
+            field("Shipment Exist"; Rec."Shipment Exist")
+            {
+                ApplicationArea = All;
+                Caption = 'Shipment Exist';
+                Editable = false;
+                ToolTip = 'ALN - Indicates whether a shipment exists for the sales order.';
+            }
+            field("Created By"; GetUserNameFromSecurityId(Rec.SystemCreatedBy))
+            {
+                ApplicationArea = All;
+                Caption = 'Created By';
+                Importance = Standard;
+                ToolTip = 'ALN - Shows the user who created this record.';
+            }
+
+            field("Modified By"; GetUserNameFromSecurityId(Rec.SystemModifiedBy))
+            {
+                ApplicationArea = All;
+                Caption = 'Modified By';
+                Importance = Standard;
+                ToolTip = 'ALN - Shows the user who last modified this record.';
+            }
+            field("Modified At"; Rec.SystemModifiedAt)
+            {
+                ApplicationArea = All;
+                Caption = 'Modified At';
+                Importance = Standard;
+                ToolTip = 'ALN - Shows the date and time when this record was last modified.';
+            }
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        WorkDescription := Rec.GetWorkDescription();
+
+    end;
+
+    procedure GetUserNameFromSecurityId(UserSecurityID: Guid): Code[50]
+    var
+        User: Record User;
+    begin
+        if User.Get(UserSecurityID) then
+            exit(User."User Name")
+        else
+            exit('');
+
+    end;
+
+    var
+        WorkDescription: Text;
+        pp: Page 5768;
 }

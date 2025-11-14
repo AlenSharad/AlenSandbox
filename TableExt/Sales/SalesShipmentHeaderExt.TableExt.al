@@ -308,5 +308,17 @@ tableextension 50107 "Sales Shipment Header Ext" extends "Sales Shipment Header"
             Editable = false;
             DataClassification = ToBeClassified;
         }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
     }
 }
