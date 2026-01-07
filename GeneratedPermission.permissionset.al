@@ -69,20 +69,17 @@ permissionset 50002 ALEN_SALES
         page PageName = X,
         codeunit Base64ToPDFHandler = X,
         codeunit "Document Attachment Handler" = X,
-        page "API - Sales Invoice Lines" = X,
-        page "API - Sales Invoices" = X,
         page "Posted Package Contents" = X,
         tabledata "Label Attachments" = RIMD,
         table "Label Attachments" = X,
         page "API - Label Attachment" = X,
         page "Label Attachment Card" = X,
         page "Label Attachment List" = X,
-        page "API - Get Sales Invoice Lines" = X,
-        page "API - Get Sales Invoices" = X,
         page "API - Vendors" = X,
         report MyReport = X,
         codeunit PurchaeseEvents = X,
         page "API - Posted Purch. Inv. Line" = X,
         page "API - Posted Purchase Invoice" = X,
-        codeunit WarehouseReceiptPostBatch = X;
+        codeunit WarehouseReceiptPostBatch = X,
+        page "API - Customer Payments" = X;
 }

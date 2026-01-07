@@ -93,6 +93,7 @@ codeunit 50100 ShopifyEventSubs
         WarehouseShipmentLine.UPC_Code := SalesLine.UPC_Code;
         WarehouseShipmentLine."PO Line" := SalesLine."PO Line";
         WarehouseShipmentLine.Weight := SalesLine."Gross Weight";
+        WarehouseShipmentLine.Cubage := SalesLine."Total Cubage FT";
         WarehouseShipmentLine.Modify();
     end;
 
@@ -220,6 +221,19 @@ codeunit 50100 ShopifyEventSubs
         RemovefromLabelattachment(DT2Date(Rec."Attached Date"));
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Inv. Header - Edit", OnOnRunOnBeforeTestFieldNo, '', false, false)]
+    local procedure UpdateInvoiceSentFlagOnOnRunOnBeforeTestFieldNo(SalesInvoiceHeaderRec: Record "Sales Invoice Header"; var SalesInvoiceHeader: Record "Sales Invoice Header")
+    begin
+        SalesInvoiceHeader."Invoice Sent" := SalesInvoiceHeaderRec."Invoice Sent";
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Posted Sales Inv. - Update", OnAfterRecordChanged, '', false, false)]
+    local procedure IsChangedUpdateOnAfterRecordChanged(var SalesInvoiceHeader: Record "Sales Invoice Header"; xSalesInvoiceHeader: Record "Sales Invoice Header"; var IsChanged: Boolean)
+    begin
+        if SalesInvoiceHeader."Invoice Sent" <> xSalesInvoiceHeader."Invoice Sent" then
+            IsChanged := true;
+    end;
+
     procedure copydocumentattachment(var Reclblattach: Record "Label Attachments")
     var
         DocAttachment: Record "Document Attachment";
@@ -286,4 +300,5 @@ codeunit 50100 ShopifyEventSubs
             until labelAttachment.Next() = 0;
 
     end;
+
 }

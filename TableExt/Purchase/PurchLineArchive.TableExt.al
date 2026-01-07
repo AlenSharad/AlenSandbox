@@ -34,5 +34,10 @@ tableextension 50123 "Purch. Line Archive Ext" extends "Purchase Line Archive"
             Caption = 'Shipment ID';
             DataClassification = ToBeClassified;
         }
+        field(50106; "Requested Ship Date"; Date)
+        {
+            Caption = 'Requested Ship Date';
+            DataClassification = ToBeClassified;
+        }
     }
 }

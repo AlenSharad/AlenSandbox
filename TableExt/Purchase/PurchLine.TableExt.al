@@ -30,5 +30,10 @@ tableextension 50117 "Purchase Line Ext" extends "Purchase Line"
             Caption = 'Shipment ID';
             DataClassification = ToBeClassified;
         }
+        field(50106; "Requested Ship Date"; Date)
+        {
+            Caption = 'Requested Ship Date';
+            DataClassification = ToBeClassified;
+        }
     }
 }

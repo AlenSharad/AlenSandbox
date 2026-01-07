@@ -36,6 +36,12 @@ pageextension 50115 "Posted Purch Inv Subform Ext" extends "Posted Purch. Invoic
                 Caption = 'Shipment ID';
                 ToolTip = 'ALN - Specifies the shipment ID associated with this purchase invoice.';
             }
+            field("Requested Ship Date"; Rec."Requested Ship Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Requested Ship Date';
+                ToolTip = 'ALN - Specifies the requested ship date associated with this purchase order.';
+            }
         }
     }
 }

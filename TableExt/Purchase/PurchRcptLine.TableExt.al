@@ -34,5 +34,10 @@ tableextension 50119 "Purch. Rcpt. Line Ext" extends "Purch. Rcpt. Line"
             Caption = 'Shipment ID';
             DataClassification = ToBeClassified;
         }
+        field(50106; "Requested Ship Date"; Date)
+        {
+            Caption = 'Requested Ship Date';
+            DataClassification = ToBeClassified;
+        }
     }
 }

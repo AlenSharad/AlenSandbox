@@ -87,9 +87,9 @@ pageextension 50105 "Posted Sales Invoice Page Ext" extends "Posted Sales Invoic
             field("Invoice Sent"; Rec."Invoice Sent")
             {
                 ApplicationArea = All;
-                Caption = 'Invoice Sent';
+                Caption = 'EDI Invoice Sent';
                 Editable = false;
-                ToolTip = 'ALN - Specifies the confirmation for the invoice sent to customer.';
+                ToolTip = 'ALN - Specifies the confirmation for the EDI invoice sent to customer.';
             }
         }
         addafter("Shipping and Billing")

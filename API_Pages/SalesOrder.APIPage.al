@@ -191,6 +191,15 @@ page 50109 "API - Sales Orders"
                         end;
                     end;
                 }
+                field(packageTrackingNo; Rec."Package Tracking No.")
+                {
+                    Caption = 'Package Tracking No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Package Tracking No."));
+                    end;
+                }
                 field(shipToContact; Rec."Ship-to Contact")
                 {
                     Caption = 'Ship-to Contact';
@@ -1309,6 +1318,7 @@ page 50109 "API - Sales Orders"
         avataxOvType: Option " ",TaxDate,Amount;
         avataxOvAmount: Decimal;
         ordertotalexcltax: Decimal;
+        packTrackNo: Text[50];
     begin
         LocCode := Rec."Location Code";
         yourReference := Rec."Your Reference";
@@ -1322,6 +1332,8 @@ page 50109 "API - Sales Orders"
         avataxOvType := Rec."Ava Line Override Type";
         avataxOvAmount := Rec."Ava Line Override Amount";
         ordertotalexcltax := Rec."Order Total Excl Tax";
+        packTrackNo := Rec."Package Tracking No.";
+
         Rec."Sales Order" := true;
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
             if Rec."No." <> '' then begin
@@ -1494,6 +1506,7 @@ page 50109 "API - Sales Orders"
             SalesHeader2."Ava Tax Override Amount" := avataxOvAmount;
             SalesHeader2."Ava Tax Override Type" := avataxOvType;
             SalesHeader2."Order Total Excl Tax" := ordertotalexcltax;
+            SalesHeader2."Package Tracking No." := packTrackNo;
             //SalesHeader2.ava ta := Rec."Ava Line Override Reason";
             SalesHeader2.Modify();
         end;
@@ -1512,6 +1525,7 @@ page 50109 "API - Sales Orders"
         Rec."Order Total Excl Tax" := ordertotalexcltax;
         Rec.ShipToOptions := customshipto.ShipToOptions;
         Rec.BillToOptions := custombillto.BillToOptions;
+        Rec."Package Tracking No." := packTrackNo;
         Rec."Sales Order" := true;
         Rec.Modify();
         exit(false);
@@ -1521,6 +1535,8 @@ page 50109 "API - Sales Orders"
     trigger OnModifyRecord(): Boolean
     var
         SalesHeader: Record "Sales Header";
+        packTrackNo: Text[50];
+        SalesHeader2: Record "Sales Header";
     begin
 
         if xRec.Id <> Rec.Id then
@@ -1530,8 +1546,15 @@ page 50109 "API - Sales Orders"
         UpdateDiscount();
 
         SetCalculatedFields();
+        packTrackNo := Rec."Package Tracking No.";
+        SalesHeader2.Reset();
 
+        if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+            SalesHeader2."Package Tracking No." := packTrackNo;
+            SalesHeader2.Modify();
+        end;
 
+        Rec."Package Tracking No." := packTrackNo;
         exit(false);
     end;
 

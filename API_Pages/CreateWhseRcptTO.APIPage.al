@@ -55,6 +55,7 @@ page 50135 "API -Create Whse Rcpt Transfer"
         TransferHeader: Record "Transfer Header";
         SID: Guid;
         WhseReceipt: Record "Warehouse Receipt Line";
+        ErrInfo: ErrorInfo;
     begin
 
         if BelowxRec then
@@ -72,7 +73,13 @@ page 50135 "API -Create Whse Rcpt Transfer"
                     Error('Receipt already exist.');
                     exit(false);
                 end;
-                createWarehouseReceipt(TransferHeader);
+                if not createWarehouseReceipt(TransferHeader) then begin
+                    ErrInfo := ErrorInfo.Create(
+                        GetLastErrorText,
+                        true);
+                    ErrInfo.Message('Receipt Creation Failed.');
+                    Error(ErrInfo);
+                end;
             end;
         end else begin
             Error('Request must have sales order id.');
@@ -81,7 +88,7 @@ page 50135 "API -Create Whse Rcpt Transfer"
         exit(true);
     end;
 
-
+    [TryFunction]
     procedure createWarehouseReceipt(TransferHeader: Record "Transfer Header")
     var
         WarehouseRequest: Record "Warehouse Request";
@@ -95,6 +102,7 @@ page 50135 "API -Create Whse Rcpt Transfer"
 
         // GetSourceDocOB.CreateFromOutbndTransferOrder(TransferHeader);
         ReceiptCreated := GetSourceDocInbound.CreateFromInbndTransferOrderHideDialog(TransferHeader);
+
         if ReceiptCreated then begin
             WhseReceipt.Reset();
             WhseReceipt.SetRange("Source No.", TransferHeader."No.");
@@ -103,7 +111,7 @@ page 50135 "API -Create Whse Rcpt Transfer"
                 message := 'Warehouse Receipt Created Successfully';
             end;
         end else begin
-            message := GetLastErrorText;
+            message := CopyStr(GetLastErrorText, 1, 250);
             Error(GetLastErrorText);
         end;
     end;

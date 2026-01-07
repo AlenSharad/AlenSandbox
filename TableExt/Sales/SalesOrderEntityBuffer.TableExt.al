@@ -373,6 +373,10 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             CalcFormula = exist("Warehouse Shipment Header" where("Source No." = field("No.")));
             Editable = false;
         }
+        field(50301; "Package Tracking No."; Text[50])
+        {
+            Caption = 'Package Tracking No.';
+        }
     }
 
 }

@@ -290,6 +290,16 @@ page 50151 "API - Posted Purchase Invoice"
                     Caption = 'Vendor Order No.';
                     Editable = false;
                 }
+                field(managerNotes; Rec."Manager Notes")
+                {
+                    Caption = 'Manager Notes';
+                    Editable = false;
+                }
+                field(vendorInvoiceNo; Rec."Vendor Invoice No.")
+                {
+                    Caption = 'Vendor Invoice No.';
+                    Editable = false;
+                }
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
                     Caption = 'Last Modified Date';

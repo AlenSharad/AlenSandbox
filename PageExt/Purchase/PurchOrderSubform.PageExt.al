@@ -35,6 +35,18 @@ pageextension 50110 "Purchase Order Subform Ext" extends "Purchase Order Subform
                 Caption = 'Shipment ID';
                 ToolTip = 'ALN - Specifies the shipment ID associated with this purchase order.';
             }
+            field(plannedReceiptDate; Rec."Planned Receipt Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Planned Receipt Date';
+                ToolTip = 'Date - Specifies the planned receipt date for the purchase order line.';
+            }
+            field("Requested Ship Date"; Rec."Requested Ship Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Requested Ship Date';
+                ToolTip = 'ALN - Specifies the requested ship date associated with this purchase order.';
+            }
         }
     }
 }

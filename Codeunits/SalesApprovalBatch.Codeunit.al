@@ -42,6 +42,15 @@ codeunit 50104 "Sales Order Release Processor"
                             if SAS."Skip Auto Release" then
                                 continue;
 
+                        if SalesHeader."Location Code" = 'HVAC' then
+                            continue;
+                        SalesLine.Reset();
+                        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                        SalesLine.SetRange("Document No.", SalesHeader."No.");
+                        SalesLine.SetRange(Type, SalesLine.Type::Item);
+                        SalesLine.SetRange("Drop Shipment", true);
+                        if Not SalesLine.IsEmpty() then
+                            continue;
                         customer.Get(SalesHeader."Sell-to Customer No.");
                         if (customer."Blocked" <> customer."Blocked"::"Release") then begin
                             SalesLine.Reset();

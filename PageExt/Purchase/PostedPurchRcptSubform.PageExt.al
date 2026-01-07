@@ -36,6 +36,12 @@ pageextension 50113 "Posted Purch Rcpt. Subform Ext" extends "Posted Purchase Rc
                 Caption = 'Shipment ID';
                 ToolTip = 'ALN - Specifies the shipment ID associated with this purchase receipt.';
             }
+            field("Requested Ship Date"; Rec."Requested Ship Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Requested Ship Date';
+                ToolTip = 'ALN - Specifies the requested ship date associated with this purchase order.';
+            }
         }
     }
 }
