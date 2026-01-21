@@ -143,8 +143,8 @@ codeunit 50101 SalesEventSubs
     var
         item: Record Item;
     begin
-        if Rec."Document Type" <> Rec."Document Type"::Order then
-            exit;
+        // if Rec."Document Type" <> Rec."Document Type"::Order then
+        //     exit;
         if (Rec.Type = Rec.Type::Item) then begin
             if item.Get(Rec."No.") then
                 Rec."Item Type" := item.Type;
@@ -360,8 +360,17 @@ codeunit 50101 SalesEventSubs
     local procedure LocationAssignmentOnBeforePerformManualReleaseProcedure(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
         LocationAssignment: Codeunit LocationAssignment;
+        salesLine: Record "Sales Line";
     begin
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
+            salesLine.Reset();
+            salesLine.SetRange("Document Type", SalesHeader."Document Type");
+            salesLine.SetRange("Document No.", SalesHeader."No.");
+            salesLine.SetFilter("No.", '<>%1', '');
+            salesLine.SetFilter("Location Code", '<>%1', SalesHeader."Location Code");
+            if not salesLine.IsEmpty() then
+                Error('Location Code on Sales Lines do not match with Sales Header Location Code. Please correct before release.');
+
             SalesHeader.TestField("Shipping Agent Service Code");
             SalesHeader.TestField("Shipping Agent Code");
             if UPPERCASE(GetUserNameFromSecurityId(SalesHeader.SystemCreatedBy)) = 'OAUTH' then begin
@@ -375,9 +384,30 @@ codeunit 50101 SalesEventSubs
                 LocationAssignment.FillItemAvailabilityLocationwise(SalesHeader, true);
                 Commit(); // to avoid calling location assignment again in same transaction if error occurs
             end;
+
+            // salesLine.Reset();
+            // salesLine.SetRange("Document Type", SalesHeader."Document Type");
+            // salesLine.SetRange("Document No.", SalesHeader."No.");
+            // salesLine.SetFilter("No.", '<>%1', '');
+            // salesLine.SetRange("Location Code", 'HVAC');
+            // if salesLine.FindSet() then
+            //     repeat
+            //         salesLine.Validate("Drop Shipment", true);
+            //         salesLine.Modify();
+            //     until salesLine.Next() = 0;
+
             if SalesHeader."Location Code" = 'BACK ORDER' then
                 IsHandled := true;
         end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCheckAssocPurchOrder, '', false, false)]
+    local procedure UpdateDropshipOnBeforeCheckAssocPurchOrder(TheFieldCaption: Text[250]; var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    begin
+        // if SalesLine."Document Type" = SalesLine."Document Type"::Order then begin
+        //     if SalesLine."Location Code" = 'HVAC' then
+        //         SalesLine.Validate("Drop Shipment", true);
+        // end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", OnAfterReleaseSalesDoc, '', false, false)]

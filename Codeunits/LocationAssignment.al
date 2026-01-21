@@ -28,20 +28,20 @@ codeunit 50102 LocationAssignment
         ReservedQuantity := 0;
         if (SalesHeader.Status = SalesHeader.Status::Released) or (SalesHeader."Document Type" <> SalesHeader."Document Type"::Order)
         or (SalesHeader."Location Assigned")
-        //or (SalesHeader."Location Code" = 'HVAC') 
+        or (SalesHeader."Location Code" = 'HVAC')
         then
             exit;
         Customer.Get(SalesHeader."Sell-to Customer No.");
         if Customer."Customer Sets Location" then
             exit;
 
-        // SalesLine.Reset();
-        // SalesLine.SetRange("Document Type", SalesHeader."Document Type");
-        // SalesLine.SetRange("Document No.", SalesHeader."No.");
-        // SalesLine.SetRange(Type, SalesLine.Type::Item);
-        // SalesLine.SetRange("Drop Shipment", true);
-        // if Not SalesLine.IsEmpty() then
-        //     exit;
+        SalesLine.Reset();
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        SalesLine.SetRange("Drop Shipment", true);
+        if Not SalesLine.IsEmpty() then
+            exit;
 
         BomBuffer.DeleteAll();
         bombuffercopy.Reset();
@@ -169,6 +169,7 @@ codeunit 50102 LocationAssignment
         location: Record Location;
         available: Boolean;
         Item: Record Item;
+        blanketsalesorder: page "Blanket Sales Order";
     begin
         OnBeforeFillItemBomAvailable(bombuffercopy, SalesHeader, IsHandled);
         if IsHandled then
@@ -187,6 +188,7 @@ codeunit 50102 LocationAssignment
                 if Item.Get(SalesLine."No.") then
                     if Item.Type = Item.Type::Inventory then begin
                         LocFilter := '';
+                        Clear(LocList);
                         bombuffercopy.Reset();
                         bombuffercopy.SetRange(Indentation, 0);
                         bombuffercopy.SetRange("No.", SalesLine."No.");

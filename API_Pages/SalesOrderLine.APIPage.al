@@ -585,17 +585,18 @@ page 50114 "API - Sales Order Lines"
         SalesHeader: Record "Sales Header";
     begin
         GraphMgtSalesOrderBuffer.PropagateModifyLine(Rec, TempFieldBuffer);
-        SalesOrderEntityBuffer.SetFilter(Id, Rec."Document Id");
-        if SalesOrderEntityBuffer.FindFirst() then begin
-            SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderEntityBuffer."No.");
-            SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
-            SalesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
-            SalesLine.SetRange("Line No.", Rec."Line No.");
-            if SalesLine.FindFirst() then begin
-                //SalesLine.CalcVATAmountLines(QtyType, SalesHeader, SalesLine, VATAmountLine, false);
-                SalesLine.Modify(true);
-            end;
-        end;
+        //Block sharad-07-01-26
+        // SalesOrderEntityBuffer.SetFilter(Id, Rec."Document Id");
+        // if SalesOrderEntityBuffer.FindFirst() then begin
+        //     SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderEntityBuffer."No.");
+        //     SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+        //     SalesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
+        //     SalesLine.SetRange("Line No.", Rec."Line No.");
+        //     if SalesLine.FindFirst() then begin
+        //         //SalesLine.CalcVATAmountLines(QtyType, SalesHeader, SalesLine, VATAmountLine, false);
+        //         SalesLine.Modify(true);
+        //     end;
+        // end;
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)

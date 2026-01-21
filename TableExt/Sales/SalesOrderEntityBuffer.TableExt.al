@@ -377,6 +377,7 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
         {
             Caption = 'Package Tracking No.';
         }
+
     }
 
 }

@@ -225,12 +225,18 @@ codeunit 50100 ShopifyEventSubs
     local procedure UpdateInvoiceSentFlagOnOnRunOnBeforeTestFieldNo(SalesInvoiceHeaderRec: Record "Sales Invoice Header"; var SalesInvoiceHeader: Record "Sales Invoice Header")
     begin
         SalesInvoiceHeader."Invoice Sent" := SalesInvoiceHeaderRec."Invoice Sent";
+        SalesInvoiceHeader.FOB_Qualifier := SalesInvoiceHeaderRec.FOB_Qualifier;
+        SalesInvoiceHeader.Vendor_Number := SalesInvoiceHeaderRec.Vendor_Number;
+        SalesInvoiceHeader.Store_number := SalesInvoiceHeaderRec.Store_number;
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Posted Sales Inv. - Update", OnAfterRecordChanged, '', false, false)]
     local procedure IsChangedUpdateOnAfterRecordChanged(var SalesInvoiceHeader: Record "Sales Invoice Header"; xSalesInvoiceHeader: Record "Sales Invoice Header"; var IsChanged: Boolean)
     begin
-        if SalesInvoiceHeader."Invoice Sent" <> xSalesInvoiceHeader."Invoice Sent" then
+        if (SalesInvoiceHeader."Invoice Sent" <> xSalesInvoiceHeader."Invoice Sent") or
+           (SalesInvoiceHeader.FOB_Qualifier <> xSalesInvoiceHeader.FOB_Qualifier) or
+           (SalesInvoiceHeader.Vendor_Number <> xSalesInvoiceHeader.Vendor_Number) or
+           (SalesInvoiceHeader.Store_number <> xSalesInvoiceHeader.Store_number) then
             IsChanged := true;
     end;
 

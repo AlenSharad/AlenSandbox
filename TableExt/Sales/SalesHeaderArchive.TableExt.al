@@ -307,5 +307,6 @@ tableextension 50108 "Sales Header Archive Ext" extends "Sales Header Archive"
             Editable = false;
             DataClassification = ToBeClassified;
         }
+
     }
 }

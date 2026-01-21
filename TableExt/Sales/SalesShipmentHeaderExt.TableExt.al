@@ -320,5 +320,6 @@ tableextension 50107 "Sales Shipment Header Ext" extends "Sales Shipment Header"
             Editable = false;
             DataClassification = ToBeClassified;
         }
+
     }
 }
