@@ -13,7 +13,7 @@ tableextension 50120 "Sales Inv Line Agg Extension" extends "Sales Invoice Line 
             Caption = 'Dealer Item No.';
             DataClassification = ToBeClassified;
         }
-        field(50102; "Discount Details"; Text[50])
+        field(50102; "Discount Details"; Text[100])
         {
             Caption = 'Discount Details';
             DataClassification = ToBeClassified;

@@ -281,7 +281,7 @@ tableextension 50132 "Sales Invoice Entity Aggr Ext" extends "Sales Invoice Enti
             Caption = 'Bill-to Phone No.';
             DataClassification = ToBeClassified;
         }
-        field(50149; "Order Discount Details"; Text[50])
+        field(50149; "Order Discount Details"; Text[100])
         {
             Caption = 'Order Discount Details';
             DataClassification = ToBeClassified;

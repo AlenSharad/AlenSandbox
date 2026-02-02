@@ -385,16 +385,16 @@ codeunit 50101 SalesEventSubs
                 Commit(); // to avoid calling location assignment again in same transaction if error occurs
             end;
 
-            // salesLine.Reset();
-            // salesLine.SetRange("Document Type", SalesHeader."Document Type");
-            // salesLine.SetRange("Document No.", SalesHeader."No.");
-            // salesLine.SetFilter("No.", '<>%1', '');
-            // salesLine.SetRange("Location Code", 'HVAC');
-            // if salesLine.FindSet() then
-            //     repeat
-            //         salesLine.Validate("Drop Shipment", true);
-            //         salesLine.Modify();
-            //     until salesLine.Next() = 0;
+            salesLine.Reset();
+            salesLine.SetRange("Document Type", SalesHeader."Document Type");
+            salesLine.SetRange("Document No.", SalesHeader."No.");
+            salesLine.SetFilter("No.", '<>%1', '');
+            salesLine.SetRange("Location Code", 'HVAC');
+            if salesLine.FindSet() then
+                repeat
+                    salesLine.Validate("Drop Shipment", true);
+                    salesLine.Modify();
+                until salesLine.Next() = 0;
 
             if SalesHeader."Location Code" = 'BACK ORDER' then
                 IsHandled := true;
@@ -404,10 +404,10 @@ codeunit 50101 SalesEventSubs
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeCheckAssocPurchOrder, '', false, false)]
     local procedure UpdateDropshipOnBeforeCheckAssocPurchOrder(TheFieldCaption: Text[250]; var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
     begin
-        // if SalesLine."Document Type" = SalesLine."Document Type"::Order then begin
-        //     if SalesLine."Location Code" = 'HVAC' then
-        //         SalesLine.Validate("Drop Shipment", true);
-        // end;
+        if (SalesLine."Document Type" = SalesLine."Document Type"::Order) and ((TheFieldCaption = SalesLine.FieldCaption("Location Code")) or (TheFieldCaption = SalesLine.FieldCaption("No."))) then begin
+            if SalesLine."Location Code" = 'HVAC' then
+                SalesLine.Validate("Drop Shipment", true);
+        end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", OnAfterReleaseSalesDoc, '', false, false)]
