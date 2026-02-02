@@ -9,17 +9,17 @@ pageextension 50102 ShipToAddExtension extends "Ship-to Address"
             field(AddressType; Rec.AddressType)
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Address Type field.', Comment = '%';
+                ToolTip = 'ALN - Specifies the value of the Address Type field.';
             }
             field(IsResidential; Rec.IsResidential)
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Residential Address field.', Comment = '%';
+                ToolTip = 'ALN - Specifies the value of the Residential Address field.';
             }
             field("Label"; Rec."Label")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Label field.', Comment = '%';
+                ToolTip = 'ALN - Specifies the value of the Label field.';
             }
         }
     }

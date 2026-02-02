@@ -14,7 +14,7 @@ tableextension 50100 CustomerExtension extends Customer
         }
         field(50002; "Third Party Billing Account"; Text[30])
         {
-            Caption = '3rd Party Billing ACcount';
+            Caption = '3rd Party Billing Account';
             DataClassification = ToBeClassified;
         }
         field(50003; "Third Party Carrier"; Text[50])
@@ -48,11 +48,6 @@ tableextension 50100 CustomerExtension extends Customer
             Caption = 'Warranty Customer';
             DataClassification = ToBeClassified;
         }
-        // field(50009; "b2b_customer"; Boolean)
-        // {
-        //     Caption = 'B2B Customer';
-        //     DataClassification = ToBeClassified;
-        // }
         field(50010; "Customer No."; Code[20])
         {
             Caption = 'Customer No.';
@@ -66,6 +61,42 @@ tableextension 50100 CustomerExtension extends Customer
         field(50012; "Zendesk Customer No."; Code[20])
         {
             Caption = 'Zendesk Customer No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50013; "Tax Exemption Expiry Date"; Date)
+        {
+            Caption = 'Tax Exemption Expiry Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50014; "Tax Exempt Certificate"; Text[500])
+        {
+            Caption = 'Tax Exempt Certificate';
+            DataClassification = ToBeClassified;
+            ExtendedDatatype = URL;
+        }
+        field(50015; "Last Name"; Text[50])
+        {
+            Caption = 'Last Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50016; "Customer Since Date"; Date)
+        {
+            Caption = 'Customer Since Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50017; "Accepts Marketing"; Boolean)
+        {
+            Caption = 'Accepts Marketing';
+            DataClassification = ToBeClassified;
+        }
+        field(50018; "ALN Legacy Customer ID"; Code[20])
+        {
+            Caption = 'ALN Legacy Customer ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50019; "First Name"; Text[50])
+        {
+            Caption = 'First Name';
             DataClassification = ToBeClassified;
         }
 

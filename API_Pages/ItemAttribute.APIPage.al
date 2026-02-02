@@ -1,7 +1,3 @@
-namespace Microsoft.API.V2;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Item.Attribute;
-using Microsoft.Inventory.Item;
 page 50106 "API - Item Attributes"
 {
     APIVersion = 'v2.0';
@@ -14,10 +10,10 @@ page 50106 "API - Item Attributes"
     PageType = API;
     SourceTable = "Item Attribute Value Selection";
     SourceTableTemporary = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

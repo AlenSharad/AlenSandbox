@@ -1,6 +1,3 @@
-namespace Microsoft.API.V2;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Item.Catalog;
 
 page 50107 "API - Item Vendor"
 {
@@ -13,9 +10,10 @@ page 50107 "API - Item Vendor"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Item Vendor";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {

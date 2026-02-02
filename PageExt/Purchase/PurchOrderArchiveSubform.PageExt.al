@@ -20,17 +20,26 @@ pageextension 50116 "PO Archive Subform Ext" extends "Purchase Order Archive Sub
             {
                 ApplicationArea = All;
                 Caption = 'Container Number';
+                ToolTip = 'ALN - Specifies the container number associated with this purchase order archive.';
             }
 
             field("PO Line ID"; Rec."PO Line ID")
             {
                 ApplicationArea = All;
                 Caption = 'PO Line ID';
+                ToolTip = 'ALN - Specifies the purchase order line ID associated with this purchase order archive.';
             }
             field("Shipment ID"; Rec."Shipment ID")
             {
                 ApplicationArea = All;
                 Caption = 'Shipment ID';
+                ToolTip = 'ALN - Specifies the shipment ID associated with this purchase order archive.';
+            }
+            field("Requested Ship Date"; Rec."Requested Ship Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Requested Ship Date';
+                ToolTip = 'ALN - Specifies the requested ship date associated with this purchase order.';
             }
         }
     }

@@ -1,6 +1,4 @@
-namespace Microsoft.API.V2;
 
-using Microsoft.CRM.Contact;
 
 page 50102 "API - Contacts Information"
 {
@@ -15,8 +13,8 @@ page 50102 "API - Contacts Information"
     SourceTable = "Contact Information Buffer";
     SourceTableTemporary = true;
     Extensible = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     InsertAllowed = false;
     ModifyAllowed = false;
     DeleteAllowed = false;

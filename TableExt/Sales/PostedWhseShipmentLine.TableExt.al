@@ -14,11 +14,71 @@ tableextension 50128 "Posted Whse Shpt Line Ext" extends "Posted Whse. Shipment 
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        field(50102; "Discount Details"; Text[50])
+        field(50102; "Discount Details"; Text[100])
         {
             Caption = 'Discount Details';
             DataClassification = ToBeClassified;
             Editable = false;
+        }
+        field(50103; "PO Line"; Text[50])
+        {
+            Caption = 'PO Line';
+            DataClassification = ToBeClassified;
+        }
+        field(50104; "UPC_Code"; Text[50])
+        {
+            Caption = 'Marketplace UPC Code';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50105; "Amazon Item ID"; Text[50])
+        {
+            Caption = 'Amazon Item ID';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50106; "StoreFront_LineAmount"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Storefront Line Amount';
+            DataClassification = ToBeClassified;
+        }
+        field(50107; "BC Unit Price"; Decimal)
+        {
+            Editable = false;
+            Caption = 'BC Unit Price';
+            DataClassification = ToBeClassified;
+        }
+        field(50108; "Customer Subscription No."; Text[50])
+        {
+            Editable = false;
+            Caption = 'Customer Subscription No.';
+            DataClassification = CustomerContent;
+        }
+        field(50111; "Line Tax AmountN"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Line Tax Amount';
+            DataClassification = CustomerContent;
+        }
+        //50112,50113 used in SalesInvoiceLineaggregate
+        field(50114; "Item Type"; Enum "Item Type")
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(50115; Weight; Decimal)
+        {
+            Caption = 'Weight';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50116; "Total Cubage FT"; Decimal)
+        {
+            Caption = 'Total Cubage FT';
+            DataClassification = CustomerContent;
+            Editable = true;
         }
     }
 }

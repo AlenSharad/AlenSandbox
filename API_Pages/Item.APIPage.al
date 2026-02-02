@@ -1,11 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Foundation.UOM;
-using Microsoft.Inventory.Item;
-using Microsoft.Finance.SalesTax;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Journal;
-using Microsoft.Inventory.Posting;
 
 page 50105 "API - Items"
 {
@@ -19,10 +11,10 @@ page 50105 "API - Items"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = Item;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)
@@ -399,11 +391,11 @@ page 50105 "API - Items"
                 }
                 part(itemUnitOfMeasure; "API - Item Unit of Measure")
                 {
-                    Caption = 'Unit Of Measure';
-                    Multiplicity = ZeroOrOne;
+                    Caption = 'Item Unit Of Measure';
                     EntityName = 'itemUnitOfMeasure';
                     EntitySetName = 'itemUnitOfMeasures';
                     SubPageLink = "Item No." = field("No.");
+
                 }
                 part(itemAttributes; "API - Item Attributes")
                 {

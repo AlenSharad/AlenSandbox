@@ -1,7 +1,4 @@
-namespace Microsoft.API.V2;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Item.Attribute;
-using Microsoft.Inventory.Item;
+
 page 50110 "API - Get Item Attributes"
 {
     APIVersion = 'v2.0';
@@ -14,10 +11,10 @@ page 50110 "API - Get Item Attributes"
     PageType = API;
     SourceTable = "Item Attribute Value Buffer";
     SourceTableTemporary = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)
@@ -180,12 +177,13 @@ page 50110 "API - Get Item Attributes"
         if ItemAttributeValueMapping.FindSet() then
             repeat
 
-                ItemAttributeValue.Get(ItemAttributeValueMapping."Item Attribute ID", ItemAttributeValueMapping."Item Attribute Value ID");
-                //if Not TempItemAttributeValue.Get(ItemAttributeValue."Attribute ID", ItemAttributeValue.ID) then begin
+                if ItemAttributeValue.Get(ItemAttributeValueMapping."Item Attribute ID", ItemAttributeValueMapping."Item Attribute Value ID") then begin
+                    //if Not TempItemAttributeValue.Get(ItemAttributeValue."Attribute ID", ItemAttributeValue.ID) then begin
 
-                TempItemAttributeValue.TransferFields(ItemAttributeValue);
-                //OnLoadAttributesOnBeforeTempItemAttributeValueInsert(TempItemAttributeValue, ItemAttributeValueMapping, RelatedRecordCode);
-                TempItemAttributeValue.Insert();
+                    TempItemAttributeValue.TransferFields(ItemAttributeValue);
+                    //OnLoadAttributesOnBeforeTempItemAttributeValueInsert(TempItemAttributeValue, ItemAttributeValueMapping, RelatedRecordCode);
+                    TempItemAttributeValue.Insert();
+                end;
             //end;
             until ItemAttributeValueMapping.Next() = 0;
         TempItemAttributeValue.Reset();

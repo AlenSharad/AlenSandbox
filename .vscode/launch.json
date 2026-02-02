@@ -7,6 +7,7 @@
             "type": "al",
             "environmentType": "Sandbox",
             "environmentName": "Sandboxintegrations",
+            //"environmentName": "SB4_09-22-25",    
             "tenant": "dd0912b7-9ce4-4c4c-be45-4e2ee7359330",
             "startupObjectId": 22,
             "startupObjectType": "Page",
@@ -15,6 +16,6 @@
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
             "schemaUpdateMode": "ForceSync"
-        }
+         }
     ]
 }

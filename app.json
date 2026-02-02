@@ -1,8 +1,8 @@
 {
   "id": "035d365d-35f3-4b8f-aa8e-b3b6f479640f",
-  "name": "ALEN",
-  "publisher": "HappiestMinds",
-  "version": "1.0.0.0",
+  "name": "ALEN_SALES",
+  "publisher": "ALEN",
+  "version": "1.0.0.37",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -10,6 +10,7 @@
   "help": "",
   "url": "",
   "logo": "",
+  
   "dependencies": 
   [
     {
@@ -23,6 +24,24 @@
       "name": "Shopify Connector",
   "publisher": "Microsoft",
   "version": "26.0.30643.33009"
+    },
+    {
+      "id": "3099ffc7-4cf7-4df6-9b96-7e4bc2bb587c",
+      "name": "Subscription Billing",
+      "publisher": "Microsoft",
+      "version": "26.2.34746.35601"
+    },
+    {
+      "id": "e7e4551c-46e4-40a0-98aa-d33dc1d10bde",
+      "name": "Multi-Entity Management (NA)",
+      "publisher": "Binary Stream Software Inc.",
+      "version": "1.1.148.0"
+    },
+    {
+      "id": "5fedf952-2450-4bce-b578-f3b7c13cd9a9",
+      "name": "Avalara AvaTax",
+      "publisher": "Avalara",
+      "version": "25.0.27.0"
     }
   ],
   "screenshots": [],
@@ -30,8 +49,8 @@
   "application": "26.0.0.0",
   "idRanges": [
     {
-      "from": 50100,
-      "to": 50149
+      "from": 50000,
+      "to": 50249
     }
   ],
   "resourceExposurePolicy": {
@@ -39,7 +58,7 @@
     "allowDownloadingSource": true,
     "includeSourceInSymbolFile": true
   },
-  "runtime": "15.0",
+  "runtime": "15.1",
   "features": [
     "NoImplicitWith"
   ]

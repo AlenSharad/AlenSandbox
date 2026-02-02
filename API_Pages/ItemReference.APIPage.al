@@ -1,6 +1,3 @@
-namespace Microsoft.API.V2;
-using Microsoft.Integration.Graph;
-using Microsoft.Inventory.Item.Catalog;
 
 page 50108 "API - Item References"
 {
@@ -13,10 +10,10 @@ page 50108 "API - Item References"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Item Reference";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

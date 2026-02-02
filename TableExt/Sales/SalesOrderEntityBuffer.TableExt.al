@@ -2,53 +2,18 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
 {
     fields
     {
-        field(11; "Your Reference"; Text[35])
-        {
-            Caption = 'Your Reference';
-        }
-        field(28; "Location Code"; Code[10])
-        {
-            Caption = 'Location Code';
-            TableRelation = Location where("Use As In-Transit" = const(false));
-        }
-        field(114; "Tax Area Code"; Code[20])
-        {
-            Caption = 'Tax Area Code';
-            TableRelation = "Tax Area";
-            ValidateTableRelation = false;
-        }
-        field(104; "Payment Method Code"; Code[10])
-        {
-            Caption = 'Payment Method Code';
-            TableRelation = "Payment Method";
-        }
-        field(105; "Shipping Agent Code"; Code[10])
-        {
-            AccessByPermission = TableData "Shipping Agent Services" = R;
-            Caption = 'Shipping Agent Code';
-            TableRelation = "Shipping Agent";
-        }
-        field(115; "Tax Liable"; Boolean)
-        {
-            Caption = 'Tax Liable';
-        }
 
-        field(5794; "Shipping Agent Service Code"; Code[10])
-        {
-            Caption = 'Shipping Agent Service Code';
-            TableRelation = "Shipping Agent Services".Code where("Shipping Agent Code" = field("Shipping Agent Code"));
-        }
         field(50100; "Order Type Code"; Code[20])
         {
             Caption = 'Order Type Code';
             DataClassification = ToBeClassified;
             TableRelation = "Order Type".Code;
         }
-        field(50101; "Shopify Variant Id"; Text[50])
-        {
-            Caption = 'Shopify Variant Id';
-            DataClassification = ToBeClassified;
-        }
+        // field(50101; "Shopify Variant Id"; Text[50])
+        // {
+        //     Caption = 'Shopify Variant Id';
+        //     DataClassification = ToBeClassified;
+        // }
         field(50102; "Sent to 3PL Date"; DateTime)
         {
             Caption = 'Sent to 3PL Date';
@@ -96,7 +61,322 @@ tableextension 50109 "Sales Order Entity Buffer Ext" extends "Sales Order Entity
             Caption = 'Bill To Options';
             DataClassification = CustomerContent;
         }
+        field(50502; ShipToOptions; Enum "Sales Ship-to Options")
+        {
+            Caption = 'Ship To Options';
+            DataClassification = CustomerContent;
+        }
+        field(50110; "Order Total Check"; Decimal)
+        {
+            Caption = 'Order Total Check';
+            DataClassification = ToBeClassified;
+        }
+        field(50111; "Order Total Variance"; Decimal)
+        {
+            Caption = 'Order Total Variance';
+            DataClassification = ToBeClassified;
+        }
+        //... Marketplace fields
+        field(50112; "memo"; Text[50])
+        {
+            Caption = 'Memo';
+            DataClassification = ToBeClassified;
+        }
+        field(50113; "Vendor_Number"; Code[20])
+        {
+            Caption = 'Vendor Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50114; "shippingAddress_attention"; Text[50])
+        {
+            Caption = 'Shipping Address Attention';
+            DataClassification = ToBeClassified;
+        }
+        field(50115; "Store_number"; Code[20])
+        {
+            Caption = 'Store Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50116; "Dealer_Department_Number"; Code[20])
+        {
+            Caption = 'Dealer Department Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50117; "Dealer_Department_Description"; Text[50])
+        {
+            Caption = 'Dealer Department Description';
+            DataClassification = ToBeClassified;
+        }
+        field(50118; "Standard_Carrier_Alpha_Code"; Text[50])
+        {
+            Caption = 'Standard Carrier Alpha Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50119; "FOB_Qualifier"; Text[50])
+        {
+            Caption = 'FOB Qualifier';
+            DataClassification = ToBeClassified;
+        }
+        field(50120; "Transportation_Method_Code"; Text[50])
+        {
+            Caption = 'Carrier Transportation Method Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50121; "Transaction_ID"; Text[200])
+        {
+            Caption = 'Transaction ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50122; "discountItem_intID"; Text[50])
+        {
+            Caption = 'Discount Item - intID';
+            DataClassification = ToBeClassified;
+        }
+        field(50123; "Customer_Account_Number"; Text[50])
+        {
+            Caption = 'Customer Account Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50124; "Special_Instructions"; Text[100])
+        {
+            Caption = 'Special Instructions';
+            DataClassification = ToBeClassified;
+        }
+        field(50125; "Customer_Order_Number"; Code[20])
+        {
+            Caption = 'Customer Order Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50126; "Release_No"; Text[50])
+        {
+            Caption = 'Release No';
+            DataClassification = ToBeClassified;
+        }
+        field(50127; "Ship_To_Code_Qualifier"; Text[50])
+        {
+            Caption = 'Ship To Code Qualifier';
+            DataClassification = ToBeClassified;
+        }
+        field(50128; "Requested_Ship_Date"; Date)
+        {
+            Caption = 'Requested Ship Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50129; "Current_Scheduled_Delivery"; Date)
+        {
+            Caption = 'Current Scheduled Delivery';
+            DataClassification = ToBeClassified;
+        }
+        field(50130; "Requested_PickUp_Date"; Date)
+        {
+            Caption = 'Requested Pick Up Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50131; "Packaging_Type"; Text[20])
+        {
+            Caption = 'Packaging Type';
+            DataClassification = ToBeClassified;
+        }
+        field(50132; "Total_Packages"; Decimal)
+        {
+            Caption = 'Total Packages';
+            DataClassification = ToBeClassified;
+        }
+        field(50133; "PKG_PLT_Qty"; Decimal)
+        {
+            Caption = 'PKG PLT Qty';
+            DataClassification = ToBeClassified;
+        }
+        field(50134; "Marketplace_Shipment_ID"; Text[50])
+        {
+            Caption = 'Marketplace Shipment ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50135; "824_Received"; Boolean)
+        {
+            Caption = '824 Received';
+            DataClassification = ToBeClassified;
+        }
+        field(50136; "824_Notes"; Text[100])
+        {
+            Caption = '824 Notes';
+            DataClassification = ToBeClassified;
+        }
+        field(50137; "Routing_Request_Sent"; Boolean)
+        {
+            Caption = 'Routing Request Sent';
+            DataClassification = ToBeClassified;
+        }
+        field(50138; "Processed"; Boolean)
+        {
+            Caption = 'Processed';
+            DataClassification = ToBeClassified;
+        }
+        field(50139; "Supplier_Contact_Name"; Text[100])
+        {
+            Caption = 'Supplier Contact Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50140; "Supplier_Contact_No"; Text[21])
+        {
+            Caption = 'Supplier Contact No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50141; "Supplier_Contact_Email"; Text[100])
+        {
+            Caption = 'Supplier Contact Email';
+            DataClassification = ToBeClassified;
+        }
+        field(50142; "Ship From"; Text[100])
+        {
+            Caption = 'Ship From';
+            DataClassification = ToBeClassified;
+        }
+        field(50143; "3rd Party Billing Account"; Text[100])
+        {
+            Caption = '3rd Party Billing Account';
+            DataClassification = ToBeClassified;
+        }
+        field(50144; "3rd Party Zip"; Code[10])
+        {
+            Caption = '3rd Party Zip';
+            DataClassification = ToBeClassified;
+        }
+        field(50145; "3rd Party Carrier"; Text[100])
+        {
+            Caption = '3rd Party Carrier';
+            DataClassification = ToBeClassified;
+        }
+        field(50146; "Storefront Name"; Text[100])
+        {
+            Caption = 'Storefront Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50147; isShipresidential; Boolean)
+        {
+            Caption = 'Is Ship Residential';
+            DataClassification = ToBeClassified;
+        }
+        field(50148; "Bill-to Phone No."; Text[30])
+        {
+            Caption = 'Bill-to Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50149; "Order Discount Details"; Text[100])
+        {
+            Caption = 'Order Discount Details';
+            DataClassification = ToBeClassified;
+        }
+        field(50150; "Your Reference"; Text[35])
+        {
+            Caption = 'Your Reference';
+        }
+        field(50151; "Location Code"; Code[10])
+        {
+            Caption = 'Location Code';
+            TableRelation = Location where("Use As In-Transit" = const(false));
+        }
+        field(50152; "Tax Area Code"; Code[20])
+        {
+            Caption = 'Tax Area Code';
+            TableRelation = "Tax Area";
+            ValidateTableRelation = false;
+        }
+        field(50153; "Payment Method Code"; Code[10])
+        {
+            Caption = 'Payment Method Code';
+            TableRelation = "Payment Method";
+        }
+        field(50154; "Shipping Agent Code"; Code[10])
+        {
+            AccessByPermission = TableData "Shipping Agent Services" = R;
+            Caption = 'Shipping Agent Code';
+            TableRelation = "Shipping Agent";
+        }
+        field(50155; "Tax Liable"; Boolean)
+        {
+            Caption = 'Tax Liable';
+        }
 
+        field(50156; "Shipping Agent Service Code"; Code[10])
+        {
+            Caption = 'Shipping Agent Service Code';
+            TableRelation = "Shipping Agent Services".Code where("Shipping Agent Code" = field("Shipping Agent Code"));
+        }
+        field(50157; "Order Total Tax"; Decimal)
+        {
+            Caption = 'Order Total Tax';
+            DataClassification = ToBeClassified;
+        }
+        field(50158; "Shipment Date"; Date)
+        {
+            Caption = 'Shipment Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50162; "Agreement No."; Text[60])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
+            DataClassification = ToBeClassified;
+        }
+        field(50164; "Order Tax Variance"; Decimal)
+        {
+            Caption = 'Order Tax Variance';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50165; "Shipment Weight"; Decimal)
+        {
+            Caption = 'Shipment Weight';
+            DataClassification = ToBeClassified;
+        }
+        field(50166; "Shipment Cubic FT"; Decimal)
+        {
+            Caption = 'Shipment Cubic FT';
+            DataClassification = ToBeClassified;
+        }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
+        field(50250; "Ava Line Override Type"; Option)
+        {
+            Caption = 'Tax Override Type';
+            OptionMembers = " ",TaxDate,Amount;
+        }
+        field(50251; "Ava Line Override Amount"; Decimal)
+        {
+            Caption = 'Tax Override Amount';
+        }
+        field(50252; "Ava Line Override Reason"; Text[250])
+        {
+            Caption = 'Tax Override Reason';
+        }
+        field(50253; "Sales Order"; Boolean)
+        {
+            Caption = 'Sales Order';
+        }
+        field(50300; "Shipment Exist"; Boolean)
+        {
+            Caption = 'Shipment Exist';
+            FieldClass = FlowField;
+            CalcFormula = exist("Warehouse Shipment Header" where("Source No." = field("No.")));
+            Editable = false;
+        }
+        field(50301; "Package Tracking No."; Text[50])
+        {
+            Caption = 'Package Tracking No.';
+        }
 
     }
 

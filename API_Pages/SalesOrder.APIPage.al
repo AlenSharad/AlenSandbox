@@ -1,17 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Integration.Entity;
-using Microsoft.Sales.Document;
-using Microsoft.Foundation.Address;
-using Microsoft.Sales.Customer;
-using Microsoft.Finance.Currency;
-using Microsoft.Foundation.PaymentTerms;
-using Microsoft.Foundation.Shipping;
-using Microsoft.Integration.Graph;
-using Microsoft.Sales.History;
-using Microsoft.Sales.Posting;
-using Microsoft.Utilities;
-using System.Reflection;
 
 page 50109 "API - Sales Orders"
 {
@@ -25,9 +11,11 @@ page 50109 "API - Sales Orders"
     ODataKeyFields = Id;
     PageType = API;
     SourceTable = "Sales Order Entity Buffer";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    SourceTableView = where("Sales Order" = const(true));
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
+    DeleteAllowed = false;
     layout
     {
         area(content)
@@ -59,7 +47,15 @@ page 50109 "API - Sales Orders"
                     Caption = 'External Document No.';
 
                     trigger OnValidate()
+                    var
+                        SalesHeader: Record "Sales Header";
                     begin
+                        if Rec."External Document No." = '' then
+                            Error(ExternalDocumentBlankErr);
+                        SalesHeader.Reset();
+                        SalesHeader.SetRange("External Document No.", Rec."External Document No.");
+                        if SalesHeader.FindFirst() then
+                            Error(ExternalDocumentAlreadyExistErr, SalesHeader."No.");
                         RegisterFieldSet(Rec.FieldNo("External Document No."))
                     end;
                 }
@@ -154,6 +150,14 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo(BillToOptions));
                     end;
                 }
+                field(ShipToOptions; Rec.ShipToOptions)
+                {
+                    Caption = 'Ship-to';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(ShipToOptions));
+                    end;
+                }
                 field(billToCustomerNumber; Rec."Bill-to Customer No.")
                 {
                     Caption = 'Bill-to Customer No.';
@@ -185,6 +189,15 @@ page 50109 "API - Sales Orders"
                             RegisterFieldSet(Rec.FieldNo("Ship-to Code"));
                             RegisterFieldSet(Rec.FieldNo("Ship-to Name"));
                         end;
+                    end;
+                }
+                field(packageTrackingNo; Rec."Package Tracking No.")
+                {
+                    Caption = 'Package Tracking No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Package Tracking No."));
                     end;
                 }
                 field(shipToContact; Rec."Ship-to Contact")
@@ -267,27 +280,57 @@ page 50109 "API - Sales Orders"
                 {
                     Caption = 'Bill-to Address Line 2';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Address 2"));
+                    end;
                 }
                 field(billToCity; Rec."Bill-to City")
                 {
                     Caption = 'Bill-to City';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to City"));
+                    end;
                 }
                 field(billToCountry; Rec."Bill-to Country/Region Code")
                 {
                     Caption = 'Bill-to Country/Region Code';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Country/Region Code"));
+                    end;
                 }
                 field(billToState; Rec."Bill-to County")
                 {
                     Caption = 'BillTo State';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to County"));
+                    end;
                 }
                 field(billToPostCode; Rec."Bill-to Post Code")
                 {
                     Caption = 'Bill-to Post Code';
                     //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Post Code"));
+                    end;
                 }
+                field(billToPhoneNo; Rec."Bill-to Phone No.")
+                {
+                    Caption = 'Bill-to Phone No.';
+                    //Editable = false;
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Bill-to Phone No."));
+                    end;
+                }
+
                 field(shipToAddressLine1; Rec."Ship-to Address")
                 {
                     Caption = 'Ship-to Address Line 1';
@@ -299,6 +342,7 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Ship-to Address"));
                     end;
                 }
+
                 field(shipToAddressLine2; Rec."Ship-to Address 2")
                 {
                     Caption = 'Ship-to Address Line 2';
@@ -476,6 +520,15 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Shipment Method Code"));
                     end;
                 }
+                field(shipmentDate; Rec."Shipment Date")
+                {
+                    Caption = 'Shipment Date';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Date"));
+                    end;
+                }
                 field(taxLiable; Rec."Tax Liable")
                 {
                     Caption = 'Tax Liable';
@@ -519,6 +572,9 @@ page 50109 "API - Sales Orders"
 
                     trigger OnValidate()
                     begin
+                        if Rec."Shipping Agent Service Code" = '' then
+                            Error('Shipping Agent Service Code must have a value.');
+
                         RegisterFieldSet(Rec.FieldNo("Shipping Agent Service Code"));
                     end;
                 }
@@ -547,6 +603,363 @@ page 50109 "API - Sales Orders"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Requested Delivery Date"));
+                    end;
+                }
+
+                field(orderTotalCheck; Rec."Order Total Check")
+                {
+                    Caption = 'Order Total Check';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Total Check"));
+                    end;
+                }
+                field(orderTotalExclTax; Rec."Order Total Excl Tax")
+                {
+                    Caption = 'Order Total Excl. Tax';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Total Excl Tax"));
+                    end;
+                }
+                field(orderTotalVariance; Rec."Order Total Variance")
+                {
+                    Caption = 'Order Total Variance';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Total Variance"));
+                    end;
+                }
+                field("memo"; Rec."memo")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Memo';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("memo"));
+                    end;
+                }
+                field("Vendor_Number"; Rec."Vendor_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Vendor Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Vendor_Number"));
+                    end;
+                }
+                field("shippingAddress_attention"; Rec."shippingAddress_attention")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shipping Address Attention';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("shippingAddress_attention"));
+                    end;
+                }
+                field("Store_number"; Rec."Store_number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Store Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Store_number"));
+                    end;
+                }
+                field("Dealer_Department_Number"; Rec."Dealer_Department_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Dealer Department Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Dealer_Department_Number"));
+                    end;
+                }
+                field("Dealer_Department_Description"; Rec."Dealer_Department_Description")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Dealer Department Description';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Dealer_Department_Description"));
+                    end;
+                }
+                field("Standard_Carrier_Alpha_Code"; Rec."Standard_Carrier_Alpha_Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Standard Carrier Alpha Code';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Standard_Carrier_Alpha_Code"));
+                    end;
+                }
+                field("FOB_Qualifier"; Rec."FOB_Qualifier")
+                {
+                    ApplicationArea = All;
+                    Caption = 'FOB Qualifier';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("FOB_Qualifier"));
+                    end;
+                }
+                field(carrierPRONumber; Rec.CarrierPRONumber)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Carrier PRO Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(CarrierPRONumber));
+                    end;
+                }
+                field(billofLading; Rec.BillofLading)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Bill of Lading';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(BillofLading));
+                    end;
+                }
+                field("Carrier_Transportation_Method_Code"; Rec."Transportation_Method_Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Carrier Transportation Method Code';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Transportation_Method_Code"));
+                    end;
+                }
+                field("Transaction_ID"; Rec."Transaction_ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Transaction ID';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Transaction_ID"));
+                    end;
+                }
+                field("discountItem_intID"; Rec."discountItem_intID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Discount Item - intID';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("discountItem_intID"));
+                    end;
+                }
+                field("Customer_Account_Number"; Rec."Customer_Account_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer Account Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer_Account_Number"));
+                    end;
+                }
+                field("Special_Instructions"; Rec."Special_Instructions")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Special Instructions';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Special_Instructions"));
+                    end;
+                }
+                field("Customer_Order_Number"; Rec."Customer_Order_Number")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer Order Number';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer_Order_Number"));
+                    end;
+                }
+                field("Release_No"; Rec."Release_No")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Release No';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Release_No"));
+                    end;
+                }
+                field("Ship_To_Code_Qualifier"; Rec."Ship_To_Code_Qualifier")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ship To Code Qualifier';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ship_To_Code_Qualifier"));
+                    end;
+                }
+                field("Requested_Ship_Date"; Rec."Requested_Ship_Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Requested Ship Date';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Requested_Ship_Date"));
+                    end;
+                }
+                field("Current_Scheduled_Delivery"; Rec."Current_Scheduled_Delivery")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Current Scheduled Delivery';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Current_Scheduled_Delivery"));
+                    end;
+                }
+                field("Requested_PickUp_Date"; Rec."Requested_PickUp_Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Requested Pick Up Date';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Requested_PickUp_Date"));
+                    end;
+                }
+                field("Packaging_Type"; Rec."Packaging_Type")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Packaging Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Packaging_Type"));
+                    end;
+                }
+                field("Total_Packages"; Rec."Total_Packages")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Total Packages';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Total_Packages"));
+                    end;
+                }
+                field("PKG_PLT_Qty"; Rec."PKG_PLT_Qty")
+                {
+                    ApplicationArea = All;
+                    Caption = 'PKG PLT Qty';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("PKG_PLT_Qty"));
+                    end;
+                }
+                field("Marketplace_Shipment_ID"; Rec."Marketplace_Shipment_ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Marketplace Shipment ID';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Marketplace_Shipment_ID"));
+                    end;
+                }
+                field("824_Received"; Rec."824_Received")
+                {
+                    ApplicationArea = All;
+                    Caption = '824 Received';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("824_Received"));
+                    end;
+                }
+                field("824_Notes"; Rec."824_Notes")
+                {
+                    ApplicationArea = All;
+                    Caption = '824 Notes';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("824_Notes"));
+                    end;
+                }
+                field("Routing_Request_Sent"; Rec."Routing_Request_Sent")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Routing Request Sent';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Routing_Request_Sent"));
+                    end;
+                }
+                field("Processed"; Rec."Processed")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Processed';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Processed"));
+                    end;
+                }
+                field("Supplier_Contact_Name"; Rec."Supplier_Contact_Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Supplier Contact Name';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Supplier_Contact_Name"));
+                    end;
+                }
+                field("Supplier_Contact_No"; Rec."Supplier_Contact_No")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Supplier Contact No.';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Supplier_Contact_No"));
+                    end;
+                }
+                field("Supplier_Contact_Email"; Rec."Supplier_Contact_Email")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Supplier Contact Email';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Supplier_Contact_Email"));
+                    end;
+                }
+                field(shipFrom; Rec."Ship From")
+                {
+                    Caption = 'Ship From';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ship From"));
+                    end;
+                }
+                field(thirdPartyBillingAccount; Rec."3rd Party Billing Account")
+                {
+                    Caption = '3rd Party Billing Account';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("3rd Party Billing Account"));
+                    end;
+                }
+                field(thirdPartyZip; Rec."3rd Party Zip")
+                {
+                    Caption = '3rd Party Zip';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("3rd Party Zip"));
+                    end;
+                }
+                field(thirdPartyCarrier; Rec."3rd Party Carrier")
+                {
+                    Caption = '3rd Party Carrier';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("3rd Party Carrier"));
+                    end;
+                }
+
+                field(isShipResidential; Rec.isShipresidential)
+                {
+                    Caption = 'Is Ship Residential';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(isShipresidential));
                     end;
                 }
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
@@ -584,16 +997,24 @@ page 50109 "API - Sales Orders"
                     Caption = 'Total Amount Excluding Tax';
                     Editable = false;
                 }
-                field(totalTaxAmount; Rec."Total Tax Amount")
+                field(orderTotalTax; Rec."Order Total Tax")
                 {
-                    Caption = 'Total Tax Amount';
-                    Editable = false;
-
+                    Caption = 'Order Total Tax';
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Total Tax Amount"));
+                        RegisterFieldSet(Rec.FieldNo("Order Total Tax"));
                     end;
                 }
+                // field(totalTaxAmount; Rec."Total Tax Amount")
+                // {
+                //     Caption = 'Total Tax Amount';
+                //     Editable = false;
+
+                //     trigger OnValidate()
+                //     begin
+                //         RegisterFieldSet(Rec.FieldNo("Total Tax Amount"));
+                //     end;
+                // }
                 field(totalAmountIncludingTax; Rec."Amount Including VAT")
                 {
                     Caption = 'Total Amount Including Tax';
@@ -613,6 +1034,17 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Completely Shipped"));
                     end;
                 }
+                field(shipmentExist; Rec."Shipment Exist")
+                {
+                    Caption = 'Shipment Exist';
+                    Editable = false;
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Exist"));
+                    end;
+                }
+
                 field(status; Rec.Status)
                 {
                     Caption = 'Status';
@@ -655,6 +1087,23 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Location Code"));
                     end;
                 }
+                field(agreementNo; Rec."Agreement No.")
+                {
+                    Caption = 'Agreement No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Agreement No."));
+                    end;
+                }
+                field(orderDiscountDetails; Rec."Order Discount Details")
+                {
+                    Caption = 'Order Discount Details';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Order Discount Details"));
+                    end;
+                }
                 field(orderType; Rec."Order Type Code")
                 {
                     Caption = 'Order Type';
@@ -664,15 +1113,15 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Order Type Code"));
                     end;
                 }
-                field(shopifyVariant; Rec."Shopify Variant Id")
-                {
-                    Caption = 'Shopify Variant Id';
+                // field(shopifyVariant; Rec."Shopify Variant Id")
+                // {
+                //     Caption = 'Shopify Variant Id';
 
-                    trigger OnValidate()
-                    begin
-                        RegisterFieldSet(Rec.FieldNo("Shopify Variant Id"));
-                    end;
-                }
+                //     trigger OnValidate()
+                //     begin
+                //         RegisterFieldSet(Rec.FieldNo("Shopify Variant Id"));
+                //     end;
+                // }
                 field(sentTo3PLDate; Rec."Sent to 3PL Date")
                 {
                     Caption = 'Sent to 3PL Date';
@@ -709,6 +1158,30 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Order Source"));
                     end;
                 }
+                field(storeFrontName; Rec."Storefront Name")
+                {
+                    Caption = 'Storefront Name';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Storefront Name"));
+                    end;
+                }
+                field(shipmentWeight; Rec."Shipment Weight")
+                {
+                    Caption = 'Shipment Weight';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Weight"));
+                    end;
+                }
+                field(shipmentCubicFT; Rec."Shipment Cubic FT")
+                {
+                    Caption = 'Shipment Cubic FT';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Shipment Cubic FT"));
+                    end;
+                }
                 field(storeFrontPaymentStatus; Rec."Store Front Payment Status")
                 {
                     Caption = 'Store Front Payment Status';
@@ -734,6 +1207,30 @@ page 50109 "API - Sales Orders"
                         RegisterFieldSet(Rec.FieldNo("Store Front Payment Event Type"));
                     end;
                 }
+                field(avataxOverrideType; Rec."Ava Line Override Type")
+                {
+                    Caption = 'Ava Line Override Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Type"));
+                    end;
+                }
+                field(avataxOverrideAmount; Rec."Ava Line Override Amount")
+                {
+                    Caption = 'Ava Line Override Amount';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Amount"));
+                    end;
+                }
+                field(avaLineOverrideReason; Rec."Ava Line Override Reason")
+                {
+                    Caption = 'Ava Line Override Reason';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Reason"));
+                    end;
+                }
                 field(storeFrontPaymentAuthcode; Rec."Store Front Payment Authcode")
                 {
                     Caption = 'Store Front Payment Authcode';
@@ -745,6 +1242,21 @@ page 50109 "API - Sales Orders"
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
                     Caption = 'Last Modified Date';
+                    Editable = false;
+                }
+                field(createdDateTime; Rec.SystemCreatedAt)
+                {
+                    Caption = 'Created Date';
+                    Editable = false;
+                }
+                field(modifiedBy; Rec.SystemModifiedBy)
+                {
+                    Caption = 'Modified By';
+                    Editable = false;
+                }
+                field(createdBy; Rec.SystemCreatedBy)
+                {
+                    Caption = 'Created By';
                     Editable = false;
                 }
                 part(attachments; "APIV2 - Attachments")
@@ -770,6 +1282,7 @@ page 50109 "API - Sales Orders"
 
     }
 
+
     trigger OnAfterGetRecord()
     begin
         SetCalculatedFields();
@@ -787,61 +1300,245 @@ page 50109 "API - Sales Orders"
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
         SalesHeader: Record "Sales Header";
+        SalesHeader2: Record "Sales Header";
         custombillto: Record "Custom Bill To Address";
+        customshipto: Record "Custom Ship To Address";
+        custombillto2: Record "Custom Bill To Address";
+        customshipto2: Record "Custom Ship To Address";
+        LocCode: Code[10];
+        yourReference: Text[35];
+        taxareaCode: Code[20];
+        paymentMethodCode: Code[10];
+        shippingagentCode: Code[10];
+        shippingAgentServiceCode: Code[10];
+        taxliable: Boolean;
+        orderTotalTax: Decimal;
+        shipDate: Date;
+        Cust: Record Customer;
+        avataxOvType: Option " ",TaxDate,Amount;
+        avataxOvAmount: Decimal;
+        ordertotalexcltax: Decimal;
+        packTrackNo: Text[50];
     begin
+        LocCode := Rec."Location Code";
+        yourReference := Rec."Your Reference";
+        taxareaCode := Rec."Tax Area Code";
+        paymentMethodCode := Rec."Payment Method Code";
+        shippingagentCode := Rec."Shipping Agent Code";
+        shippingAgentServiceCode := Rec."Shipping Agent Service Code";
+        taxliable := Rec."Tax Liable";
+        orderTotalTax := Rec."Order Total Tax";
+        shipDate := Rec."Shipment Date";
+        avataxOvType := Rec."Ava Line Override Type";
+        avataxOvAmount := Rec."Ava Line Override Amount";
+        ordertotalexcltax := Rec."Order Total Excl Tax";
+        packTrackNo := Rec."Package Tracking No.";
 
+        Rec."Sales Order" := true;
         if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-            custombillto.DeleteAll();
-            custombillto.Init();
-            custombillto."Document Type" := custombillto."Document Type"::Order;
-            custombillto."Document No." := Rec."No.";
-            custombillto.billtooptions := Rec.BillToOptions;
-            custombillto.BilltoAdd1 := Rec."Bill-to Address";
-            custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
-            custombillto.billtoPostCode := Rec."Bill-to Post Code";
-            custombillto.billtoCity := Rec."Bill-to City";
-            custombillto.billtoCountryRegionCode := Rec."Bill-to Country/Region Code";
-            custombillto.billtoCounty := Rec."Bill-to County";
-            custombillto.Insert();
+            if Rec."No." <> '' then begin
+                custombillto.Reset();
+                custombillto.SetRange("Document Type", custombillto."Document Type"::Order);
+                custombillto.SetRange("External Document No.", Rec."External Document No.");
+                if custombillto.FindFirst() then
+                    custombillto.Delete();
+                // IF custombillto.Get(custombillto."Document Type"::Order, Rec."No.", Rec."External Document No.") then
+                //     custombillto.Init();
+                custombillto."Document Type" := custombillto."Document Type"::Order;
+                custombillto."Document No." := Rec."No.";
+                custombillto."External Document No." := Rec."External Document No.";
+                custombillto.BillToName := Rec."Bill-to Name";
+                custombillto.billtooptions := Rec.BillToOptions;
+                custombillto.BilltoAdd1 := Rec."Bill-to Address";
+                custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
+                custombillto.billtoPostCode := Rec."Bill-to Post Code";
+                custombillto.billtoCity := Rec."Bill-to City";
+                custombillto.billtoCountryRegionCode := Rec."Bill-to Country/Region Code";
+                custombillto.billtoCounty := Rec."Bill-to County";
+                custombillto.Insert();
+            end
+            else begin
+                custombillto.Reset();
+                custombillto.SetRange("Document Type", custombillto."Document Type"::Order);
+                custombillto.SetRange("External Document No.", Rec."External Document No.");
+                if custombillto.FindFirst() then
+                    custombillto.Delete();
+                custombillto.Reset();
+                custombillto.Init();
+                custombillto."Document Type" := custombillto."Document Type"::Order;
+                custombillto."Document No." := Rec."No.";
+                custombillto."External Document No." := Rec."External Document No.";
+                custombillto.BillToName := Rec."Bill-to Name";
+                custombillto.billtooptions := Rec.BillToOptions;
+                custombillto.BilltoAdd1 := Rec."Bill-to Address";
+                custombillto.BilltoAdd2 := Rec."Bill-to Address 2";
+                custombillto.billtoPostCode := Rec."Bill-to Post Code";
+                custombillto.billtoCity := Rec."Bill-to City";
+                custombillto.billtoCountryRegionCode := Rec."Bill-to Country/Region Code";
+                custombillto.billtoCounty := Rec."Bill-to County";
+                custombillto.Insert();
+                //end;
+            end;
+        end;
+        if Rec.ShipToOptions = Rec.ShipToOptions::"Custom Address" then begin
+            if Rec."No." <> '' then begin
+                IF customshipto.Get(customshipto."Document Type"::Order, Rec."No.", Rec."External Document No.") then
+                    customshipto.Delete();
+                customshipto.Init();
+                customshipto."Document Type" := customshipto."Document Type"::Order;
+                customshipto."Document No." := Rec."No.";
+                customshipto."External Document No." := Rec."External Document No.";
+                customshipto.ShipToName := Rec."Ship-to Name";
+                customshipto.shiptooptions := Rec.ShipToOptions;
+                customshipto.ShiptoAdd1 := Rec."Ship-to Address";
+                customshipto.ShiptoAdd2 := Rec."Ship-to Address 2";
+                customshipto.ShiptoPostCode := Rec."Ship-to Post Code";
+                customshipto.ShiptoCity := Rec."Ship-to City";
+                customshipto.ShiptoCountryRegionCode := Rec."Ship-to Country/Region Code";
+                customshipto.ShiptoCounty := Rec."Ship-to County";
+                customshipto.Insert();
+            end else begin
+                customshipto.Reset();
+                customshipto.SetRange("Document Type", customshipto."Document Type"::Order);
+                customshipto.SetRange("External Document No.", Rec."External Document No.");
+                if customshipto.FindFirst() then
+                    customshipto.Delete();
+                customshipto.Reset();
+                customshipto.Init();
+                customshipto."Document Type" := customshipto."Document Type"::Order;
+                customshipto."Document No." := Rec."No.";
+                customshipto."External Document No." := Rec."External Document No.";
+                customshipto.ShipToName := Rec."Ship-to Name";
+                customshipto.shiptooptions := Rec.ShipToOptions;
+                customshipto.ShiptoAdd1 := Rec."Ship-to Address";
+                customshipto.ShiptoAdd2 := Rec."Ship-to Address 2";
+                customshipto.ShiptoPostCode := Rec."Ship-to Post Code";
+                customshipto.ShiptoCity := Rec."Ship-to City";
+                customshipto.ShiptoCountryRegionCode := Rec."Ship-to Country/Region Code";
+                customshipto.ShiptoCounty := Rec."Ship-to County";
+                customshipto.Insert();
+                //end;
 
+            end;
         end;
 
         CheckSellToCustomerSpecified();
-
         GraphMgtSalesOrderBuffer.PropagateOnInsert(Rec, TempFieldBuffer);
+        //Error('SS');
 
+        // SetDates();
 
-        SetDates();
+        // UpdateDiscount();
 
-        UpdateDiscount();
+        // SetCalculatedFields();
+        SalesHeader2.Reset();
 
-        SetCalculatedFields();
-        if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
-            //Error('-%1 and %2 and %3 and %4', custombillto."Document No.", custombillto.BillToOptions, custombillto.BilltoAdd1, custombillto.billtoPostCode);
-            Rec."Bill-to Address" := custombillto.BilltoAdd1;
-            Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
-            Rec."Bill-to Post Code" := custombillto.billtoPostCode;
-            Rec."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
-            Rec."Bill-to City" := custombillto.billtoCity;
-            Rec."Bill-to County" := custombillto.billtoCounty;
-            SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
-            SalesHeader."Bill-to Address" := custombillto.BilltoAdd1;
-            SalesHeader."Bill-to Address 2" := custombillto.BilltoAdd2;
-            SalesHeader."Bill-to Post Code" := custombillto.billtoPostCode;
-            SalesHeader."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
-            SalesHeader."Bill-to City" := custombillto.billtoCity;
-            SalesHeader."Bill-to County" := custombillto.billtoCounty;
-            SalesHeader.modify;
+        if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+            custombillto2.Reset();
+            custombillto2.SetRange("Document Type", custombillto."Document Type"::Order);
+            custombillto2.SetRange("External Document No.", Rec."External Document No.");
+            custombillto2.SetRange("Document No.", '');
+            if custombillto2.FindFirst() then
+                custombillto2.Rename(custombillto2."Document Type"::Order, Rec."No.", Rec."External Document No.");
 
+            customshipto2.Reset();
+            customshipto2.SetRange("Document Type", customshipto2."Document Type"::Order);
+            customshipto2.SetRange("External Document No.", Rec."External Document No.");
+            customshipto2.SetRange("Document No.", '');
+            if customshipto2.FindFirst() then
+                customshipto2.Rename(customshipto2."Document Type"::Order, Rec."No.", Rec."External Document No.");
+        END;
+
+        SalesHeader2.Reset();
+
+        if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+
+            if customshipto.get(customshipto."Document Type"::Order, Rec."No.", Rec."External Document No.") then begin
+                if customshipto.ShipToOptions = customshipto.ShipToOptions::"Custom Address" then begin
+                    Rec.ShipToOptions := customshipto.ShipToOptions;
+                    Rec."Ship-to Name" := customshipto.ShipToName;
+                    Rec."Ship-to Address" := customshipto.ShiptoAdd1;
+                    Rec."Ship-to Address 2" := customshipto.ShiptoAdd2;
+                    Rec."Ship-to Post Code" := customshipto.ShiptoPostCode;
+                    Rec."Ship-to Country/Region Code" := customshipto.ShiptoCountryRegionCode;
+                    Rec."Ship-to City" := customshipto.shiptoCity;
+                    Rec."Ship-to County" := customshipto.shiptoCounty;
+                    SalesHeader2."Ship-to Address" := customshipto.ShiptoAdd1;
+                    SalesHeader2."Ship-to Address 2" := customshipto.ShiptoAdd2;
+                    SalesHeader2."Ship-to Post Code" := customshipto.shiptoPostCode;
+                    SalesHeader2."Ship-to Country/Region Code" := customshipto.shiptoCountryRegionCode;
+                    SalesHeader2."Ship-to City" := customshipto.shiptoCity;
+                    SalesHeader2."Ship-to County" := customshipto.shiptoCounty;
+                end;
+            end;
+            if custombillto.get(custombillto."Document Type"::Order, Rec."No.", Rec."External Document No.") then begin
+                if custombillto.BillToOptions = custombillto.BillToOptions::"Custom Address" then begin
+                    Rec.BillToOptions := custombillto.BillToOptions;
+                    Rec."Bill-to Name" := custombillto.BillToName;
+                    Rec."Bill-to Address" := custombillto.BilltoAdd1;
+                    Rec."Bill-to Address 2" := custombillto.BilltoAdd2;
+                    Rec."Bill-to Post Code" := custombillto.billtoPostCode;
+                    Rec."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
+                    Rec."Bill-to City" := custombillto.billtoCity;
+                    Rec."Bill-to County" := custombillto.billtoCounty;
+
+                    SalesHeader2."Bill-to Name" := custombillto.BillToName;
+                    SalesHeader2."Bill-to Address" := custombillto.BilltoAdd1;
+                    SalesHeader2."Bill-to Address 2" := custombillto.BilltoAdd2;
+                    SalesHeader2."Bill-to Post Code" := custombillto.billtoPostCode;
+                    SalesHeader2."Bill-to Country/Region Code" := custombillto.billtoCountryRegionCode;
+                    SalesHeader2."Bill-to City" := custombillto.billtoCity;
+                    SalesHeader2."Bill-to County" := custombillto.billtoCounty;
+                end;
+            end;
+
+            SalesHeader2."Location Code" := LocCode;
+            SalesHeader2."Your Reference" := yourReference;
+            //SalesHeader2."Tax Area Code" := taxareaCode;
+            Cust.Get(SalesHeader2."Sell-to Customer No.");
+            SalesHeader2.Validate("Tax Area Code", Cust."Tax Area Code");
+            SalesHeader2."Payment Method Code" := paymentMethodCode;
+            SalesHeader2."Shipping Agent Code" := shippingagentCode;
+            SalesHeader2."Shipping Agent Service Code" := shippingAgentServiceCode;
+            SalesHeader2.Validate("Tax Liable", Cust."Tax Liable");
+            SalesHeader2."Order Total Tax" := orderTotalTax;
+            SalesHeader2."Shipment Date" := shipDate;
+            SalesHeader2."Ava Tax Override Amount" := avataxOvAmount;
+            SalesHeader2."Ava Tax Override Type" := avataxOvType;
+            SalesHeader2."Order Total Excl Tax" := ordertotalexcltax;
+            SalesHeader2."Package Tracking No." := packTrackNo;
+            //SalesHeader2.ava ta := Rec."Ava Line Override Reason";
+            SalesHeader2.Modify();
         end;
-        custombillto.DeleteAll();
+
+        Rec."Location Code" := LocCode;
+        Rec."Your Reference" := yourReference;
+        Rec."Tax Area Code" := taxareaCode;
+        Rec."Payment Method Code" := paymentMethodCode;
+        Rec."Shipping Agent Code" := shippingagentCode;
+        Rec."Shipping Agent Service Code" := shippingAgentServiceCode;
+        Rec."Tax Liable" := taxliable;
+        Rec."Order Total Tax" := orderTotalTax;
+        Rec."Shipment Date" := shipDate;
+        Rec."Ava Line Override Amount" := avataxOvAmount;
+        Rec."Ava Line Override Type" := avataxOvType;
+        Rec."Order Total Excl Tax" := ordertotalexcltax;
+        Rec.ShipToOptions := customshipto.ShipToOptions;
+        Rec.BillToOptions := custombillto.BillToOptions;
+        Rec."Package Tracking No." := packTrackNo;
+        Rec."Sales Order" := true;
+        Rec.Modify();
         exit(false);
+
     end;
 
     trigger OnModifyRecord(): Boolean
     var
         SalesHeader: Record "Sales Header";
+        packTrackNo: Text[50];
+        SalesHeader2: Record "Sales Header";
     begin
+
         if xRec.Id <> Rec.Id then
             Error(CannotChangeIDErr);
 
@@ -849,17 +1546,15 @@ page 50109 "API - Sales Orders"
         UpdateDiscount();
 
         SetCalculatedFields();
+        packTrackNo := Rec."Package Tracking No.";
+        SalesHeader2.Reset();
 
-        // if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-        //     SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
-        //     SalesHeader."Bill-to Address" := Rec."Bill-to Address";
-        //     SalesHeader."Bill-to Address 2" := Rec."Bill-to Address 2";
-        //     SalesHeader."Bill-to Post Code" := Rec."Bill-to Post Code";
-        //     SalesHeader."Bill-to Country/Region Code" := Rec."Bill-to Country/Region Code";
-        //     SalesHeader."Bill-to City" := Rec."Bill-to City";
-        //     SalesHeader."Bill-to County" := Rec."Bill-to County";
-        //     SalesHeader.modify;
-        // end;
+        if SalesHeader2.Get(SalesHeader2."Document Type"::Order, Rec."No.") then begin
+            SalesHeader2."Package Tracking No." := packTrackNo;
+            SalesHeader2.Modify();
+        end;
+
+        Rec."Package Tracking No." := packTrackNo;
         exit(false);
     end;
 
@@ -869,16 +1564,6 @@ page 50109 "API - Sales Orders"
     begin
         ClearCalculatedFields();
 
-        // if Rec.BillToOptions = Rec.BillToOptions::"Custom Address" then begin
-        //     SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
-        //     SalesHeader."Bill-to Address" := Rec."Bill-to Address";
-        //     SalesHeader."Bill-to Address 2" := Rec."Bill-to Address 2";
-        //     SalesHeader."Bill-to Post Code" := Rec."Bill-to Post Code";
-        //     SalesHeader."Bill-to Country/Region Code" := Rec."Bill-to Country/Region Code";
-        //     SalesHeader."Bill-to City" := Rec."Bill-to City";
-        //     SalesHeader."Bill-to County" := Rec."Bill-to County";
-        //     SalesHeader.modify;
-        // end;
     end;
 
     trigger OnOpenPage()
@@ -911,6 +1596,8 @@ page 50109 "API - Sales Orders"
         CurrencyIdDoesNotMatchACurrencyErr: Label 'The "currencyId" does not match to a Currency.', Comment = 'currencyId is a field name and should not be translated.';
         CurrencyCodeDoesNotMatchACurrencyErr: Label 'The "currencyCode" does not match to a Currency.', Comment = 'currencyCode is a field name and should not be translated.';
         PaymentTermsIdDoesNotMatchAPaymentTermsErr: Label 'The "paymentTermsId" does not match to a Payment Terms.', Comment = 'paymentTermsId is a field name and should not be translated.';
+        ExternalDocumentBlankErr: Label '"externalDocumentNumber" cannot be empty. Shopify or Marketplace Order should be filled here.', Comment = 'externalDocumentNumber is a field name and should not be translated.';
+        ExternalDocumentAlreadyExistErr: Label '"externalDocumentNumber" already exist in BC with Sales Order No. %1 .', Comment = 'externalDocumentNumber is a field name and should not be translated.';
         ShipmentMethodIdDoesNotMatchAShipmentMethodErr: Label 'The "shipmentMethodId" does not match to a Shipment Method.', Comment = 'shipmentMethodId is a field name and should not be translated.';
         CannotFindOrderErr: Label 'The order cannot be found.';
         CannotEnablePricesIncludeTaxErr: Label 'The "pricesIncludeTax" cannot be set to true if VAT Calculation Type is Sales Tax.', Comment = 'pricesIncludeTax is a field name and should not be translated.';
@@ -1084,22 +1771,26 @@ page 50109 "API - Sales Orders"
         if Released then
             SetActionResponse(ActionContext, SalesHeader.SystemId, Page::"API - Sales Orders", WebServiceActionResultCode::Updated);
     end;
+
+    [ServiceEnabled]
+    [Scope('Cloud')]
+    procedure createWarehouseShipment(var ActionContext: WebServiceActionContext)
+    var
+        WarehouseRequest: Record "Warehouse Request";
+        SalesHeader: Record "Sales Header";
+        ShipmentCreated: Boolean;
+        GetSourceDocOB: codeunit "Get Source Doc. Outbound";
+
+    begin
+        GetOrder(SalesHeader);
+        SalesHeader.Get(SalesHeader."Document Type"::Order, Rec."No.");
+        if not SalesHeader.IsApprovedForPosting() then
+            ShipmentCreated := false;
+
+        GetSourceDocOB.FindWarehouseRequestForSalesOrder(WarehouseRequest, SalesHeader);
+        ShipmentCreated := GetSourceDocOB.CreateWhseShipmentHeaderFromWhseRequest(WarehouseRequest);
+        if ShipmentCreated then
+            SetActionResponse(ActionContext, SalesHeader.SystemId, Page::"API - Sales Orders", WebServiceActionResultCode::Updated);
+
+    end;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

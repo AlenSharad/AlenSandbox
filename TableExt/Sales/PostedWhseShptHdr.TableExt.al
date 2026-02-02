@@ -8,12 +8,12 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             DataClassification = ToBeClassified;
             TableRelation = "Order Type".Code;
         }
-        field(50101; "Shopify Variant Id"; Text[50])
-        {
-            Caption = 'Shopify Variant Id';
-            DataClassification = ToBeClassified;
-            Editable = false;
-        }
+        // field(50101; "Shopify Variant Id"; Text[50])
+        // {
+        //     Caption = 'Shopify Variant Id';
+        //     DataClassification = ToBeClassified;
+        //     Editable = false;
+        // }
         field(50102; "Sent to 3PL Date"; DateTime)
         {
             Caption = 'Sent to 3PL Date';
@@ -35,6 +35,340 @@ tableextension 50111 "Posted Whse Shpt Header Ext" extends "Posted Whse. Shipmen
             Caption = 'Order Source Code';
             DataClassification = ToBeClassified;
             TableRelation = "Order Source".Code;
+        }
+        field(50106; "Store Front Payment Status"; Text[50])
+        {
+            Caption = 'Store Front Payment Status';
+            DataClassification = ToBeClassified;
+        }
+        field(50107; "Store Front Payment Gateway"; Code[20])
+        {
+            Caption = 'Store Front Payment Gateway';
+            DataClassification = ToBeClassified;
+        }
+        field(50108; "Store Front Payment Event Type"; Text[50])
+        {
+            Caption = 'Store Front Payment Event Type';
+            DataClassification = ToBeClassified;
+        }
+        field(50109; "Store Front Payment Authcode"; Text[50])
+        {
+            Caption = 'Store Front Payment Authcode';
+            DataClassification = ToBeClassified;
+        }
+        field(50110; "Order Total Check"; Decimal)
+        {
+            Caption = 'Order Total Check';
+            DataClassification = ToBeClassified;
+        }
+        field(50111; "Order Total Variance"; Decimal)
+        {
+            Caption = 'Order Total Variance';
+            DataClassification = ToBeClassified;
+        }
+        //... Marketplace fields
+        field(50112; "memo"; Text[50])
+        {
+            Caption = 'Memo';
+            DataClassification = ToBeClassified;
+        }
+        field(50113; "Vendor_Number"; Code[20])
+        {
+            Caption = 'Vendor Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50114; "shippingAddress_attention"; Text[50])
+        {
+            Caption = 'Shipping Address Attention';
+            DataClassification = ToBeClassified;
+        }
+        field(50115; "Store_number"; Code[20])
+        {
+            Caption = 'Store Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50116; "Dealer_Department_Number"; Code[20])
+        {
+            Caption = 'Dealer Department Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50117; "Dealer_Department_Description"; Text[50])
+        {
+            Caption = 'Dealer Department Description';
+            DataClassification = ToBeClassified;
+        }
+        field(50118; "Standard_Carrier_Alpha_Code"; Text[50])
+        {
+            Caption = 'Standard Carrier Alpha Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50119; "FOB_Qualifier"; Text[50])
+        {
+            Caption = 'FOB Qualifier';
+            DataClassification = ToBeClassified;
+        }
+        field(50120; "Transportation_Method_Code"; Text[50])
+        {
+            Caption = 'Carrier Transportation Method Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50121; "Transaction_ID"; Text[200])
+        {
+            Caption = 'Transaction ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50122; "discountItem_intID"; Text[50])
+        {
+            Caption = 'Discount Item - intID';
+            DataClassification = ToBeClassified;
+        }
+        field(50123; "Customer_Account_Number"; Text[50])
+        {
+            Caption = 'Customer Account Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50124; "Special_Instructions"; Text[100])
+        {
+            Caption = 'Special Instructions';
+            DataClassification = ToBeClassified;
+        }
+        field(50125; "Customer_Order_Number"; Code[20])
+        {
+            Caption = 'Customer Order Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50126; "Release_No"; Text[50])
+        {
+            Caption = 'Release No';
+            DataClassification = ToBeClassified;
+        }
+        field(50127; "Ship_To_Code_Qualifier"; Text[50])
+        {
+            Caption = 'Ship To Code Qualifier';
+            DataClassification = ToBeClassified;
+        }
+        field(50128; "Requested_Ship_Date"; Date)
+        {
+            Caption = 'Requested Ship Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50129; "Current_Scheduled_Delivery"; Date)
+        {
+            Caption = 'Current Scheduled Delivery';
+            DataClassification = ToBeClassified;
+        }
+        field(50130; "Requested_PickUp_Date"; Date)
+        {
+            Caption = 'Requested Pick Up Date';
+            DataClassification = ToBeClassified;
+        }
+        field(50131; "Packaging_Type"; Text[20])
+        {
+            Caption = 'Packaging Type';
+            DataClassification = ToBeClassified;
+        }
+        field(50132; "Total_Packages"; Decimal)
+        {
+            Caption = 'Total Packages';
+            DataClassification = ToBeClassified;
+        }
+        field(50133; "PKG_PLT_Qty"; Decimal)
+        {
+            Caption = 'PKG PLT Qty';
+            DataClassification = ToBeClassified;
+        }
+        field(50134; "Marketplace_Shipment_ID"; Text[50])
+        {
+            Caption = 'Marketplace Shipment ID';
+            DataClassification = ToBeClassified;
+        }
+        field(50135; "824_Received"; Boolean)
+        {
+            Caption = '824 Received';
+            DataClassification = ToBeClassified;
+        }
+        field(50136; "824_Notes"; Text[100])
+        {
+            Caption = '824 Notes';
+            DataClassification = ToBeClassified;
+        }
+        field(50137; "Routing_Request_Sent"; Boolean)
+        {
+            Caption = 'Routing Request Sent';
+            DataClassification = ToBeClassified;
+        }
+        field(50138; "Processed"; Boolean)
+        {
+            Caption = 'Processed';
+            DataClassification = ToBeClassified;
+        }
+        field(50139; "Supplier_Contact_Name"; Text[100])
+        {
+            Caption = 'Supplier Contact Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50140; "Supplier_Contact_No"; Text[21])
+        {
+            Caption = 'Supplier Contact No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50141; "Supplier_Contact_Email"; Text[100])
+        {
+            Caption = 'Supplier Contact Email';
+            DataClassification = ToBeClassified;
+        }
+        field(50142; "Ship From"; Text[100])
+        {
+            Caption = 'Ship From';
+            DataClassification = ToBeClassified;
+        }
+        field(50143; "3rd Party Billing Account"; Text[100])
+        {
+            Caption = '3rd Party Billing Account';
+            DataClassification = ToBeClassified;
+        }
+        field(50144; "3rd Party Zip"; Code[10])
+        {
+            Caption = '3rd Party Zip';
+            DataClassification = ToBeClassified;
+        }
+        field(50145; "3rd Party Carrier"; Text[100])
+        {
+            Caption = '3rd Party Carrier';
+            DataClassification = ToBeClassified;
+        }
+        field(50146; "Storefront Name"; Text[100])
+        {
+            Caption = 'Storefront Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50147; isShipresidential; Boolean)
+        {
+            Caption = 'Is Ship Residential';
+            DataClassification = ToBeClassified;
+        }
+        field(50148; "Bill-to Phone No."; Text[30])
+        {
+            Caption = 'Bill-to Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50149; "Order Discount Details"; Text[100])
+        {
+            Caption = 'Order Discount Details';
+            DataClassification = ToBeClassified;
+        }
+        field(50157; "Order Total Tax"; Decimal)
+        {
+            Editable = false;
+            Caption = 'Order Total Tax';
+            DataClassification = ToBeClassified;
+        }
+        field(50162; "Agreement No."; Text[60])
+        {
+            Caption = 'Agreement No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50163; "Order Total Excl Tax"; Decimal)
+        {
+            Caption = 'Order Total Excl. Tax';
+            DataClassification = ToBeClassified;
+        }
+        field(50167; CarrierPRONumber; Text[50])
+        {
+            Caption = 'Carrier PRO Number';
+            DataClassification = ToBeClassified;
+        }
+        field(50168; BillofLading; Text[50])
+        {
+            Caption = 'Bill of Lading';
+            DataClassification = ToBeClassified;
+        }
+        field(50200; "Source No."; Code[20])
+        {
+            Editable = false;
+            Caption = 'Source No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50201; "Your Reference"; Text[35])
+        {
+            Caption = 'Your Reference';
+            DataClassification = ToBeClassified;
+        }
+        field(50202; "Package Tracking No."; Text[50])
+        {
+
+            Caption = 'Package Tracking No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50203; "Requested Delivery Date"; Date)
+        {
+            Caption = 'Requested Delivery Date';
+            Editable = false;
+            DataClassification = ToBeClassified;
+        }
+        field(50204; "Shipping Address"; Text[100])
+        {
+            Caption = 'Shipping Address';
+            DataClassification = ToBeClassified;
+        }
+        field(50205; "Shipping Address 2"; Text[100])
+        {
+            Caption = 'Shipping Address 2';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; "Shipping City"; Text[50])
+        {
+            Caption = 'Shipping City';
+            DataClassification = ToBeClassified;
+        }
+        field(50207; "Shipping County"; Text[50])
+        {
+            Caption = 'Shipping County';
+            DataClassification = ToBeClassified;
+        }
+        field(50208; "Shipping Post Code"; Code[20])
+        {
+            Caption = 'Shipping Post Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50209; "Shipping Country/Region Code"; Code[10])
+        {
+            Caption = 'Shipping Country/Region Code';
+            DataClassification = ToBeClassified;
+        }
+        field(50210; "Shipping Phone No."; Text[30])
+        {
+            Caption = 'Shipping Phone No.';
+            DataClassification = ToBeClassified;
+        }
+        field(50212; "Ship to Name"; Text[100])
+        {
+            Caption = 'Ship to Name';
+            DataClassification = ToBeClassified;
+        }
+        field(50213; "SO Date"; Date)
+        {
+            Caption = 'SO Date';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50214; "Customer No."; Code[20])
+        {
+            Caption = 'Customer No.';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50215; "Customer Name"; Text[100])
+        {
+            Caption = 'Customer Name';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(50216; "Customer Posting Group"; Code[20])
+        {
+            Caption = 'Customer Posting Group';
+            DataClassification = ToBeClassified;
+            Editable = false;
         }
     }
 }

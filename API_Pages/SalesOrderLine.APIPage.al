@@ -1,12 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Integration.Entity;
-using Microsoft.Finance.GeneralLedger.Account;
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Integration.Graph;
-using Microsoft.Sales.Document;
-using Microsoft.Inventory.Item;
-using System.Reflection;
 
 page 50114 "API - Sales Order Lines"
 {
@@ -20,9 +11,10 @@ page 50114 "API - Sales Order Lines"
     EntitySetName = 'salesItemList';
     SourceTable = "Sales Invoice Line Aggregate";
     SourceTableTemporary = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {
@@ -209,10 +201,27 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Line Discount %"));
                     end;
                 }
+                field(itemType; Rec."Item Type")
+                {
+                    Caption = 'Item Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Item Type"));
+                    end;
+                }
                 field(discountAppliedBeforeTax; Rec."Discount Applied Before Tax")
                 {
                     Caption = 'Discount Applied Before Tax';
                     Editable = false;
+                }
+                field(StoreFront_LineAmount; Rec.StoreFront_LineAmount)
+                {
+                    Caption = 'Store Front Line Amount';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo(StoreFront_LineAmount));
+                    end;
                 }
                 field(amountExcludingTax; Rec."Line Amount Excluding Tax")
                 {
@@ -239,6 +248,16 @@ page 50114 "API - Sales Order Lines"
                             Rec.Validate("Tax Group Code", COPYSTR(Rec."Tax Code", 1, 20));
                             RegisterFieldSet(Rec.FieldNo("Tax Group Code"));
                         end;
+                    end;
+                }
+
+                field(lineTaxAmount; Rec."Line Tax AmountN")
+                {
+                    Caption = 'Line Tax Amount';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Line Tax AmountN"));
                     end;
                 }
                 field(taxPercent; Rec."VAT %")
@@ -326,6 +345,18 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Qty. to Ship"));
                     end;
                 }
+                field(totalWeight; Rec."Gross Weight")
+                {
+                    Caption = 'Total Weight';
+                }
+                field(totalCubageFT; Rec."Total Cubage FT")
+                {
+                    Caption = 'Total Cubage FT';
+                }
+                field(netWeight; Rec."Net Weight")
+                {
+                    Caption = 'Net Weight';
+                }
                 field(itemVariantId; Rec."Variant Id")
                 {
                     Caption = 'Item Variant Id';
@@ -335,13 +366,46 @@ page 50114 "API - Sales Order Lines"
                         RegisterFieldSet(Rec.FieldNo("Variant Code"));
                     end;
                 }
-                field(locationId; Rec."Location Id")
+                field(locationId; Rec."Location Code")
                 {
                     Caption = 'Location Id';
 
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Location Code"));
+                    end;
+                }
+                field(customerSubscription; Rec."Customer Subscription No.")
+                {
+                    Caption = 'Customer Subscription No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer Subscription No."));
+                    end;
+                }
+                field(avaLineOverrideType; Rec."Ava Line Override Type")
+                {
+                    Caption = 'Ava Line Override Type';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Type"));
+                    end;
+                }
+                field(avaLineOverrideAmount; Rec."Ava Line Override Amount")
+                {
+                    Caption = 'Ava Line Override Amount';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Amount"));
+                    end;
+                }
+                field(avaLineOverrideReason; Rec."Ava Line Override Reason")
+                {
+                    Caption = 'Ava Line Override Reason';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Ava Line Override Reason"));
                     end;
                 }
                 field(shopifyVariantId; Rec."Shopify Variant Id")
@@ -369,6 +433,34 @@ page 50114 "API - Sales Order Lines"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Discount Details"));
+                    end;
+                }
+                field(amazonItemId; Rec."Amazon Item ID")
+                {
+                    Caption = 'Amazon Item ID';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Amazon Item ID"));
+                    end;
+                }
+
+                field(upcCode; Rec.UPC_Code)
+                {
+                    Caption = 'Marketplace UPC Code';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("UPC_Code"));
+                    end;
+                }
+                field(poLine; Rec."PO Line")
+                {
+                    Caption = 'PO Line';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("PO Line"));
                     end;
                 }
                 part(dimensionSetLines; "APIV2 - Dimension Set Lines")
@@ -409,19 +501,36 @@ page 50114 "API - Sales Order Lines"
         DocumentIdFilter: Text;
         IdFilter: Text;
         FilterView: Text;
+        SalesOrderEntityBuffer: Record "Sales Order Entity Buffer";
+        salesLine: Record "Sales Line";
+        salesInvoiceLineAggregate: Record "Sales Invoice Line Aggregate";
     begin
         if not LinesLoaded then begin
             FilterView := Rec.GetView();
             IdFilter := Rec.GetFilter(SystemId);
             DocumentIdFilter := Rec.GetFilter("Document Id");
-            if (IdFilter = '') and (DocumentIdFilter = '') then
-                Error(IDOrDocumentIdShouldBeSpecifiedForLinesErr);
+            //Error(IdFilter + ' , ' + DocumentIdFilter);
+
             if IdFilter <> '' then begin
                 Evaluate(SysId, IdFilter);
                 DocumentIdFilter := GraphMgtSalesInvLines.GetSalesOrderDocumentIdFilterFromSystemId(SysId);
             end else
                 DocumentIdFilter := Rec.GetFilter("Document Id");
             GraphMgtSalesOrderBuffer.LoadLines(Rec, DocumentIdFilter);
+            if Rec.FindSet() then
+                repeat
+                    SalesOrderEntityBuffer.SetFilter(Id, DocumentIdFilter);
+                    if SalesOrderEntityBuffer.FindFirst() then
+                        salesLine.reset();
+                    salesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+                    salesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
+                    salesLine.SetRange("Line No.", Rec."Line No.");
+                    if salesLine.FindFirst() then begin
+                        Rec."Gross Weight" := salesLine."Gross Weight";
+                        Rec."Net Weight" := salesLine."Net Weight" * salesLine.Quantity;
+                        Rec.Modify();
+                    end;
+                until Rec.Next() = 0;
             Rec.SetView(FilterView);
             if not Rec.FindFirst() then
                 exit(false);
@@ -437,18 +546,31 @@ page 50114 "API - Sales Order Lines"
         SalesOrderEntityBuffer: Record "Sales Order Entity Buffer";
         SalesLine: Record "Sales Line";
         linediscountamt: Decimal;
+        avataxOvType: Option " ",TaxDate,Amount;
+        avataxOvAmount: Decimal;
+        avataxOvReason: Text[250];
+        QtyType: Option General,Invoicing,Shipping;
+        SalesHeader: Record "Sales Header";
     begin
         linediscountamt := Rec."Line Discount Amount";
+        avataxOvType := Rec."Ava Line Override Type";
+        avataxOvAmount := Rec."Ava Line Override Amount";
+        avataxOvReason := Rec."Ava Line Override Reason";
         GraphMgtSalesOrderBuffer.PropagateInsertLine(Rec, TempFieldBuffer);
         //Error('Document No. %1 and Discount %2', Rec."Document Id", Rec."Line Discount Amount");
         SalesOrderEntityBuffer.SetFilter(Id, Rec."Document Id");
         if SalesOrderEntityBuffer.FindFirst() then begin
+            SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderEntityBuffer."No.");
             SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
             SalesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
             SalesLine.SetRange("Line No.", Rec."Line No.");
             if SalesLine.FindFirst() then begin
                 SalesLine.Validate("Line Discount Amount", linediscountamt);
-                SalesLine.Modify();
+                SalesLine."Ava Line Override Type" := avataxOvType;
+                SalesLine."Ava Line Override Amount" := avataxOvAmount;
+                SalesLine."Ava Line Override Reason" := avataxOvReason;
+                //SalesLine.CalcVATAmountLines(QtyType, SalesHeader, SalesLine, VATAmountLine, false);
+                SalesLine.Modify(true);
             end;
         end;
 
@@ -457,8 +579,24 @@ page 50114 "API - Sales Order Lines"
     trigger OnModifyRecord(): Boolean
     var
         GraphMgtSalesOrderBuffer: Codeunit "Graph Mgt - Sales Order Buffer";
+        SalesOrderEntityBuffer: Record "Sales Order Entity Buffer";
+        SalesLine: Record "Sales Line";
+        QtyType: Option General,Invoicing,Shipping;
+        SalesHeader: Record "Sales Header";
     begin
         GraphMgtSalesOrderBuffer.PropagateModifyLine(Rec, TempFieldBuffer);
+        //Block sharad-07-01-26
+        // SalesOrderEntityBuffer.SetFilter(Id, Rec."Document Id");
+        // if SalesOrderEntityBuffer.FindFirst() then begin
+        //     SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderEntityBuffer."No.");
+        //     SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+        //     SalesLine.SetRange("Document No.", SalesOrderEntityBuffer."No.");
+        //     SalesLine.SetRange("Line No.", Rec."Line No.");
+        //     if SalesLine.FindFirst() then begin
+        //         //SalesLine.CalcVATAmountLines(QtyType, SalesHeader, SalesLine, VATAmountLine, false);
+        //         SalesLine.Modify(true);
+        //     end;
+        // end;
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)

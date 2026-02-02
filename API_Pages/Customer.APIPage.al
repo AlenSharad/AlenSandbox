@@ -1,13 +1,3 @@
-namespace Microsoft.API.V2;
-
-using Microsoft.Sales.Customer;
-using Microsoft.Finance.GeneralLedger.Setup;
-using Microsoft.Finance.Currency;
-using Microsoft.Foundation.PaymentTerms;
-using Microsoft.Foundation.Shipping;
-using Microsoft.Bank.BankAccount;
-using Microsoft.Integration.Graph;
-using Microsoft.Integration.Entity;
 
 page 50100 "API - Customers"
 {
@@ -22,9 +12,9 @@ page 50100 "API - Customers"
     PageType = API;
     SourceTable = Customer;
     Extensible = true;
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
-
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
+    DeleteAllowed = false;
     layout
     {
         area(content)
@@ -40,14 +30,13 @@ page 50100 "API - Customers"
                 {
                     Caption = 'No.';
                 }
-                field(extId; Rec."Name 2")
+                field(name2; Rec."Name 2")
                 {
-                    Caption = 'External Id';
+                    Caption = 'Name 2';
                     ShowMandatory = true;
 
                     trigger OnValidate()
                     begin
-
                         RegisterFieldSet(Rec.FieldNo("Name 2"));
                     end;
                 }
@@ -70,6 +59,60 @@ page 50100 "API - Customers"
                     trigger OnValidate()
                     begin
                         RegisterFieldSet(Rec.FieldNo("Contact Type"));
+                    end;
+                }
+                field(firstName; Rec."First Name")
+                {
+                    Caption = 'First Name';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("First Name"));
+                    end;
+                }
+                field(lastName; Rec."Last Name")
+                {
+                    Caption = 'Last Name';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Last Name"));
+                    end;
+                }
+                field(customerSinceDate; Rec."Customer Since Date")
+                {
+                    Caption = 'Customer Since Date';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Customer Since Date"));
+                    end;
+                }
+                field(legacyCustomerID; Rec."ALN Legacy Customer ID")
+                {
+                    Caption = 'ALN Legacy Customer ID';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("ALN Legacy Customer ID"));
+                    end;
+                }
+                field(searchName; Rec."Search Name")
+                {
+                    Caption = 'Search Name';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Search Name"));
+                    end;
+                }
+                field(acceptsMarketing; Rec."Accepts Marketing")
+                {
+                    Caption = 'Accepts Marketing';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Accepts Marketing"));
                     end;
                 }
                 field(addressLine1; Rec.Address)
@@ -195,6 +238,33 @@ page 50100 "API - Customers"
                         RegisterFieldSet(Rec.FieldNo("Tax Liable"));
                     end;
                 }
+                field(taxExemptionNo; Rec."Tax Exemption No.")
+                {
+                    Caption = 'Tax Exemption No.';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Tax Exemption No."));
+                    end;
+                }
+                field(taxExemptionExpiryDate; Rec."Tax Exemption Expiry Date")
+                {
+                    Caption = 'Tax Exemption Expiry Date';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Tax Exemption Expiry Date"));
+                    end;
+                }
+                field(taxExemptCertificate; Rec."Tax Exempt Certificate")
+                {
+                    Caption = 'Tax Exempt Certificate';
+
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Tax Exempt Certificate"));
+                    end;
+                }
                 field(taxAreaId; Rec."Tax Area ID")
                 {
                     Caption = 'Tax Area Id';
@@ -211,6 +281,7 @@ page 50100 "API - Customers"
                             RegisterFieldSet(Rec.FieldNo("VAT Bus. Posting Group"));
                     end;
                 }
+
                 field(taxAreaDisplayName; TaxAreaDisplayNameGlobal)
                 {
                     Caption = 'Tax Area Display Name';
@@ -389,7 +460,7 @@ page 50100 "API - Customers"
                         RegisterFieldSet(Rec.FieldNo("Tax Area Code"));
                     end;
                 }
-                field(taxIdendification; Rec."Tax Identification Type")
+                field(taxIdentification; Rec."Tax Identification Type")
                 {
                     Caption = 'Tax Identification Type';
 
@@ -525,16 +596,24 @@ page 50100 "API - Customers"
                 //         RegisterFieldSet(Rec.FieldNo("b2b_customer"));
                 //     end;
                 // }
-                field(shopifyCustomer; Rec."Shopify Customer No.")
+                field(shopifyCustomerNo; Rec."Shopify Customer No.")
                 {
-                    Caption = 'Shopify Customer';
+                    Caption = 'Shopify Customer No';
 
                     trigger OnValidate()
+                    var
+                        Customer: Record Customer;
                     begin
+                        if Rec."Shopify Customer No." <> '' then begin
+                            Customer.Reset();
+                            Customer.SetRange("Shopify Customer No.", Rec."Shopify Customer No.");
+                            if not Customer.IsEmpty() then
+                                Error('A customer %1 with the same "Shopify Customer No." already exists.', Customer."No.");
+                        end;
                         RegisterFieldSet(Rec.FieldNo("Shopify Customer No."));
                     end;
                 }
-                field(zendeskCustomer; Rec."Zendesk Customer No.")
+                field(zendeskCustomerNo; Rec."Zendesk Customer No.")
                 {
                     Caption = 'Zendesk Customer No.';
 

@@ -1,7 +1,3 @@
-namespace Microsoft.Sales.Customer;
-
-using Microsoft.Foundation.Address;
-using Microsoft.Integration.Graph;
 
 page 50104 "API - CustomerBank"
 {
@@ -15,10 +11,10 @@ page 50104 "API - CustomerBank"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Customer Bank Account";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
-
+    DeleteAllowed = false;
     layout
     {
         area(content)

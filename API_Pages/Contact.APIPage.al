@@ -1,10 +1,3 @@
-namespace Microsoft.API.V2;
-using Microsoft.CRM.Contact;
-using Microsoft.Sales.Customer;
-using Microsoft.CRM.BusinessRelation;
-using Microsoft.Integration.Graph;
-using Microsoft.CRM.Setup;
-
 
 page 50101 "API - Contacts"
 {
@@ -18,9 +11,10 @@ page 50101 "API - Contacts"
     ODataKeyFields = SystemId;
     PageType = API;
     SourceTable = "Contact Buffer";
-    APIPublisher = 'HappiestMinds';
-    APIGroup = 'AlenAPIS';
+    APIPublisher = 'ALEN';
+    APIGroup = 'BCAPI';
     Extensible = true;
+    DeleteAllowed = false;
 
     layout
     {
